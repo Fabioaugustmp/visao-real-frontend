@@ -1,0 +1,35 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Controle de Acesso de Usuários</strong>
+        </c-card-header>
+        <c-card-body>
+          <table cTable>
+            <thead>
+              <tr>
+                <th>Usuário</th>
+                <th>Status do Pagamento</th>
+                <th>Status do Acesso</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of users">
+                <td>{{ user.nome }}</td>
+                <td><c-badge [color]="getPaymentStatus(user.id) === 'Ativo' ? 'success' : 'danger'">{{ getPaymentStatus(user.id) }}</c-badge></td>
+                <td><c-badge [color]="user.status ? 'success' : 'danger'">{{ user.status ? 'Ativo' : 'Inativo' }}</c-badge></td>
+                <td>
+                  <button cButton [color]="user.status ? 'danger' : 'success'" size="sm" (click)="toggleUserStatus(user)">
+                    {{ user.status ? 'Desativar' : 'Ativar' }}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

@@ -1,0 +1,61 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Minha Assinatura</strong>
+        </c-card-header>
+        <c-card-body *ngIf="subscription; else noSubscription">
+          <p><strong>Plano:</strong> {{ subscription.planName }}</p>
+          <p><strong>Valor:</strong> {{ subscription.price | currency:'BRL' }}</p>
+          <p><strong>Vigência:</strong> {{ subscription.startDate | date:'dd/MM/yyyy' }} - {{ subscription.endDate | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Status:</strong> <c-badge [color]="subscription.status === 'active' ? 'success' : 'danger'">{{ subscription.status }}</c-badge></p>
+          <button cButton color="danger" (click)="cancelSubscription()">Cancelar Assinatura</button>
+          <button cButton color="link" [routerLink]="['/subscriptions']">Ver Todas as Assinaturas</button>
+        </c-card-body>
+        <ng-template #noSubscription>
+          <c-card-body>
+            <p>Você não possui uma assinatura ativa.</p>
+            <button cButton color="primary">Assinar Agora</button>
+          </c-card-body>
+        </ng-template>
+      </c-card>
+
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Meus Métodos de Pagamento</strong>
+        </c-card-header>
+        <c-card-body>
+          <button cButton color="primary" class="mb-3" [routerLink]="['/billing/add-credit-card']">Adicionar Cartão</button>
+          <button cButton color="info" class="mb-3 ms-2" [routerLink]="['/billing/add-pix']">Adicionar PIX</button>
+
+          <table cTable>
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Detalhes</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pm of paymentMethods">
+                <td>{{ pm.type === 'credit-card' ? 'Cartão de Crédito' : 'PIX' }}</td>
+                <td>
+                  <div *ngIf="pm.type === 'credit-card'">
+                    {{ pm.cardHolderName }} - {{ pm.cardNumber }}
+                  </div>
+                  <div *ngIf="pm.type === 'pix'">
+                    {{ pm.pixKey }}
+                  </div>
+                </td>
+                <td>
+                  <button cButton color="danger" size="sm" (click)="deletePaymentMethod(pm.id)">Remover</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

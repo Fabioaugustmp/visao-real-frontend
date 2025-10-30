@@ -1,0 +1,33 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Preços</strong>
+        </c-card-header>
+        <c-card-body>
+          <button cButton color="primary" class="mb-3" [routerLink]="['/precos/novo']">Novo Preço</button>
+          <table cTable>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Valor</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let preco of precos">
+                <td>{{ preco.id_item }}</td>
+                <td>{{ preco.valor | currency:'BRL' }}</td>
+                <td>
+                  <button cButton color="secondary" size="sm" [routerLink]="['/precos/editar', preco.id]">Editar</button>
+                  <button cButton color="danger" size="sm" (click)="deletePreco(preco.id)">Excluir</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

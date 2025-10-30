@@ -1,0 +1,64 @@
+<div class="animated fadeIn">
+  <c-row class="justify-content-center">
+    <c-col md="8" lg="6">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Adicionar Cartão de Crédito</strong>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="cardForm" (ngSubmit)="onSubmit()" cForm novalidate>
+            <c-input-group class="mb-3">
+              <span cInputGroupText>
+                <svg cIcon name="cil-credit-card"></svg>
+              </span>
+              <input cFormControl id="cardNumber" formControlName="cardNumber" placeholder="Número do Cartão" required
+                     [valid]="cardForm.controls['cardNumber'].valid">
+              <c-form-feedback [valid]="false">Número do cartão é obrigatório.</c-form-feedback>
+            </c-input-group>
+
+            <c-input-group class="mb-3">
+              <span cInputGroupText>
+                <svg cIcon name="cil-user"></svg>
+              </span>
+              <input cFormControl id="cardHolderName" formControlName="cardHolderName" placeholder="Nome no Cartão" required
+                     [valid]="cardForm.controls['cardHolderName'].valid">
+              <c-form-feedback [valid]="false">Nome no cartão é obrigatório.</c-form-feedback>
+            </c-input-group>
+
+            <c-row>
+              <c-col xs="7">
+                <c-input-group class="mb-3">
+                  <span cInputGroupText>
+                    <svg cIcon name="cil-calendar"></svg>
+                  </span>
+                  <input cFormControl id="expiryDate" formControlName="expiryDate" placeholder="MM/AA" required
+                         [valid]="cardForm.controls['expiryDate'].valid">
+                  <c-form-feedback [valid]="false">Data de validade é obrigatória.</c-form-feedback>
+                </c-input-group>
+              </c-col>
+              <c-col xs="5">
+                <c-input-group class="mb-3">
+                  <span cInputGroupText>
+                    <svg cIcon name="cil-lock-locked"></svg>
+                  </span>
+                  <input cFormControl id="cvv" formControlName="cvv" placeholder="CVV" required
+                         [valid]="cardForm.controls['cvv'].valid">
+                  <c-form-feedback [valid]="false">CVV é obrigatório.</c-form-feedback>
+                </c-input-group>
+              </c-col>
+            </c-row>
+
+            <c-row>
+              <c-col xs="6">
+                <button cButton color="primary" type="submit" class="px-4" [disabled]="cardForm.invalid">Salvar</button>
+              </c-col>
+              <c-col xs="6" class="text-right">
+                <button cButton color="secondary" [routerLink]="['/billing']">Cancelar</button>
+              </c-col>
+            </c-row>
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

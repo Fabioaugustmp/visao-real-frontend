@@ -1,0 +1,26 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{ isEditMode ? 'Editar Preço' : 'Novo Preço' }}</strong>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="precoForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label cLabel for="id_item">Item</label>
+              <input cFormControl id="id_item" formControlName="id_item" type="number">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="valor">Valor</label>
+              <input cFormControl id="valor" formControlName="valor" type="number">
+            </div>
+
+            <button cButton color="primary" type="submit" [disabled]="precoForm.invalid">Salvar</button>
+            <button cButton color="secondary" [routerLink]="['/precos']">Cancelar</button>
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

@@ -1,0 +1,36 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Todas as Assinaturas</strong>
+        </c-card-header>
+        <c-card-body>
+          <div *ngFor="let group of subscriptionsByMonth">
+            <h4>{{ group.month }}</h4>
+            <table cTable class="mb-4">
+              <thead>
+                <tr>
+                  <th>Usuário (ID)</th>
+                  <th>Plano</th>
+                  <th>Valor</th>
+                  <th>Vigência</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let sub of group.subscriptions">
+                  <td>{{ sub.userId }}</td>
+                  <td>{{ sub.planName }}</td>
+                  <td>{{ sub.price | currency:'BRL' }}</td>
+                  <td>{{ sub.startDate | date:'dd/MM/yyyy' }} - {{ sub.endDate | date:'dd/MM/yyyy' }}</td>
+                  <td><c-badge [color]="sub.status === 'active' ? 'success' : 'danger'">{{ sub.status }}</c-badge></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

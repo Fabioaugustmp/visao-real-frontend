@@ -1,0 +1,37 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Contadores</strong>
+        </c-card-header>
+        <c-card-body>
+          <button cButton color="primary" class="mb-3" [routerLink]="['/contadores/novo']">Novo Contador</button>
+          <table cTable>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>CRC</th>
+                <th>UF</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let contador of contadores">
+                <td>{{ contador.nome }}</td>
+                <td>{{ contador.email }}</td>
+                <td>{{ contador.crc }}</td>
+                <td>{{ contador.crc_uf }}</td>
+                <td>
+                  <button cButton color="secondary" size="sm" [routerLink]="['/contadores/editar', contador.id]">Editar</button>
+                  <button cButton color="danger" size="sm" (click)="deleteContador(contador.id)">Excluir</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

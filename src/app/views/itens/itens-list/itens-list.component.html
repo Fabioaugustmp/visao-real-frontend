@@ -1,0 +1,33 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Itens</strong>
+        </c-card-header>
+        <c-card-body>
+          <button cButton color="primary" class="mb-3" [routerLink]="['/itens/novo']">Novo Item</button>
+          <table cTable>
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of itens">
+                <td>{{ item.tipo }}</td>
+                <td>{{ item.descricao }}</td>
+                <td>
+                  <button cButton color="secondary" size="sm" [routerLink]="['/itens/editar', item.id]">Editar</button>
+                  <button cButton color="danger" size="sm" (click)="deleteItem(item.id)">Excluir</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

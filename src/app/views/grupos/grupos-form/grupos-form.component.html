@@ -1,0 +1,22 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{ isEditMode ? 'Editar Grupo' : 'Novo Grupo' }}</strong>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="grupoForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label cLabel for="nome_grupo">Nome do Grupo</label>
+              <input cFormControl id="nome_grupo" formControlName="nome_grupo">
+            </div>
+
+            <button cButton color="primary" type="submit" [disabled]="grupoForm.invalid">Salvar</button>
+            <button cButton color="secondary" [routerLink]="['/grupos']">Cancelar</button>
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

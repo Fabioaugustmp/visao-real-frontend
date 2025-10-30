@@ -1,0 +1,37 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Usuários</strong>
+        </c-card-header>
+        <c-card-body>
+          <button cButton color="primary" class="mb-3" [routerLink]="['/usuarios/novo']">Novo Usuário</button>
+          <table cTable>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Login</th>
+                <th>Grupo</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let usuario of usuarios">
+                <td>{{ usuario.nome }}</td>
+                <td>{{ usuario.login }}</td>
+                <td>{{ usuario.id_grupo }}</td>
+                <td><c-badge [color]="usuario.status ? 'success' : 'danger'">{{ usuario.status ? 'Ativo' : 'Inativo' }}</c-badge></td>
+                <td>
+                  <button cButton color="secondary" size="sm" [routerLink]="['/usuarios/editar', usuario.id]">Editar</button>
+                  <button cButton color="danger" size="sm" (click)="deleteUsuario(usuario.id)">Excluir</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

@@ -1,0 +1,50 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{ isEditMode ? 'Editar Médico' : 'Novo Médico' }}</strong>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="medicoForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label cLabel for="crm">CRM</label>
+              <input cFormControl id="crm" formControlName="crm" type="number">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="nome">Nome</label>
+              <input cFormControl id="nome" formControlName="nome">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="email">Email</label>
+              <input cFormControl id="email" formControlName="email" type="email">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="data_nasc">Data de Nascimento</label>
+              <input cFormControl id="data_nasc" formControlName="data_nasc" type="date">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="cpf">CPF</label>
+              <input cFormControl id="cpf" formControlName="cpf" type="number">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="taxa_imposto">Taxa de Imposto</label>
+              <input cFormControl id="taxa_imposto" formControlName="taxa_imposto" type="number">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="id_empresa">Empresa</label>
+              <input cFormControl id="id_empresa" formControlName="id_empresa" type="number">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="id_usuario">Usuário</label>
+              <input cFormControl id="id_usuario" formControlName="id_usuario" type="number">
+            </div>
+
+            <button cButton color="primary" type="submit" [disabled]="medicoForm.invalid">Salvar</button>
+            <button cButton color="secondary" [routerLink]="['/medicos']">Cancelar</button>
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

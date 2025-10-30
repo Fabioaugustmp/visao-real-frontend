@@ -1,0 +1,22 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Adicionar Chave PIX</strong>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="pixForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label cLabel for="pixKey">Chave PIX</label>
+              <input cFormControl id="pixKey" formControlName="pixKey">
+            </div>
+
+            <button cButton color="primary" type="submit" [disabled]="pixForm.invalid">Salvar</button>
+            <button cButton color="secondary" [routerLink]="['/billing']">Cancelar</button>
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

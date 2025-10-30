@@ -1,0 +1,35 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Médicos</strong>
+        </c-card-header>
+        <c-card-body>
+          <button cButton color="primary" class="mb-3" [routerLink]="['/medicos/novo']">Novo Médico</button>
+          <table cTable>
+            <thead>
+              <tr>
+                <th>CRM</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let medico of medicos">
+                <td>{{ medico.crm }}</td>
+                <td>{{ medico.nome }}</td>
+                <td>{{ medico.email }}</td>
+                <td>
+                  <button cButton color="secondary" size="sm" [routerLink]="['/medicos/editar', medico.id]">Editar</button>
+                  <button cButton color="danger" size="sm" (click)="deleteMedico(medico.id)">Excluir</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

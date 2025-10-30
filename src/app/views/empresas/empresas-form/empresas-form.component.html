@@ -1,0 +1,34 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{ isEditMode ? 'Editar Empresa' : 'Nova Empresa' }}</strong>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="empresaForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label cLabel for="CNPJ">CNPJ</label>
+              <input cFormControl id="CNPJ" formControlName="CNPJ" type="number">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="razao_social">Razão Social</label>
+              <input cFormControl id="razao_social" formControlName="razao_social">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="id_contrato_cartao">Contrato Cartão</label>
+              <input cFormControl id="id_contrato_cartao" formControlName="id_contrato_cartao" type="number">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="id_contador">Contador</label>
+              <input cFormControl id="id_contador" formControlName="id_contador" type="number">
+            </div>
+
+            <button cButton color="primary" type="submit" [disabled]="empresaForm.invalid">Salvar</button>
+            <button cButton color="secondary" [routerLink]="['/empresas']">Cancelar</button>
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

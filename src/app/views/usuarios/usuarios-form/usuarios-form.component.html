@@ -1,0 +1,40 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{ isEditMode ? 'Editar Usuário' : 'Novo Usuário' }}</strong>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label cLabel for="nome">Nome</label>
+              <input cFormControl id="nome" formControlName="nome">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="login">Login</label>
+              <input cFormControl id="login" formControlName="login">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="id_grupo">Grupo</label>
+              <input cFormControl id="id_grupo" formControlName="id_grupo" type="number">
+            </div>
+            <div class="mb-3" *ngIf="!isEditMode">
+              <label cLabel for="password">Senha</label>
+              <input cFormControl id="password" formControlName="password" type="password">
+            </div>
+            <div class="mb-3">
+              <c-form-check>
+                <input cFormCheckInput id="status" formControlName="status" type="checkbox">
+                <label cFormCheckLabel for="status">Ativo</label>
+              </c-form-check>
+            </div>
+
+            <button cButton color="primary" type="submit" [disabled]="usuarioForm.invalid">Salvar</button>
+            <button cButton color="secondary" [routerLink]="['/usuarios']">Cancelar</button>
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

@@ -1,0 +1,34 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{ isEditMode ? 'Editar Contador' : 'Novo Contador' }}</strong>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="contadorForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label cLabel for="nome">Nome</label>
+              <input cFormControl id="nome" formControlName="nome">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="email">Email</label>
+              <input cFormControl id="email" formControlName="email" type="email">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="crc">CRC</label>
+              <input cFormControl id="crc" formControlName="crc">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="crc_uf">UF</label>
+              <input cFormControl id="crc_uf" formControlName="crc_uf">
+            </div>
+
+            <button cButton color="primary" type="submit" [disabled]="contadorForm.invalid">Salvar</button>
+            <button cButton color="secondary" [routerLink]="['/contadores']">Cancelar</button>
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

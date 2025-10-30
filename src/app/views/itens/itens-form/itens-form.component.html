@@ -1,0 +1,26 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{ isEditMode ? 'Editar Item' : 'Novo Item' }}</strong>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label cLabel for="tipo">Tipo</label>
+              <input cFormControl id="tipo" formControlName="tipo">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="descricao">Descrição</label>
+              <input cFormControl id="descricao" formControlName="descricao">
+            </div>
+
+            <button cButton color="primary" type="submit" [disabled]="itemForm.invalid">Salvar</button>
+            <button cButton color="secondary" [routerLink]="['/itens']">Cancelar</button>
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

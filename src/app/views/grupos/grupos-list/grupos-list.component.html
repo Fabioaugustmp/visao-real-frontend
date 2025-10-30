@@ -1,0 +1,31 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Grupos</strong>
+        </c-card-header>
+        <c-card-body>
+          <button cButton color="primary" class="mb-3" [routerLink]="['/grupos/novo']">Novo Grupo</button>
+          <table cTable>
+            <thead>
+              <tr>
+                <th>Nome do Grupo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let grupo of grupos">
+                <td>{{ grupo.nome_grupo }}</td>
+                <td>
+                  <button cButton color="secondary" size="sm" [routerLink]="['/grupos/editar', grupo.id]">Editar</button>
+                  <button cButton color="danger" size="sm" (click)="deleteGrupo(grupo.id)">Excluir</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

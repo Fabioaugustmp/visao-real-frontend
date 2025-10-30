@@ -1,0 +1,33 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Empresas</strong>
+        </c-card-header>
+        <c-card-body>
+          <button cButton color="primary" class="mb-3" [routerLink]="['/empresas/nova']">Nova Empresa</button>
+          <table cTable>
+            <thead>
+              <tr>
+                <th>CNPJ</th>
+                <th>Razão Social</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let empresa of empresas">
+                <td>{{ empresa.CNPJ }}</td>
+                <td>{{ empresa.razao_social }}</td>
+                <td>
+                  <button cButton color="secondary" size="sm" [routerLink]="['/empresas/editar', empresa.id]">Editar</button>
+                  <button cButton color="danger" size="sm" (click)="deleteEmpresa(empresa.id)">Excluir</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>
