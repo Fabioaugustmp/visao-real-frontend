@@ -4,6 +4,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MedicoService } from '../medico.service';
 import { Medico } from '../medico.model';
+import { Empresa } from '../../empresas/empresa.model';
+import { Usuario } from '../../usuarios/usuario.model';
+import { EmpresaService } from '../../empresas/empresa.service';
+import { UsuarioService } from '../../usuarios/usuario.service';
 import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
 
 @Component({
@@ -18,16 +22,22 @@ export class MedicosFormComponent implements OnInit {
   medicoForm!: FormGroup;
   isEditMode = false;
   medicoId!: number;
+  empresas: Empresa[] = [];
+  usuarios: Usuario[] = [];
 
   constructor(
     private fb: FormBuilder,
     private medicoService: MedicoService,
+    private empresaService: EmpresaService,
+    private usuarioService: UsuarioService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.initForm();
+    this.loadEmpresas();
+    this.loadUsuarios();
     this.checkMode();
   }
 
@@ -41,6 +51,18 @@ export class MedicosFormComponent implements OnInit {
       taxa_imposto: ['', Validators.required],
       id_empresa: ['', Validators.required],
       id_usuario: ['', Validators.required]
+    });
+  }
+
+  loadEmpresas(): void {
+    this.empresaService.getEmpresas().subscribe(empresas => {
+      this.empresas = empresas;
+    });
+  }
+
+  loadUsuarios(): void {
+    this.usuarioService.getUsuarios().subscribe(usuarios => {
+      this.usuarios = usuarios;
     });
   }
 

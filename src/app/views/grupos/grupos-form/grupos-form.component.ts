@@ -33,7 +33,7 @@ export class GruposFormComponent implements OnInit {
 
   initForm(): void {
     this.grupoForm = this.fb.group({
-      nome_grupo: ['', Validators.required]
+      nomeGrupo: ['', Validators.required]
     });
   }
 

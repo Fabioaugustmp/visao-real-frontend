@@ -33,11 +33,15 @@
             </div>
             <div class="mb-3">
               <label cLabel for="id_empresa">Empresa</label>
-              <input cFormControl id="id_empresa" formControlName="id_empresa" type="number">
+              <select cSelect id="id_empresa" formControlName="id_empresa">
+                <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.razao_social }}</option>
+              </select>
             </div>
             <div class="mb-3">
               <label cLabel for="id_usuario">Usuário</label>
-              <input cFormControl id="id_usuario" formControlName="id_usuario" type="number">
+              <select cSelect id="id_usuario" formControlName="id_usuario">
+                <option *ngFor="let usuario of usuarios" [value]="usuario.id">{{ usuario.nome }}</option>
+              </select>
             </div>
 
             <button cButton color="primary" type="submit" [disabled]="medicoForm.invalid">Salvar</button>

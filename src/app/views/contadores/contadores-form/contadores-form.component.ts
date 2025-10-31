@@ -36,7 +36,7 @@ export class ContadoresFormComponent implements OnInit {
       nome: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       crc: ['', Validators.required],
-      crc_uf: ['', Validators.required]
+      crcUf: ['', Validators.required]
     });
   }
 

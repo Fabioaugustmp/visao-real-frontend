@@ -21,7 +21,9 @@
             </div>
             <div class="mb-3">
               <label cLabel for="id_contador">Contador</label>
-              <input cFormControl id="id_contador" formControlName="id_contador" type="number">
+              <select cSelect id="id_contador" formControlName="id_contador">
+                <option *ngFor="let contador of contadores" [value]="contador.id">{{ contador.nome }}</option>
+              </select>
             </div>
 
             <button cButton color="primary" type="submit" [disabled]="empresaForm.invalid">Salvar</button>

@@ -8,8 +8,8 @@
         <c-card-body>
           <form [formGroup]="grupoForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
-              <label cLabel for="nome_grupo">Nome do Grupo</label>
-              <input cFormControl id="nome_grupo" formControlName="nome_grupo">
+              <label cLabel for="nomeGrupo">Nome do Grupo</label>
+              <input cFormControl id="nomeGrupo" formControlName="nomeGrupo">
             </div>
 
             <button cButton color="primary" type="submit" [disabled]="grupoForm.invalid">Salvar</button>

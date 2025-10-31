@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { EmpresaService } from '../empresa.service';
 import { Empresa } from '../empresa.model';
+import { Contador } from '../../contadores/contador.model';
+import { ContadorService } from '../../contadores/contador.service';
 import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
 
 @Component({
@@ -18,16 +20,19 @@ export class EmpresasFormComponent implements OnInit {
   empresaForm!: FormGroup;
   isEditMode = false;
   empresaId!: number;
+  contadores: Contador[] = [];
 
   constructor(
     private fb: FormBuilder,
     private empresaService: EmpresaService,
+    private contadorService: ContadorService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.initForm();
+    this.loadContadores();
     this.checkMode();
   }
 
@@ -37,6 +42,12 @@ export class EmpresasFormComponent implements OnInit {
       razao_social: ['', Validators.required],
       id_contrato_cartao: ['', Validators.required],
       id_contador: ['', Validators.required]
+    });
+  }
+
+  loadContadores(): void {
+    this.contadorService.getContadores().subscribe(contadores => {
+      this.contadores = contadores;
     });
   }
 

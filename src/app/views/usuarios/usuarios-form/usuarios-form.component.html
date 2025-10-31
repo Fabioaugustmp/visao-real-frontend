@@ -17,7 +17,9 @@
             </div>
             <div class="mb-3">
               <label cLabel for="id_grupo">Grupo</label>
-              <input cFormControl id="id_grupo" formControlName="id_grupo" type="number">
+              <select cSelect id="id_grupo" formControlName="id_grupo">
+                <option *ngFor="let grupo of grupos" [value]="grupo.id">{{ grupo.nomeGrupo }}</option>
+              </select>
             </div>
             <div class="mb-3" *ngIf="!isEditMode">
               <label cLabel for="password">Senha</label>

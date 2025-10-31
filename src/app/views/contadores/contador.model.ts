@@ -3,5 +3,5 @@ export interface Contador {
   nome: string;
   email: string;
   crc: string;
-  crc_uf: string;
+  crcUf: string;
 }

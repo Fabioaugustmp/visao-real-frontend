@@ -16,7 +16,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let grupo of grupos">
-                <td>{{ grupo.nome_grupo }}</td>
+                <td>{{ grupo.nomeGrupo }}</td>
                 <td>
                   <button cButton color="secondary" size="sm" [routerLink]="['/grupos/editar', grupo.id]">Editar</button>
                   <button cButton color="danger" size="sm" (click)="deleteGrupo(grupo.id)">Excluir</button>

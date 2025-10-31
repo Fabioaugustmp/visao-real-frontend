@@ -22,7 +22,7 @@
                 <td>{{ contador.nome }}</td>
                 <td>{{ contador.email }}</td>
                 <td>{{ contador.crc }}</td>
-                <td>{{ contador.crc_uf }}</td>
+                <td>{{ contador.crcUf }}</td>
                 <td>
                   <button cButton color="secondary" size="sm" [routerLink]="['/contadores/editar', contador.id]">Editar</button>
                   <button cButton color="danger" size="sm" (click)="deleteContador(contador.id)">Excluir</button>

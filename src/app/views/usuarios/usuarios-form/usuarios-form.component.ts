@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../usuario.service';
 import { Usuario } from '../usuario.model';
+import { Grupo } from '../../grupos/grupo.model';
+import { GrupoService } from '../../grupos/grupo.service';
 import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
 
 @Component({
@@ -18,16 +20,19 @@ export class UsuariosFormComponent implements OnInit {
   usuarioForm!: FormGroup;
   isEditMode = false;
   usuarioId!: number;
+  grupos: Grupo[] = [];
 
   constructor(
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
+    private grupoService: GrupoService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.initForm();
+    this.loadGrupos();
     this.checkMode();
   }
 
@@ -38,6 +43,12 @@ export class UsuariosFormComponent implements OnInit {
       id_grupo: ['', Validators.required],
       password: ['', Validators.required],
       status: [true]
+    });
+  }
+
+  loadGrupos(): void {
+    this.grupoService.getGrupos().subscribe(grupos => {
+      this.grupos = grupos;
     });
   }
 
