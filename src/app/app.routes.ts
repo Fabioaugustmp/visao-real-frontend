@@ -105,6 +105,10 @@ export const routes: Routes = [
         data: {
           title: 'Assinaturas'
         }
+      },
+      {
+        path: 'tickets',
+        loadChildren: () => import('./views/tickets/routes').then((m) => m.TICKET_ROUTES)
       }
     ]
   },

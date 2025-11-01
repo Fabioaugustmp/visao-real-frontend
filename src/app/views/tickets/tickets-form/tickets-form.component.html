@@ -1,0 +1,38 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{ isEditMode ? 'Editar Ticket' : 'Novo Ticket' }}</strong>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label cLabel for="dataTicket">Data</label>
+              <input cFormControl id="dataTicket" formControlName="dataTicket" type="date">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="numAtend">Atendimento</label>
+              <input cFormControl id="numAtend" formControlName="numAtend">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="nomePaciente">Paciente</label>
+              <input cFormControl id="nomePaciente" formControlName="nomePaciente">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="nomePagador">Pagador</label>
+              <input cFormControl id="nomePagador" formControlName="nomePagador">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="cpfPagador">CPF Pagador</label>
+              <input cFormControl id="cpfPagador" formControlName="cpfPagador">
+            </div>
+
+            <button cButton color="primary" type="submit" [disabled]="ticketForm.invalid">Salvar</button>
+            <button cButton color="secondary" [routerLink]="['/tickets']">Cancelar</button>
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>
