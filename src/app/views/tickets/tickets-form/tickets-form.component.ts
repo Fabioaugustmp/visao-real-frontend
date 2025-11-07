@@ -19,6 +19,9 @@ import { Ticket } from '../ticket.model';
 import { TicketService } from '../ticket.service';
 import { IndicacaoService } from '../../indicacoes/indicacao.service';
 import { Indicacao } from '../../indicacoes/indicacao.model';
+import { Tarifario } from '../../tarifarios/tarifario.model';
+import { TarifarioService } from '../../tarifarios/tarifario.service';
+import { Financeiro } from '../../financeiros/financeiro.model';
 import { CardModule, GridModule, FormModule, ButtonModule } from '@coreui/angular';
 
 @Component({
@@ -48,6 +51,7 @@ export class TicketsFormComponent implements OnInit {
   itens$!: Observable<Item[]>;
   indicados$!: Observable<Indicado[]>;
   indicacoes$!: Observable<Indicacao[]>;
+  tarifarios$!: Observable<Tarifario[]>;
 
   constructor(
     private fb: FormBuilder,
@@ -59,6 +63,7 @@ export class TicketsFormComponent implements OnInit {
     private itemService: ItemService,
     private indicadoService: IndicadoService,
     private indicacaoService: IndicacaoService,
+    private tarifarioService: TarifarioService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -73,6 +78,7 @@ export class TicketsFormComponent implements OnInit {
     this.itens$ = this.itemService.getItens();
     this.indicados$ = this.indicadoService.getIndicados();
     this.indicacoes$ = this.indicacaoService.getIndicacoes();
+    this.tarifarios$ = this.tarifarioService.getTarifarios();
   }
 
   initForm(): void {
@@ -96,7 +102,7 @@ export class TicketsFormComponent implements OnInit {
       posNum: ['', Validators.required],
       itens: this.fb.array([]),
       indicados: this.fb.array([]),
-      financeiro: ['', Validators.required]
+      tarifario: ['', Validators.required] // New control for tarifario
     });
   }
 
@@ -143,7 +149,15 @@ export class TicketsFormComponent implements OnInit {
         this.isEditMode = true;
         this.ticketId = params['id'];
         this.ticketService.getTicket(this.ticketId).subscribe(ticket => {
-          this.ticketForm.patchValue(ticket);
+          this.ticketForm.patchValue({
+            ...ticket,
+            medicoExec: ticket.medicoExec.id,
+            medicoSolic: ticket.medicoSolic.id,
+            formaPagamento: ticket.formaPagamento.id,
+            bandeira: ticket.bandeira.id,
+            parcelamento: ticket.parcelamento.id,
+            tarifario: ticket.financeiro.tarifarioMedicoHistorico.id // Patch tarifario
+          });
           ticket.itens.forEach(item => {
             this.itens.push(this.fb.group(item));
           });
@@ -157,9 +171,79 @@ export class TicketsFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.ticketForm.valid) {
-      const ticketData: Ticket = this.ticketForm.value;
+      const formValue = this.ticketForm.value;
+
+      // Find selected objects
+      let selectedMedicoExec: Medico | undefined;
+      this.medicos$.subscribe(medicos => {
+        selectedMedicoExec = medicos.find(m => m.id === +formValue.medicoExec);
+      }).unsubscribe();
+
+      let selectedMedicoSolic: Medico | undefined;
+      this.medicos$.subscribe(medicos => {
+        selectedMedicoSolic = medicos.find(m => m.id === +formValue.medicoSolic);
+      }).unsubscribe();
+
+      let selectedFormaPagamento: FormaPagamento | undefined;
+      this.formasPagamento$.subscribe(formas => {
+        selectedFormaPagamento = formas.find(f => f.id === +formValue.formaPagamento);
+      }).unsubscribe();
+
+      let selectedBandeira: Bandeira | undefined;
+      this.bandeiras$.subscribe(bandeiras => {
+        selectedBandeira = bandeiras.find(b => b.id === +formValue.bandeira);
+      }).unsubscribe();
+
+      let selectedParcelamento: Parcelamento | undefined;
+      this.parcelamentos$.subscribe(parcelamentos => {
+        selectedParcelamento = parcelamentos.find(p => p.id === +formValue.parcelamento);
+      }).unsubscribe();
+
+      let selectedTarifario: Tarifario | undefined;
+      this.tarifarios$.subscribe(tarifarios => {
+        selectedTarifario = tarifarios.find(t => t.id === +formValue.tarifario);
+      }).unsubscribe();
+
+      // Create Financeiro object
+      const financeiro: Financeiro = {
+        id: 0, // Will be set by backend
+        ticket: null, // Will be set by backend
+        medico: selectedMedicoExec!, // Assuming medicoExec is the relevant medico for financeiro
+        totalParcelas: 0, // Not available in ticket form
+        parcela: 0, // Not available in ticket form
+        vencimentoData: new Date(), // Not available in ticket form
+        recebido: false, // Default value
+        recebidoData: null, // Default value
+        valor: 0, // Not available in ticket form
+        tarifarioMedicoHistorico: selectedTarifario!,
+        percentualTarifaAplicado: selectedTarifario?.percentualTarifa || 0
+      };
+
+      const ticketData: Ticket = {
+        id: this.ticketId,
+        dataTicket: formValue.dataTicket,
+        numAtend: formValue.numAtend,
+        nomePaciente: formValue.nomePaciente,
+        nomePagador: formValue.nomePagador,
+        cpfPagador: formValue.cpfPagador,
+        medicoExec: selectedMedicoExec!,
+        medicoSolic: selectedMedicoSolic!,
+        nfSerie: formValue.nfSerie,
+        nfNumero: formValue.nfNumero,
+        formaPagamento: selectedFormaPagamento!,
+        bandeira: selectedBandeira!,
+        cartaoIdent: formValue.cartaoIdent,
+        cartaoCvv: formValue.cartaoCvv,
+        cartaoAutorizacao: formValue.cartaoAutorizacao,
+        cartaoNsu: formValue.cartaoNsu,
+        parcelamento: selectedParcelamento!,
+        posNum: formValue.posNum,
+        itens: formValue.itens,
+        indicados: formValue.indicados,
+        financeiro: financeiro
+      };
+
       if (this.isEditMode) {
-        ticketData.id = this.ticketId;
         this.ticketService.updateTicket(ticketData).subscribe(() => {
           this.router.navigate(['/tickets']);
         });

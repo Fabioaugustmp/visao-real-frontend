@@ -137,6 +137,10 @@ export const routes: Routes = [
       {
         path: 'financeiros',
         loadChildren: () => import('./views/financeiros/routes').then((m) => m.routes)
+      },
+      {
+        path: 'tarifarios',
+        loadChildren: () => import('./views/tarifarios/routes').then((m) => m.routes)
       }
     ]
   },

@@ -1,7 +1,7 @@
 import { Medico } from '../medicos/medico.model';
 import { Bandeira } from '../bandeiras/bandeira.model';
 
-export interface TarifarioMedicoHistorico {
+export interface Tarifario {
   id: number;
   medico: Medico;
   bandeira: Bandeira;

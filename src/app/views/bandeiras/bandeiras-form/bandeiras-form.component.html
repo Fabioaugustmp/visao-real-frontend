@@ -8,7 +8,8 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <label cLabel for="bandeira">Bandeira</label>
-            <input cFormControl id="bandeira" formControlName="bandeira" />
+            <input cFormControl id="bandeira" formControlName="bandeira" [class.is-invalid]="form.get('bandeira')?.invalid && (form.get('bandeira')?.dirty || form.get('bandeira')?.touched)" />
+            <app-validation-feedback [control]="form.get('bandeira')"></app-validation-feedback>
           </div>
           <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
           <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>

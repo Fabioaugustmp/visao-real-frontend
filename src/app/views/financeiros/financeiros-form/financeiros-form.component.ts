@@ -7,8 +7,8 @@ import { Ticket } from '../../tickets/ticket.model';
 import { TicketService } from '../../tickets/ticket.service';
 import { Medico } from '../../medicos/medico.model';
 import { MedicoService } from '../../medicos/medico.service';
-import { TarifarioMedicoHistorico } from '../tarifario-medico-historico.model';
-import { TarifarioMedicoHistoricoService } from '../tarifario-medico-historico.service';
+import { Tarifario } from '../../tarifarios/tarifario.model';
+import { TarifarioService } from '../../tarifarios/tarifario.service';
 import { CommonModule } from '@angular/common';
 import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
 
@@ -34,14 +34,14 @@ export class FinanceirosFormComponent implements OnInit {
   financeiroId: number | null = null;
   tickets: Ticket[] = [];
   medicos: Medico[] = [];
-  tarifarios: TarifarioMedicoHistorico[] = [];
+  tarifarios: Tarifario[] = [];
 
   constructor(
     private fb: FormBuilder,
     private financeiroService: FinanceiroService,
     private ticketService: TicketService,
     private medicoService: MedicoService,
-    private tarifarioService: TarifarioMedicoHistoricoService,
+    private tarifarioService: TarifarioService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -55,7 +55,7 @@ export class FinanceirosFormComponent implements OnInit {
       recebido: [false],
       recebidoData: [null],
       valor: [null, Validators.required],
-      tarifarioMedicoHistorico: [null, Validators.required],
+      tarifario: [null, Validators.required],
       percentualTarifaAplicado: [null, Validators.required]
     });
   }
@@ -72,7 +72,7 @@ export class FinanceirosFormComponent implements OnInit {
           ...data,
           ticket: data.ticket?.id,
           medico: data.medico.id,
-          tarifarioMedicoHistorico: data.tarifarioMedicoHistorico.id
+          tarifario: data.tarifarioMedicoHistorico.id
         });
       });
     }
@@ -101,7 +101,7 @@ export class FinanceirosFormComponent implements OnInit {
       const formValue = this.form.value;
       const selectedTicket = this.tickets.find(t => t.id === formValue.ticket);
       const selectedMedico = this.medicos.find(m => m.id === +formValue.medico);
-      const selectedTarifario = this.tarifarios.find(t => t.id === +formValue.tarifarioMedicoHistorico);
+      const selectedTarifario = this.tarifarios.find(t => t.id === +formValue.tarifario);
 
       const financeiro: Financeiro = {
         id: formValue.id,

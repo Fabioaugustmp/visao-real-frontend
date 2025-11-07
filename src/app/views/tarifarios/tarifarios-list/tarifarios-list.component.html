@@ -1,0 +1,39 @@
+<c-row>
+  <c-col>
+    <c-card>
+      <c-card-header>
+        Lista de Tarifários
+      </c-card-header>
+      <c-card-body>
+        <button cButton color="primary" [routerLink]="['/tarifarios/novo']">Novo Tarifário</button>
+        <table cTable class="mt-3">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Médico</th>
+              <th scope="col">Bandeira</th>
+              <th scope="col">Percentual Tarifa</th>
+              <th scope="col">Início Vigência</th>
+              <th scope="col">Fim Vigência</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tarifario of tarifarios">
+              <th scope="row">{{ tarifario.id }}</th>
+              <td>{{ tarifario.medico.nome }}</td>
+              <td>{{ tarifario.bandeira.bandeira }}</td>
+              <td>{{ tarifario.percentualTarifa }}%</td>
+              <td>{{ tarifario.dataInicioVigencia | date:'shortDate' }}</td>
+              <td>{{ tarifario.dataFimVigencia | date:'shortDate' }}</td>
+              <td>
+                <button cButton color="secondary" size="sm" [routerLink]="['/tarifarios/editar', tarifario.id]">Editar</button>
+                <button cButton color="danger" size="sm" class="ms-1" (click)="excluirTarifario(tarifario.id)">Excluir</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

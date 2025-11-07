@@ -1,0 +1,39 @@
+<c-row>
+  <c-col>
+    <c-card>
+      <c-card-header>
+        {{ isEditMode ? 'Editar Tarifário' : 'Novo Tarifário' }}
+      </c-card-header>
+      <c-card-body>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label cLabel for="medico">Médico</label>
+            <select cSelect id="medico" formControlName="medico">
+              <option *ngFor="let medico of medicos" [value]="medico.id">{{ medico.nome }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="bandeira">Bandeira</label>
+            <select cSelect id="bandeira" formControlName="bandeira">
+              <option *ngFor="let bandeira of bandeiras" [value]="bandeira.id">{{ bandeira.bandeira }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="percentualTarifa">Percentual Tarifa</label>
+            <input cFormControl id="percentualTarifa" formControlName="percentualTarifa" type="number" />
+          </div>
+          <div class="mb-3">
+            <label cLabel for="dataInicioVigencia">Início Vigência</label>
+            <input cFormControl id="dataInicioVigencia" formControlName="dataInicioVigencia" type="date" />
+          </div>
+          <div class="mb-3">
+            <label cLabel for="dataFimVigencia">Fim Vigência</label>
+            <input cFormControl id="dataFimVigencia" formControlName="dataFimVigencia" type="date" />
+          </div>
+          <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
+          <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
+        </form>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

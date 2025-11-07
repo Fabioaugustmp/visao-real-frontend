@@ -5,6 +5,7 @@ import { BandeiraService } from '../bandeira.service';
 import { Bandeira } from '../bandeira.model';
 import { CommonModule } from '@angular/common';
 import { ButtonDirective, CardBodyComponent, CardComponent, CardHeaderComponent, ColComponent, FormControlDirective, FormDirective, FormLabelDirective, RowComponent } from '@coreui/angular';
+import { ValidationFeedbackComponent } from '../../../components/validation-feedback/validation-feedback.component'; // Corrected import path
 
 @Component({
   selector: 'app-bandeiras-form',
@@ -21,7 +22,8 @@ import { ButtonDirective, CardBodyComponent, CardComponent, CardHeaderComponent,
     ColComponent,
     FormLabelDirective,
     FormControlDirective,
-    ButtonDirective
+    ButtonDirective,
+    ValidationFeedbackComponent // Add ValidationFeedbackComponent here
   ]
 })
 export class BandeirasFormComponent implements OnInit {

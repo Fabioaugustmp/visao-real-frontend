@@ -118,6 +118,11 @@ export const navItems: INavData[] = [
         name: 'Assinaturas',
         url: '/subscriptions',
         icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Tarifários',
+        url: '/tarifarios',
+        icon: 'nav-icon-bullet'
       }
     ]
   },

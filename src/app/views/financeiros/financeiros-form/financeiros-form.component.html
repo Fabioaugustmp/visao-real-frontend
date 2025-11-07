@@ -35,8 +35,8 @@
             <input cFormControl id="valor" formControlName="valor" type="number" />
           </div>
           <div class="mb-3">
-            <label cLabel for="tarifarioMedicoHistorico">Tarifário</label>
-            <select cSelect id="tarifarioMedicoHistorico" formControlName="tarifarioMedicoHistorico">
+            <label cLabel for="tarifario">Tarifário</label>
+            <select cSelect id="tarifario" formControlName="tarifario">
               <option *ngFor="let tarifario of tarifarios" [value]="tarifario.id">{{ tarifario.id }} - {{ tarifario.percentualTarifa }}%</option>
             </select>
           </div>

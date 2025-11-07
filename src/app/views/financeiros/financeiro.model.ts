@@ -1,5 +1,5 @@
 import { Medico } from '../medicos/medico.model';
-import { TarifarioMedicoHistorico } from './tarifario-medico-historico.model';
+import { Tarifario } from '../tarifarios/tarifario.model';
 
 export interface Financeiro {
   id: number;
@@ -9,8 +9,13 @@ export interface Financeiro {
   parcela: number;
   vencimentoData: Date;
   recebido: boolean;
-  recebidoData: Date;
+  recebidoData: Date | null;
   valor: number;
   tarifarioMedicoHistorico: TarifarioMedicoHistorico;
   percentualTarifaAplicado: number;
+}
+
+export interface TarifarioMedicoHistorico {
+  id: number;
+  // TODO: Define other properties for TarifarioMedicoHistorico
 }

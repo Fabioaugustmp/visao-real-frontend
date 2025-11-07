@@ -82,6 +82,12 @@
               </select>
             </div>
             <div class="mb-3">
+              <label cLabel for="tarifario">Tarifário</label>
+              <select cSelect id="tarifario" formControlName="tarifario">
+                <option *ngFor="let tarifario of tarifarios$ | async" [value]="tarifario.id">{{ tarifario.id }} - {{ tarifario.percentualTarifa }}%</option>
+              </select>
+            </div>
+            <div class="mb-3">
               <label cLabel for="posNum">Número POS</label>
               <input cFormControl id="posNum" formControlName="posNum">
             </div>
@@ -109,7 +115,7 @@
                 <div class="mb-3">
                   <label cLabel for="indicado-{{ i }}">Indicado</label>
                   <select cSelect id="indicado-{{ i }}" formControlName="indicado">
-                    <option *ngFor="let ind of indicados$ | async" [value]="ind.id">{{ ind.indicacao?.medico?.nome }}</option>
+                    <option *ngFor="let ind of indicados$ | async" [value]="ind.id">{{ ind.indicacao.medico ? ind.indicacao.medico.nome : '' }}</option>
                   </select>
                 </div>
                 <button cButton color="danger" type="button" (click)="removeIndicado(i)">Remover Indicado</button>
