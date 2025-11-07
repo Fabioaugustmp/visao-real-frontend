@@ -1,0 +1,29 @@
+<c-row>
+  <c-col>
+    <c-card>
+      <c-card-header>
+        {{ isEditMode ? 'Editar Indicação' : 'Nova Indicação' }}
+      </c-card-header>
+      <c-card-body>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label cLabel for="medico">Médico</label>
+            <select cSelect id="medico" formControlName="medico">
+              <option *ngFor="let medico of medicos" [value]="medico.id">{{ medico.nome }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="tipo">Tipo</label>
+            <input cFormControl id="tipo" formControlName="tipo" />
+          </div>
+          <div class="mb-3">
+            <label cLabel for="valorIndicacao">Valor</label>
+            <input cFormControl id="valorIndicacao" formControlName="valorIndicacao" type="number" />
+          </div>
+          <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
+          <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
+        </form>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 })
 export class ItemTicketService {
 
-  private API_URL = `${environment.apiUrl}/itens-ticket`;
+  private API_URL = `${environment.apiUrl}/itens_ticket`;
 
   constructor(private http: HttpClient) { }
 

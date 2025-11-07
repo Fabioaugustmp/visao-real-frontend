@@ -1,0 +1,31 @@
+<c-row>
+  <c-col>
+    <c-card>
+      <c-card-header>
+        {{ isEditMode ? 'Editar Item do Ticket' : 'Novo Item do Ticket' }}
+      </c-card-header>
+      <c-card-body>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label cLabel for="ticket">Ticket</label>
+            <select cSelect id="ticket" formControlName="ticket">
+              <option *ngFor="let ticket of tickets" [value]="ticket.id">{{ ticket.id }} - {{ ticket.nomePaciente }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="item">Item</label>
+            <select cSelect id="item" formControlName="item">
+              <option *ngFor="let item of items" [value]="item.id">{{ item.descricao }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="valor">Valor</label>
+            <input cFormControl id="valor" formControlName="valor" type="number" />
+          </div>
+          <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
+          <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
+        </form>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

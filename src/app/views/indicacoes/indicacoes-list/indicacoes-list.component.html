@@ -1,0 +1,35 @@
+<c-row>
+  <c-col>
+    <c-card>
+      <c-card-header>
+        Lista de Indicações
+      </c-card-header>
+      <c-card-body>
+        <button cButton color="primary" [routerLink]="['/indicacoes/nova']">Nova Indicação</button>
+        <table cTable class="mt-3">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Médico</th>
+              <th scope="col">Tipo</th>
+              <th scope="col">Valor</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let indicacao of indicacoes">
+              <th scope="row">{{ indicacao.id }}</th>
+              <td>{{ indicacao.medico.nome }}</td>
+              <td>{{ indicacao.tipo }}</td>
+              <td>{{ indicacao.valorIndicacao | currency:'BRL' }}</td>
+              <td>
+                <button cButton color="secondary" size="sm" [routerLink]="['/indicacoes/editar', indicacao.id]">Editar</button>
+                <button cButton color="danger" size="sm" class="ms-1" (click)="excluirIndicacao(indicacao.id)">Excluir</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

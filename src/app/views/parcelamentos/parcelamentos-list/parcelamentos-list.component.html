@@ -1,0 +1,33 @@
+<c-row>
+  <c-col>
+    <c-card>
+      <c-card-header>
+        Lista de Parcelamentos
+      </c-card-header>
+      <c-card-body>
+        <button cButton color="primary" [routerLink]="['/parcelamentos/novo']">Novo Parcelamento</button>
+        <table cTable class="mt-3">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Número de Parcelas</th>
+              <th scope="col">Ticket</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let parcelamento of parcelamentos">
+              <th scope="row">{{ parcelamento.id }}</th>
+              <td>{{ parcelamento.numeroDeParcelas }}</td>
+              <td>{{ parcelamento.ticket?.id }}</td>
+              <td>
+                <button cButton color="secondary" size="sm" [routerLink]="['/parcelamentos/editar', parcelamento.id]">Editar</button>
+                <button cButton color="danger" size="sm" class="ms-1" (click)="excluirParcelamento(parcelamento.id)">Excluir</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

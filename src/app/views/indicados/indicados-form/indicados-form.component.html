@@ -1,0 +1,63 @@
+<c-row>
+  <c-col>
+    <c-card>
+      <c-card-header>
+        {{ isEditMode ? 'Editar Indicado' : 'Novo Indicado' }}
+      </c-card-header>
+      <c-card-body>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label cLabel for="ticket">Ticket</label>
+            <select cSelect id="ticket" formControlName="ticket">
+              <option *ngFor="let ticket of tickets" [value]="ticket.id">{{ ticket.id }} - {{ ticket.nomePaciente }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="indicacao">Indicação</label>
+            <select cSelect id="indicacao" formControlName="indicacao">
+              <option *ngFor="let indicacao of indicacoes" [value]="indicacao.id">{{ indicacao.medico.nome }} - {{ indicacao.tipo }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="venctoIndicacao">Vencimento</label>
+            <input cFormControl id="venctoIndicacao" formControlName="venctoIndicacao" type="date" />
+          </div>
+          <div class="mb-3">
+            <label cLabel for="totalParcelas">Total de Parcelas</label>
+            <input cFormControl id="totalParcelas" formControlName="totalParcelas" type="number" />
+          </div>
+          <div class="mb-3">
+            <label cLabel for="parcela">Parcela</label>
+            <input cFormControl id="parcela" formControlName="parcela" type="number" />
+          </div>
+          <div class="mb-3">
+            <label cLabel for="valorIndicacao">Valor</label>
+            <input cFormControl id="valorIndicacao" formControlName="valorIndicacao" type="number" />
+          </div>
+          <div class="mb-3">
+            <c-form-check>
+              <input cFormCheckInput id="pago" formControlName="pago" type="checkbox" />
+              <label cFormCheckLabel for="pago">Pago</label>
+            </c-form-check>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="pagoData">Data Pagamento</label>
+            <input cFormControl id="pagoData" formControlName="pagoData" type="date" />
+          </div>
+          <div class="mb-3">
+            <c-form-check>
+              <input cFormCheckInput id="recebido" formControlName="recebido" type="checkbox" />
+              <label cFormCheckLabel for="recebido">Recebido</label>
+            </c-form-check>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="recebidoData">Data Recebimento</label>
+            <input cFormControl id="recebidoData" formControlName="recebidoData" type="date" />
+          </div>
+          <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
+          <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
+        </form>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

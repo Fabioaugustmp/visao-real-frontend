@@ -1,0 +1,25 @@
+<c-row>
+  <c-col>
+    <c-card>
+      <c-card-header>
+        {{ isEditMode ? 'Editar Parcelamento' : 'Novo Parcelamento' }}
+      </c-card-header>
+      <c-card-body>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label cLabel for="numeroDeParcelas">Número de Parcelas</label>
+            <input cFormControl id="numeroDeParcelas" formControlName="numeroDeParcelas" type="number" />
+          </div>
+          <div class="mb-3">
+            <label cLabel for="ticket">Ticket</label>
+            <select cSelect id="ticket" formControlName="ticket">
+              <option *ngFor="let ticket of tickets" [value]="ticket.id">{{ ticket.id }} - {{ ticket.nomePaciente }}</option>
+            </select>
+          </div>
+          <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
+          <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
+        </form>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

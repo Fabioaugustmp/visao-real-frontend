@@ -117,6 +117,26 @@ export const routes: Routes = [
       {
         path: 'formas-pagamento',
         loadChildren: () => import('./views/formas-pagamento/routes').then((m) => m.routes)
+      },
+      {
+        path: 'indicacoes',
+        loadChildren: () => import('./views/indicacoes/routes').then((m) => m.routes)
+      },
+      {
+        path: 'parcelamentos',
+        loadChildren: () => import('./views/parcelamentos/routes').then((m) => m.routes)
+      },
+      {
+        path: 'itens-ticket',
+        loadChildren: () => import('./views/itens-ticket/routes').then((m) => m.routes)
+      },
+      {
+        path: 'indicados',
+        loadChildren: () => import('./views/indicados/routes').then((m) => m.routes)
+      },
+      {
+        path: 'financeiros',
+        loadChildren: () => import('./views/financeiros/routes').then((m) => m.routes)
       }
     ]
   },

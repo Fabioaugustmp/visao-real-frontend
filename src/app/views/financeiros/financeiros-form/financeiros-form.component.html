@@ -1,0 +1,63 @@
+<c-row>
+  <c-col>
+    <c-card>
+      <c-card-header>
+        {{ isEditMode ? 'Editar Registro Financeiro' : 'Novo Registro Financeiro' }}
+      </c-card-header>
+      <c-card-body>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label cLabel for="ticket">Ticket</label>
+            <select cSelect id="ticket" formControlName="ticket">
+              <option *ngFor="let ticket of tickets" [value]="ticket.id">{{ ticket.id }} - {{ ticket.nomePaciente }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="medico">Médico</label>
+            <select cSelect id="medico" formControlName="medico">
+              <option *ngFor="let medico of medicos" [value]="medico.id">{{ medico.nome }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="totalParcelas">Total de Parcelas</label>
+            <input cFormControl id="totalParcelas" formControlName="totalParcelas" type="number" />
+          </div>
+          <div class="mb-3">
+            <label cLabel for="parcela">Parcela</label>
+            <input cFormControl id="parcela" formControlName="parcela" type="number" />
+          </div>
+          <div class="mb-3">
+            <label cLabel for="vencimentoData">Vencimento</label>
+            <input cFormControl id="vencimentoData" formControlName="vencimentoData" type="date" />
+          </div>
+          <div class="mb-3">
+            <label cLabel for="valor">Valor</label>
+            <input cFormControl id="valor" formControlName="valor" type="number" />
+          </div>
+          <div class="mb-3">
+            <label cLabel for="tarifarioMedicoHistorico">Tarifário</label>
+            <select cSelect id="tarifarioMedicoHistorico" formControlName="tarifarioMedicoHistorico">
+              <option *ngFor="let tarifario of tarifarios" [value]="tarifario.id">{{ tarifario.id }} - {{ tarifario.percentualTarifa }}%</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="percentualTarifaAplicado">Percentual Tarifa Aplicado</label>
+            <input cFormControl id="percentualTarifaAplicado" formControlName="percentualTarifaAplicado" type="number" />
+          </div>
+          <div class="mb-3">
+            <c-form-check>
+              <input cFormCheckInput id="recebido" formControlName="recebido" type="checkbox" />
+              <label cFormCheckLabel for="recebido">Recebido</label>
+            </c-form-check>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="recebidoData">Data Recebimento</label>
+            <input cFormControl id="recebidoData" formControlName="recebidoData" type="date" />
+          </div>
+          <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
+          <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
+        </form>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

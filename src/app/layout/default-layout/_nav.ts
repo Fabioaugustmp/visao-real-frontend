@@ -27,6 +27,31 @@ export const navItems: INavData[] = [
         name: 'Tickets',
         url: '/tickets',
         icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Indicações',
+        url: '/indicacoes',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Parcelamentos',
+        url: '/parcelamentos',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Itens do Ticket',
+        url: '/itens-ticket',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Indicados',
+        url: '/indicados',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Financeiros',
+        url: '/financeiros',
+        icon: 'nav-icon-bullet'
       }
     ]
   },
