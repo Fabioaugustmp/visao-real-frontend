@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../usuario.service';
 import { Usuario } from '../usuario.model';
-import { Grupo } from '../../grupos/grupo.model';
-import { GrupoService } from '../../grupos/grupo.service';
+import { Perfil } from '../perfil.model';
+import { PerfilService } from '../perfil.service';
 import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
 
 @Component({
@@ -20,19 +20,19 @@ export class UsuariosFormComponent implements OnInit {
   usuarioForm!: FormGroup;
   isEditMode = false;
   usuarioId!: number;
-  grupos: Grupo[] = [];
+  perfis: Perfil[] = [];
 
   constructor(
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
-    private grupoService: GrupoService,
+    private perfilService: PerfilService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.initForm();
-    this.loadGrupos();
+    this.loadPerfis();
     this.checkMode();
   }
 
@@ -40,15 +40,16 @@ export class UsuariosFormComponent implements OnInit {
     this.usuarioForm = this.fb.group({
       nome: ['', Validators.required],
       login: ['', Validators.required],
-      id_grupo: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      perfis: [[], Validators.required],
       password: ['', Validators.required],
       status: [true]
     });
   }
 
-  loadGrupos(): void {
-    this.grupoService.getGrupos().subscribe(grupos => {
-      this.grupos = grupos;
+  loadPerfis(): void {
+    this.perfilService.getPerfis().subscribe(perfis => {
+      this.perfis = perfis;
     });
   }
 
@@ -60,7 +61,10 @@ export class UsuariosFormComponent implements OnInit {
         this.usuarioForm.get('password')?.clearValidators();
         this.usuarioForm.get('password')?.updateValueAndValidity();
         this.usuarioService.getUsuario(this.usuarioId).subscribe(usuario => {
-          this.usuarioForm.patchValue(usuario);
+          this.usuarioForm.patchValue({
+            ...usuario,
+            perfis: usuario.perfis.map(p => p.id)
+          });
         });
       }
     });
@@ -68,9 +72,20 @@ export class UsuariosFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.usuarioForm.valid) {
-      const usuarioData: Usuario = this.usuarioForm.value;
+      const formValue = this.usuarioForm.value;
+      const selectedPerfis = this.perfis.filter(p => formValue.perfis.includes(p.id));
+      const usuarioData: Usuario = {
+        id: this.usuarioId,
+        nome: formValue.nome,
+        login: formValue.login,
+        email: formValue.email,
+        perfis: selectedPerfis,
+        password: formValue.password,
+        status: formValue.status,
+        dataCriacao: new Date() // This should be handled by the backend
+      };
+
       if (this.isEditMode) {
-        usuarioData.id = this.usuarioId;
         this.usuarioService.updateUsuario(usuarioData).subscribe(() => {
           this.router.navigate(['/usuarios']);
         });
@@ -82,3 +97,4 @@ export class UsuariosFormComponent implements OnInit {
     }
   }
 }
+

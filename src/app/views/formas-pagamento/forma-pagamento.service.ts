@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 })
 export class FormaPagamentoService {
 
-  private API_URL = `${environment.apiUrl}/formas-pagamento`;
+  private API_URL = `${environment.apiUrl}/formas_pagamento`;
 
   constructor(private http: HttpClient) { }
 

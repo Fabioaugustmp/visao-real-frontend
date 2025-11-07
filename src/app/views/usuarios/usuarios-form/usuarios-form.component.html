@@ -16,9 +16,13 @@
               <input cFormControl id="login" formControlName="login">
             </div>
             <div class="mb-3">
-              <label cLabel for="id_grupo">Grupo</label>
-              <select cSelect id="id_grupo" formControlName="id_grupo">
-                <option *ngFor="let grupo of grupos" [value]="grupo.id">{{ grupo.nomeGrupo }}</option>
+              <label cLabel for="email">Email</label>
+              <input cFormControl id="email" formControlName="email" type="email">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="perfis">Perfis</label>
+              <select cSelect id="perfis" formControlName="perfis" multiple>
+                <option *ngFor="let perfil of perfis" [value]="perfil.id">{{ perfil.nome }}</option>
               </select>
             </div>
             <div class="mb-3" *ngIf="!isEditMode">

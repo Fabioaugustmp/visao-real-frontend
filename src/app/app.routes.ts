@@ -109,6 +109,14 @@ export const routes: Routes = [
       {
         path: 'tickets',
         loadChildren: () => import('./views/tickets/routes').then((m) => m.TICKET_ROUTES)
+      },
+      {
+        path: 'bandeiras',
+        loadChildren: () => import('./views/bandeiras/routes').then((m) => m.routes)
+      },
+      {
+        path: 'formas-pagamento',
+        loadChildren: () => import('./views/formas-pagamento/routes').then((m) => m.routes)
       }
     ]
   },

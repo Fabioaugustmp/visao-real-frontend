@@ -28,6 +28,10 @@ export class UsuariosListComponent implements OnInit {
     });
   }
 
+  getPerfis(usuario: Usuario): string {
+    return usuario.perfis.map(p => p.nome).join(', ');
+  }
+
   deleteUsuario(id: number): void {
     if (confirm('Tem certeza que deseja excluir este usuário?')) {
       this.usuarioService.deleteUsuario(id).subscribe(() => {

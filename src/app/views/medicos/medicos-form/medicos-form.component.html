@@ -9,7 +9,7 @@
           <form [formGroup]="medicoForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label cLabel for="crm">CRM</label>
-              <input cFormControl id="crm" formControlName="crm" type="number">
+              <input cFormControl id="crm" formControlName="crm" type="text">
             </div>
             <div class="mb-3">
               <label cLabel for="nome">Nome</label>
@@ -20,26 +20,26 @@
               <input cFormControl id="email" formControlName="email" type="email">
             </div>
             <div class="mb-3">
-              <label cLabel for="data_nasc">Data de Nascimento</label>
-              <input cFormControl id="data_nasc" formControlName="data_nasc" type="date">
+              <label cLabel for="dataNasc">Data de Nascimento</label>
+              <input cFormControl id="dataNasc" formControlName="dataNasc" type="date">
             </div>
             <div class="mb-3">
               <label cLabel for="cpf">CPF</label>
-              <input cFormControl id="cpf" formControlName="cpf" type="number">
+              <input cFormControl id="cpf" formControlName="cpf" type="text">
             </div>
             <div class="mb-3">
-              <label cLabel for="taxa_imposto">Taxa de Imposto</label>
-              <input cFormControl id="taxa_imposto" formControlName="taxa_imposto" type="number">
+              <label cLabel for="taxaImposto">Taxa de Imposto</label>
+              <input cFormControl id="taxaImposto" formControlName="taxaImposto" type="number">
             </div>
             <div class="mb-3">
-              <label cLabel for="id_empresa">Empresa</label>
-              <select cSelect id="id_empresa" formControlName="id_empresa">
-                <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.razao_social }}</option>
+              <label cLabel for="empresa">Empresa</label>
+              <select cSelect id="empresa" formControlName="empresa">
+                <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.razaoSocial }}</option>
               </select>
             </div>
             <div class="mb-3">
-              <label cLabel for="id_usuario">Usuário</label>
-              <select cSelect id="id_usuario" formControlName="id_usuario">
+              <label cLabel for="usuario">Usuário</label>
+              <select cSelect id="usuario" formControlName="usuario">
                 <option *ngFor="let usuario of usuarios" [value]="usuario.id">{{ usuario.nome }}</option>
               </select>
             </div>

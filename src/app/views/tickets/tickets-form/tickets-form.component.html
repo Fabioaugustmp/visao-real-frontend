@@ -12,7 +12,7 @@
               <input cFormControl id="dataTicket" formControlName="dataTicket" type="date">
             </div>
             <div class="mb-3">
-              <label cLabel for="numAtend">Atendimento</label>
+              <label cLabel for="numAtend">Nº Atendimento</label>
               <input cFormControl id="numAtend" formControlName="numAtend">
             </div>
             <div class="mb-3">
@@ -26,6 +26,94 @@
             <div class="mb-3">
               <label cLabel for="cpfPagador">CPF Pagador</label>
               <input cFormControl id="cpfPagador" formControlName="cpfPagador">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="medicoExec">Médico Executante</label>
+              <select cSelect id="medicoExec" formControlName="medicoExec">
+                <option *ngFor="let medico of medicos$ | async" [value]="medico.id">{{ medico.nome }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label cLabel for="medicoSolic">Médico Solicitante</label>
+              <select cSelect id="medicoSolic" formControlName="medicoSolic">
+                <option *ngFor="let medico of medicos$ | async" [value]="medico.id">{{ medico.nome }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label cLabel for="nfSerie">Série NF</label>
+              <input cFormControl id="nfSerie" formControlName="nfSerie">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="nfNumero">Nº NF</label>
+              <input cFormControl id="nfNumero" formControlName="nfNumero">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="formaPagamento">Forma de Pagamento</label>
+              <select cSelect id="formaPagamento" formControlName="formaPagamento">
+                <option *ngFor="let formaPagamento of formasPagamento$ | async" [value]="formaPagamento.id">{{ formaPagamento.descricao }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label cLabel for="bandeira">Bandeira</label>
+              <select cSelect id="bandeira" formControlName="bandeira">
+                <option *ngFor="let bandeira of bandeiras$ | async" [value]="bandeira.id">{{ bandeira.bandeira }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label cLabel for="cartaoIdent">Identificação do Cartão</label>
+              <input cFormControl id="cartaoIdent" formControlName="cartaoIdent">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="cartaoCvv">CVV</label>
+              <input cFormControl id="cartaoCvv" formControlName="cartaoCvv">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="cartaoAutorizacao">Autorização</label>
+              <input cFormControl id="cartaoAutorizacao" formControlName="cartaoAutorizacao">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="cartaoNsu">NSU</label>
+              <input cFormControl id="cartaoNsu" formControlName="cartaoNsu">
+            </div>
+            <div class="mb-3">
+              <label cLabel for="parcelamento">Parcelamento</label>
+              <select cSelect id="parcelamento" formControlName="parcelamento">
+                <option *ngFor="let parcelamento of parcelamentos$ | async" [value]="parcelamento.id">{{ parcelamento.numeroDeParcelas }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label cLabel for="posNum">Número POS</label>
+              <input cFormControl id="posNum" formControlName="posNum">
+            </div>
+            <div formArrayName="itens">
+              <h4>Itens</h4>
+              <button cButton color="success" type="button" (click)="addItem()">Adicionar Item</button>
+              <div *ngFor="let item of itens.controls; let i=index" [formGroupName]="i">
+                <div class="mb-3">
+                  <label cLabel for="item-{{ i }}">Item</label>
+                  <select cSelect id="item-{{ i }}" formControlName="item">
+                    <option *ngFor="let item of itens$ | async" [value]="item.id">{{ item.descricao }}</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label cLabel for="valor-{{ i }}">Valor</label>
+                  <input cFormControl id="valor-{{ i }}" formControlName="valor" type="number">
+                </div>
+                <button cButton color="danger" type="button" (click)="removeItem(i)">Remover Item</button>
+              </div>
+            </div>
+            <div formArrayName="indicados">
+              <h4>Indicados</h4>
+              <button cButton color="success" type="button" (click)="addIndicado()">Adicionar Indicado</button>
+              <div *ngFor="let indicado of indicados.controls; let i=index" [formGroupName]="i">
+                <div class="mb-3">
+                  <label cLabel for="indicado-{{ i }}">Indicado</label>
+                  <select cSelect id="indicado-{{ i }}" formControlName="indicado">
+                    <option *ngFor="let ind of indicados$ | async" [value]="ind.id">{{ ind.indicacao?.medico?.nome }}</option>
+                  </select>
+                </div>
+                <button cButton color="danger" type="button" (click)="removeIndicado(i)">Remover Indicado</button>
+              </div>
             </div>
 
             <button cButton color="primary" type="submit" [disabled]="ticketForm.invalid">Salvar</button>

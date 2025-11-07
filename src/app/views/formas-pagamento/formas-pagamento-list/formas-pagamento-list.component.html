@@ -1,0 +1,33 @@
+<c-row>
+  <c-col>
+    <c-card>
+      <c-card-header>
+        Lista de Formas de Pagamento
+      </c-card-header>
+      <c-card-body>
+        <button cButton color="primary" [routerLink]="['/formas-pagamento/nova']">Nova Forma de Pagamento</button>
+        <table cTable class="mt-3">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Descrição</th>
+              <th scope="col">ID Parcelamento</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let forma of formasPagamento">
+              <th scope="row">{{ forma.id }}</th>
+              <td>{{ forma.descricao }}</td>
+              <td>{{ forma.idParcelamento }}</td>
+              <td>
+                <button cButton color="secondary" size="sm" [routerLink]="['/formas-pagamento/editar', forma.id]">Editar</button>
+                <button cButton color="danger" size="sm" class="ms-1" (click)="excluirFormaPagamento(forma.id)">Excluir</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

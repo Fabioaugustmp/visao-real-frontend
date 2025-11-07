@@ -1,11 +1,15 @@
+import { Empresa } from '../empresas/empresa.model';
+import { Usuario } from '../usuarios/usuario.model';
+
 export interface Medico {
   id: number;
-  crm: number;
+  crm: string;
   nome: string;
-  data_nasc: Date;
-  cpf: number;
-  taxa_imposto: number;
-  id_empresa: number;
-  id_usuario: number;
+  dataNasc: Date;
+  cpf: string;
+  taxaImposto: number;
+  empresa: Empresa;
+  usuario: Usuario;
   email: string;
 }
+

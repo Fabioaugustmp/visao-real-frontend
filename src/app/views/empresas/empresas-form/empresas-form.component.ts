@@ -38,10 +38,10 @@ export class EmpresasFormComponent implements OnInit {
 
   initForm(): void {
     this.empresaForm = this.fb.group({
-      CNPJ: ['', Validators.required],
-      razao_social: ['', Validators.required],
-      id_contrato_cartao: ['', Validators.required],
-      id_contador: ['', Validators.required]
+      cnpj: ['', Validators.required],
+      razaoSocial: ['', Validators.required],
+      idContratoCartao: ['', Validators.required],
+      contador: [null, Validators.required]
     });
   }
 
@@ -57,7 +57,10 @@ export class EmpresasFormComponent implements OnInit {
         this.isEditMode = true;
         this.empresaId = +params['id'];
         this.empresaService.getEmpresa(this.empresaId).subscribe(empresa => {
-          this.empresaForm.patchValue(empresa);
+          this.empresaForm.patchValue({
+            ...empresa,
+            contador: empresa.contador.id
+          });
         });
       }
     });
@@ -65,9 +68,17 @@ export class EmpresasFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.empresaForm.valid) {
-      const empresaData: Empresa = this.empresaForm.value;
+      const formValue = this.empresaForm.value;
+      const selectedContador = this.contadores.find(c => c.id === +formValue.contador);
+      const empresaData: Empresa = {
+        id: this.empresaId,
+        cnpj: formValue.cnpj,
+        razaoSocial: formValue.razaoSocial,
+        idContratoCartao: formValue.idContratoCartao,
+        contador: selectedContador!
+      };
+
       if (this.isEditMode) {
-        empresaData.id = this.empresaId;
         this.empresaService.updateEmpresa(empresaData).subscribe(() => {
           this.router.navigate(['/empresas']);
         });
@@ -79,3 +90,4 @@ export class EmpresasFormComponent implements OnInit {
     }
   }
 }
+

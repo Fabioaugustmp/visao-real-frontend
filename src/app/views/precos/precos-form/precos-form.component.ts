@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PrecoService } from '../preco.service';
 import { Preco } from '../preco.model';
+import { Item } from '../../itens/item.model';
+import { ItemService } from '../../itens/item.service';
 import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
 
 @Component({
@@ -18,22 +20,31 @@ export class PrecosFormComponent implements OnInit {
   precoForm!: FormGroup;
   isEditMode = false;
   precoId!: number;
+  items: Item[] = [];
 
   constructor(
     private fb: FormBuilder,
     private precoService: PrecoService,
+    private itemService: ItemService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    this.loadItems();
     this.initForm();
     this.checkMode();
   }
 
+  loadItems(): void {
+    this.itemService.getItens().subscribe(items => {
+      this.items = items;
+    });
+  }
+
   initForm(): void {
     this.precoForm = this.fb.group({
-      id_item: ['', Validators.required],
+      item: [null, Validators.required],
       valor: ['', Validators.required]
     });
   }
@@ -44,7 +55,10 @@ export class PrecosFormComponent implements OnInit {
         this.isEditMode = true;
         this.precoId = +params['id'];
         this.precoService.getPreco(this.precoId).subscribe(preco => {
-          this.precoForm.patchValue(preco);
+          this.precoForm.patchValue({
+            item: preco.item.id,
+            valor: preco.valor
+          });
         });
       }
     });
@@ -52,9 +66,15 @@ export class PrecosFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.precoForm.valid) {
-      const precoData: Preco = this.precoForm.value;
+      const formValue = this.precoForm.value;
+      const selectedItem = this.items.find(item => item.id === +formValue.item);
+      const precoData: Preco = {
+        id: this.precoId,
+        item: selectedItem!,
+        valor: formValue.valor
+      };
+
       if (this.isEditMode) {
-        precoData.id = this.precoId;
         this.precoService.updatePreco(precoData).subscribe(() => {
           this.router.navigate(['/precos']);
         });
@@ -66,3 +86,4 @@ export class PrecosFormComponent implements OnInit {
     }
   }
 }
+

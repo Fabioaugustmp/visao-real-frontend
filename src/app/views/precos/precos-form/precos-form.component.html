@@ -8,8 +8,10 @@
         <c-card-body>
           <form [formGroup]="precoForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
-              <label cLabel for="id_item">Item</label>
-              <input cFormControl id="id_item" formControlName="id_item" type="number">
+              <label cLabel for="item">Item</label>
+              <select cSelect id="item" formControlName="item">
+                <option *ngFor="let item of items" [value]="item.id">{{ item.descricao }}</option>
+              </select>
             </div>
             <div class="mb-3">
               <label cLabel for="valor">Valor</label>

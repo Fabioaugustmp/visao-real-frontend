@@ -16,28 +16,15 @@
               <input cFormControl id="login" formControlName="login">
             </div>
             <div class="mb-3">
-              <label cLabel for="password">Nova Senha (deixe em branco para não alterar)</label>
-              <input cFormControl id="password" formControlName="password" type="password">
-            </div>
-            <div class="mb-3">
               <label cLabel for="email">Email</label>
               <input cFormControl id="email" formControlName="email" type="email">
             </div>
             <div class="mb-3">
-              <label cLabel for="crm">CRM</label>
-              <input cFormControl id="crm" formControlName="crm" type="number">
-            </div>
-            <div class="mb-3">
-              <label cLabel for="data_nasc">Data de Nascimento</label>
-              <input cFormControl id="data_nasc" formControlName="data_nasc" type="date">
-            </div>
-            <div class="mb-3">
-              <label cLabel for="cpf">CPF</label>
-              <input cFormControl id="cpf" formControlName="cpf" type="number">
+              <label cLabel for="password">Nova Senha</label>
+              <input cFormControl id="password" formControlName="password" type="password">
             </div>
 
-            <button cButton color="primary" type="submit" [disabled]="profileForm.invalid">Salvar Alterações</button>
-            <button cButton color="secondary" [routerLink]="['/dashboard']">Cancelar</button>
+            <button cButton color="primary" type="submit" [disabled]="profileForm.invalid">Salvar</button>
           </form>
         </c-card-body>
       </c-card>

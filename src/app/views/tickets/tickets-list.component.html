@@ -1,0 +1,39 @@
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Tickets</strong>
+        </c-card-header>
+        <c-card-body>
+          <button cButton color="primary" class="mb-3" [routerLink]="['/tickets/novo']">Novo Ticket</button>
+          <table cTable>
+            <thead>
+              <tr>
+                <th>Nº Atendimento</th>
+                <th>Paciente</th>
+                <th>Pagador</th>
+                <th>Médico Executante</th>
+                <th>Data</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ticket of tickets">
+                <td>{{ ticket.numAtend }}</td>
+                <td>{{ ticket.nomePaciente }}</td>
+                <td>{{ ticket.nomePagador }}</td>
+                <td>{{ ticket.medicoExec.nome }}</td>
+                <td>{{ ticket.dataTicket | date: 'dd/MM/yyyy' }}</td>
+                <td>
+                  <button cButton color="secondary" size="sm" [routerLink]="['/tickets/editar', ticket.id]">Editar</button>
+                  <button cButton color="danger" size="sm" (click)="deleteTicket(ticket.id)">Excluir</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

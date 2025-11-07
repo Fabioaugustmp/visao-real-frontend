@@ -35,9 +35,6 @@ export class ProfileComponent implements OnInit {
       login: ['', Validators.required],
       password: [''], // Password is not required
       email: ['', [Validators.required, Validators.email]],
-      crm: ['', Validators.required],
-      data_nasc: ['', Validators.required],
-      cpf: ['', Validators.required]
     });
   }
 
@@ -49,16 +46,16 @@ export class ProfileComponent implements OnInit {
 
   onSubmit(): void {
     if (this.profileForm.valid) {
-      const usuarioData: Usuario = this.profileForm.value;
+      const usuarioData: Partial<Usuario> = this.profileForm.value;
       usuarioData.id = this.userId;
 
       // Preserve existing values for fields not in the form
       this.usuarioService.getUsuario(this.userId).subscribe(existingUser => {
-        usuarioData.id_grupo = existingUser.id_grupo;
+        usuarioData.perfis = existingUser.perfis;
         usuarioData.status = existingUser.status;
-        usuarioData.data_criacao = existingUser.data_criacao;
+        usuarioData.dataCriacao = existingUser.dataCriacao;
 
-        this.usuarioService.updateUsuario(usuarioData).subscribe(() => {
+        this.usuarioService.updateUsuario(usuarioData as Usuario).subscribe(() => {
           alert('Perfil atualizado com sucesso!');
           this.router.navigate(['/dashboard']);
         });

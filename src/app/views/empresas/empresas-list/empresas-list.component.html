@@ -17,8 +17,8 @@
             </thead>
             <tbody>
               <tr *ngFor="let empresa of empresas">
-                <td>{{ empresa.CNPJ }}</td>
-                <td>{{ empresa.razao_social }}</td>
+                <td>{{ empresa.cnpj }}</td>
+                <td>{{ empresa.razaoSocial }}</td>
                 <td>
                   <button cButton color="secondary" size="sm" [routerLink]="['/empresas/editar', empresa.id]">Editar</button>
                   <button cButton color="danger" size="sm" (click)="deleteEmpresa(empresa.id)">Excluir</button>

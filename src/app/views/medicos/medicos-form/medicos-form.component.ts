@@ -46,11 +46,11 @@ export class MedicosFormComponent implements OnInit {
       crm: ['', Validators.required],
       nome: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      data_nasc: ['', Validators.required],
+      dataNasc: ['', Validators.required],
       cpf: ['', Validators.required],
-      taxa_imposto: ['', Validators.required],
-      id_empresa: ['', Validators.required],
-      id_usuario: ['', Validators.required]
+      taxaImposto: ['', Validators.required],
+      empresa: [null, Validators.required],
+      usuario: [null, Validators.required]
     });
   }
 
@@ -72,7 +72,11 @@ export class MedicosFormComponent implements OnInit {
         this.isEditMode = true;
         this.medicoId = +params['id'];
         this.medicoService.getMedico(this.medicoId).subscribe(medico => {
-          this.medicoForm.patchValue(medico);
+          this.medicoForm.patchValue({
+            ...medico,
+            empresa: medico.empresa.id,
+            usuario: medico.usuario.id
+          });
         });
       }
     });
@@ -80,9 +84,23 @@ export class MedicosFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.medicoForm.valid) {
-      const medicoData: Medico = this.medicoForm.value;
+      const formValue = this.medicoForm.value;
+      const selectedEmpresa = this.empresas.find(e => e.id === +formValue.empresa);
+      const selectedUsuario = this.usuarios.find(u => u.id === +formValue.usuario);
+
+      const medicoData: Medico = {
+        id: this.medicoId,
+        crm: formValue.crm,
+        nome: formValue.nome,
+        email: formValue.email,
+        dataNasc: formValue.dataNasc,
+        cpf: formValue.cpf,
+        taxaImposto: formValue.taxaImposto,
+        empresa: selectedEmpresa!,
+        usuario: selectedUsuario!
+      };
+
       if (this.isEditMode) {
-        medicoData.id = this.medicoId;
         this.medicoService.updateMedico(medicoData).subscribe(() => {
           this.router.navigate(['/medicos']);
         });
@@ -94,3 +112,4 @@ export class MedicosFormComponent implements OnInit {
     }
   }
 }
+

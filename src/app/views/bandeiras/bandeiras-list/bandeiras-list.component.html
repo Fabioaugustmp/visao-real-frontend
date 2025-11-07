@@ -1,0 +1,31 @@
+<c-row>
+  <c-col>
+    <c-card>
+      <c-card-header>
+        Lista de Bandeiras
+      </c-card-header>
+      <c-card-body>
+        <button cButton color="primary" [routerLink]="['/bandeiras/nova']">Nova Bandeira</button>
+        <table cTable class="mt-3">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Bandeira</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let bandeira of bandeiras">
+              <th scope="row">{{ bandeira.id }}</th>
+              <td>{{ bandeira.bandeira }}</td>
+              <td>
+                <button cButton color="secondary" size="sm" [routerLink]="['/bandeiras/editar', bandeira.id]">Editar</button>
+                <button cButton color="danger" size="sm" class="ms-1" (click)="excluirBandeira(bandeira.id)">Excluir</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

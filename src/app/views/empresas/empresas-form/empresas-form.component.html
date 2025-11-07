@@ -8,20 +8,20 @@
         <c-card-body>
           <form [formGroup]="empresaForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
-              <label cLabel for="CNPJ">CNPJ</label>
-              <input cFormControl id="CNPJ" formControlName="CNPJ" type="number">
+              <label cLabel for="cnpj">CNPJ</label>
+              <input cFormControl id="cnpj" formControlName="cnpj" type="text">
             </div>
             <div class="mb-3">
-              <label cLabel for="razao_social">Razão Social</label>
-              <input cFormControl id="razao_social" formControlName="razao_social">
+              <label cLabel for="razaoSocial">Razão Social</label>
+              <input cFormControl id="razaoSocial" formControlName="razaoSocial">
             </div>
             <div class="mb-3">
-              <label cLabel for="id_contrato_cartao">Contrato Cartão</label>
-              <input cFormControl id="id_contrato_cartao" formControlName="id_contrato_cartao" type="number">
+              <label cLabel for="idContratoCartao">Contrato Cartão</label>
+              <input cFormControl id="idContratoCartao" formControlName="idContratoCartao" type="number">
             </div>
             <div class="mb-3">
-              <label cLabel for="id_contador">Contador</label>
-              <select cSelect id="id_contador" formControlName="id_contador">
+              <label cLabel for="contador">Contador</label>
+              <select cSelect id="contador" formControlName="contador">
                 <option *ngFor="let contador of contadores" [value]="contador.id">{{ contador.nome }}</option>
               </select>
             </div>

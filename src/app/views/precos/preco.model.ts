@@ -1,5 +1,8 @@
+import { Item } from '../itens/item.model';
+
 export interface Preco {
   id: number;
-  id_item: number;
+  item: Item;
   valor: number;
 }
+

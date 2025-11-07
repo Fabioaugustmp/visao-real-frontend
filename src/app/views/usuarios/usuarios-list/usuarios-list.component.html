@@ -12,7 +12,7 @@
               <tr>
                 <th>Nome</th>
                 <th>Login</th>
-                <th>Grupo</th>
+                <th>Perfis</th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>
@@ -21,7 +21,7 @@
               <tr *ngFor="let usuario of usuarios">
                 <td>{{ usuario.nome }}</td>
                 <td>{{ usuario.login }}</td>
-                <td>{{ usuario.id_grupo }}</td>
+                <td>{{ getPerfis(usuario) }}</td>
                 <td><c-badge [color]="usuario.status ? 'success' : 'danger'">{{ usuario.status ? 'Ativo' : 'Inativo' }}</c-badge></td>
                 <td>
                   <button cButton color="secondary" size="sm" [routerLink]="['/usuarios/editar', usuario.id]">Editar</button>

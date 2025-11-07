@@ -17,7 +17,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let preco of precos">
-                <td>{{ preco.id_item }}</td>
+                <td>{{ preco.item.descricao }}</td>
                 <td>{{ preco.valor | currency:'BRL' }}</td>
                 <td>
                   <button cButton color="secondary" size="sm" [routerLink]="['/precos/editar', preco.id]">Editar</button>
