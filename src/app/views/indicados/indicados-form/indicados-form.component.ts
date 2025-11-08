@@ -73,7 +73,7 @@ export class IndicadosFormComponent implements OnInit {
   }
 
   loadTickets(): void {
-    this.ticketService.getTickets().subscribe(data => {
+    this.ticketService.getAllTicketsWithoutPagination().subscribe(data => {
       this.tickets = data;
     });
   }

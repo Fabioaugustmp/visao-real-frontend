@@ -13,7 +13,7 @@
                 <th>Nº Atendimento</th>
                 <th>Paciente</th>
                 <th>Pagador</th>
-                <th>Médico Executante</th>
+                <th>Médico Exec. Nome</th> <!-- Updated header -->
                 <th>Data</th>
                 <th>Ações</th>
               </tr>
@@ -23,7 +23,7 @@
                 <td>{{ ticket.numAtend }}</td>
                 <td>{{ ticket.nomePaciente }}</td>
                 <td>{{ ticket.nomePagador }}</td>
-                <td>{{ ticket.medicoExec.nome }}</td>
+                <td>{{ ticket.medicoExecNome }}</td> <!-- Updated property -->
                 <td>{{ ticket.dataTicket | date: 'dd/MM/yyyy' }}</td>
                 <td>
                   <button cButton color="secondary" size="sm" [routerLink]="['/tickets/editar', ticket.id]">Editar</button>
@@ -32,6 +32,28 @@
               </tr>
             </tbody>
           </table>
+
+          <!-- Pagination Controls -->
+          <c-pagination align="center" aria-label="Page navigation">
+            <c-page-item [disabled]="currentPage === 0" class="mx-1">
+              <a cButton color="secondary" c-page-link (click)="onPageChange(0)">First</a>
+            </c-page-item>
+            <c-page-item [disabled]="currentPage === 0" class="mx-1">
+              <a cButton color="secondary" c-page-link (click)="onPageChange(currentPage - 1)">Prev</a>
+            </c-page-item>
+            <ng-container *ngFor="let pageNumber of [].constructor(totalPages); let i = index">
+              <c-page-item [active]="currentPage === i" class="mx-1">
+                <a cButton color="secondary" c-page-link (click)="onPageChange(i)">{{ i + 1 }}</a>
+              </c-page-item>
+            </ng-container>
+            <c-page-item [disabled]="currentPage === totalPages - 1" class="mx-1">
+              <a cButton color="secondary" c-page-link (click)="onPageChange(currentPage + 1)">Next</a>
+            </c-page-item>
+            <c-page-item [disabled]="currentPage === totalPages - 1" class="mx-1">
+              <a cButton color="secondary" c-page-link (click)="onPageChange(totalPages - 1)">Last</a>
+            </c-page-item>
+          </c-pagination>
+
         </c-card-body>
       </c-card>
     </c-col>

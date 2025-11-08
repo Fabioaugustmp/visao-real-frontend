@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FinanceiroService } from '../financeiro.service';
 import { Financeiro } from '../financeiro.model';
-import { Ticket } from '../../tickets/ticket.model';
+import { Ticket, TicketDTO } from '../../tickets/ticket.model';
 import { TicketService } from '../../tickets/ticket.service';
 import { Medico } from '../../medicos/medico.model';
 import { MedicoService } from '../../medicos/medico.service';
@@ -32,7 +32,7 @@ export class FinanceirosFormComponent implements OnInit {
   form: FormGroup;
   isEditMode = false;
   financeiroId: number | null = null;
-  tickets: Ticket[] = [];
+  tickets: TicketDTO[] = [];
   medicos: Medico[] = [];
   tarifarios: Tarifario[] = [];
 
@@ -79,8 +79,9 @@ export class FinanceirosFormComponent implements OnInit {
   }
 
   loadTickets(): void {
-    this.ticketService.getTickets().subscribe(data => {
-      this.tickets = data;
+    const pageable = { page: 0, size: 9999, sort: ['id,asc'] }; // Assuming a large enough size to get all tickets
+    this.ticketService.getTickets(pageable).subscribe(data => {
+      this.tickets = data.content;
     });
   }
 
