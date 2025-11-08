@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard'; // Import AuthGuard
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'dashboard', // Redirect to dashboard for authenticated users
     pathMatch: 'full'
   },
   {
@@ -12,6 +13,7 @@ export const routes: Routes = [
     data: {
       title: 'Home'
     },
+    canActivate: [AuthGuard], // Apply AuthGuard to protected routes
     children: [
       {
         path: 'dashboard',
@@ -179,5 +181,5 @@ export const routes: Routes = [
       title: 'Register Page'
     }
   },
-  { path: '**', redirectTo: 'dashboard' }
+  { path: '**', redirectTo: 'login' } // Redirect all unknown paths to login
 ];

@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <div *ngIf="control && control.invalid && (control.dirty || control.touched)" class="invalid-feedback d-block">
       <div *ngIf="control.errors?.['required']">
-        This field is required.
+        Este campo é requerido.
       </div>
       <div *ngIf="control.errors?.['minlength']">
         Min length is {{ control.errors?.['minlength'].requiredLength }} characters.
