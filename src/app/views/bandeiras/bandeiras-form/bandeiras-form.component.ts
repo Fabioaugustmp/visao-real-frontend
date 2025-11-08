@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BandeiraService } from '../bandeira.service';
-import { Bandeira } from '../bandeira.model';
+import { Bandeira, BandeiraEnum } from '../bandeira.model';
 import { CommonModule } from '@angular/common';
-import { ButtonDirective, CardBodyComponent, CardComponent, CardHeaderComponent, ColComponent, FormControlDirective, FormDirective, FormLabelDirective, RowComponent } from '@coreui/angular';
+import { ButtonDirective, CardBodyComponent, CardComponent, CardHeaderComponent, ColComponent, FormControlDirective, FormDirective, FormLabelDirective, RowComponent, FormSelectDirective } from '@coreui/angular'; // Added FormSelectDirective
 import { ValidationFeedbackComponent } from '../../../components/validation-feedback/validation-feedback.component'; // Corrected import path
 
 @Component({
@@ -23,7 +23,8 @@ import { ValidationFeedbackComponent } from '../../../components/validation-feed
     FormLabelDirective,
     FormControlDirective,
     ButtonDirective,
-    ValidationFeedbackComponent // Add ValidationFeedbackComponent here
+    ValidationFeedbackComponent,
+    FormSelectDirective // Added FormSelectDirective
   ]
 })
 export class BandeirasFormComponent implements OnInit {
@@ -31,6 +32,7 @@ export class BandeirasFormComponent implements OnInit {
   form: FormGroup;
   isEditMode = false;
   bandeiraId: number | null = null;
+  bandeiraEnums = Object.values(BandeiraEnum); // Make enum values available to template
 
   constructor(
     private fb: FormBuilder,

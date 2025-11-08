@@ -141,6 +141,13 @@ export const routes: Routes = [
       {
         path: 'tarifarios',
         loadChildren: () => import('./views/tarifarios/routes').then((m) => m.routes)
+      },
+      {
+        path: 'relatorios-dashboard',
+        loadChildren: () => import('./views/relatorios-dashboard/routes').then((m) => m.routes),
+        data: {
+          title: 'Relatórios'
+        }
       }
     ]
   },

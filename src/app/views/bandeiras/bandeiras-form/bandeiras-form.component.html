@@ -8,7 +8,10 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <label cLabel for="bandeira">Bandeira</label>
-            <input cFormControl id="bandeira" formControlName="bandeira" [class.is-invalid]="form.get('bandeira')?.invalid && (form.get('bandeira')?.dirty || form.get('bandeira')?.touched)" />
+            <select cSelect id="bandeira" formControlName="bandeira" [class.is-invalid]="form.get('bandeira')?.invalid && (form.get('bandeira')?.dirty || form.get('bandeira')?.touched)">
+              <option [ngValue]="null" disabled>Selecione uma bandeira</option>
+              <option *ngFor="let enumValue of bandeiraEnums" [ngValue]="enumValue">{{ enumValue }}</option>
+            </select>
             <app-validation-feedback [control]="form.get('bandeira')"></app-validation-feedback>
           </div>
           <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>

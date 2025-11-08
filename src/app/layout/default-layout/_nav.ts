@@ -123,6 +123,11 @@ export const navItems: INavData[] = [
         name: 'Tarifários',
         url: '/tarifarios',
         icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Relatórios',
+        url: '/relatorios-dashboard',
+        iconComponent: { name: 'cil-chart-pie' } // Using a chart icon for reports
       }
     ]
   },
