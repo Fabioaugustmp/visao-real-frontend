@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ParcelamentoService } from '../parcelamento.service';
 import { Parcelamento } from '../parcelamento.model';
-import { Ticket } from '../../tickets/ticket.model';
-import { TicketService } from '../../tickets/ticket.service';
 import { CommonModule } from '@angular/common';
 import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
 
@@ -28,52 +26,33 @@ export class ParcelamentosFormComponent implements OnInit {
   form: FormGroup;
   isEditMode = false;
   parcelamentoId: number | null = null;
-  tickets: Ticket[] = [];
 
   constructor(
     private fb: FormBuilder,
     private parcelamentoService: ParcelamentoService,
-    private ticketService: TicketService,
     private router: Router,
     private route: ActivatedRoute
   ) {
     this.form = this.fb.group({
       id: [null],
-      numeroDeParcelas: [null, Validators.required],
-      ticket: [null, Validators.required]
+      descricao: ['', Validators.required],
+      numeroDeParcelas: [null, Validators.required]
     });
   }
 
   ngOnInit(): void {
-    this.loadTickets();
     this.parcelamentoId = this.route.snapshot.params['id'];
     if (this.parcelamentoId) {
       this.isEditMode = true;
       this.parcelamentoService.getParcelamento(this.parcelamentoId).subscribe(data => {
-        this.form.patchValue({
-          ...data,
-          ticket: data.ticket?.id
-        });
+        this.form.patchValue(data);
       });
     }
   }
 
-  loadTickets(): void {
-    this.ticketService.getAllTicketsWithoutPagination().subscribe(data => {
-      this.tickets = data;
-    });
-  }
-
   onSubmit(): void {
     if (this.form.valid) {
-      const formValue = this.form.value;
-      const selectedTicket = this.tickets.find(t => t.id === formValue.ticket);
-      const parcelamento: Parcelamento = {
-        id: formValue.id,
-        numeroDeParcelas: formValue.numeroDeParcelas,
-        ticket: selectedTicket!
-      };
-
+      const parcelamento: Parcelamento = this.form.value;
       if (this.isEditMode) {
         this.parcelamentoService.updateParcelamento(parcelamento).subscribe(() => {
           this.router.navigate(['/parcelamentos']);

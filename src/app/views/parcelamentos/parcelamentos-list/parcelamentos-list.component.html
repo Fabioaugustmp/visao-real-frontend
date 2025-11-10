@@ -10,16 +10,16 @@
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">Descrição</th>
               <th scope="col">Número de Parcelas</th>
-              <th scope="col">Ticket</th>
               <th scope="col">Ações</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let parcelamento of parcelamentos">
               <th scope="row">{{ parcelamento.id }}</th>
+              <td>{{ parcelamento.descricao }}</td>
               <td>{{ parcelamento.numeroDeParcelas }}</td>
-              <td>{{ parcelamento.ticket?.id }}</td>
               <td>
                 <button cButton color="secondary" size="sm" [routerLink]="['/parcelamentos/editar', parcelamento.id]">Editar</button>
                 <button cButton color="danger" size="sm" class="ms-1" (click)="excluirParcelamento(parcelamento.id)">Excluir</button>

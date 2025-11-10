@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormaPagamentoService } from '../forma-pagamento.service';
-import { FormaPagamento } from '../forma-pagamento.model';
+import { FormaPagamento, NomeFormaPagamento } from '../forma-pagamento.model';
+import { Parcelamento } from '../../parcelamentos/parcelamento.model';
+import { ParcelamentoService } from '../../parcelamentos/parcelamento.service';
 import { CommonModule } from '@angular/common';
 import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
 
@@ -26,21 +28,28 @@ export class FormasPagamentoFormComponent implements OnInit {
   form: FormGroup;
   isEditMode = false;
   formaPagamentoId: number | null = null;
+  nomeFormaPagamentoKeys: (keyof typeof NomeFormaPagamento)[];
+  NomeFormaPagamento = NomeFormaPagamento; // Make enum available in template
+  parcelamentos: Parcelamento[] = [];
 
   constructor(
     private fb: FormBuilder,
     private formaPagamentoService: FormaPagamentoService,
+    private parcelamentoService: ParcelamentoService,
     private router: Router,
     private route: ActivatedRoute
   ) {
+    this.nomeFormaPagamentoKeys = Object.keys(NomeFormaPagamento) as (keyof typeof NomeFormaPagamento)[];
     this.form = this.fb.group({
       id: [null],
+      nome: ['', Validators.required], // New field
       descricao: ['', Validators.required],
       idParcelamento: [null, Validators.required]
     });
   }
 
   ngOnInit(): void {
+    this.loadParcelamentos();
     this.formaPagamentoId = this.route.snapshot.params['id'];
     if (this.formaPagamentoId) {
       this.isEditMode = true;
@@ -48,6 +57,12 @@ export class FormasPagamentoFormComponent implements OnInit {
         this.form.patchValue(data);
       });
     }
+  }
+
+  loadParcelamentos(): void {
+    this.parcelamentoService.getParcelamentos().subscribe(data => {
+      this.parcelamentos = data;
+    });
   }
 
   onSubmit(): void {

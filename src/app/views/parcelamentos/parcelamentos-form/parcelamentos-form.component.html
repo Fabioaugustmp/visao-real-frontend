@@ -7,15 +7,13 @@
       <c-card-body>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="mb-3">
-            <label cLabel for="numeroDeParcelas">Número de Parcelas</label>
-            <input cFormControl id="numeroDeParcelas" formControlName="numeroDeParcelas" type="number" />
+            <label cLabel for="descricao">Descrição</label>
+            <input cFormControl id="descricao" formControlName="descricao" type="text" />
           </div>
           <div class="mb-3">
-            <label cLabel for="ticket">Ticket</label>
-            <select cSelect id="ticket" formControlName="ticket">
-              <option *ngFor="let ticket of tickets" [value]="ticket.id">{{ ticket.id }} - {{ ticket.nomePaciente }}</option>
-            </select>
-          </div>
+            <label cLabel for="numeroDeParcelas">Número de Parcelas</label>
+            <input cFormControl id="numeroDeParcelas" formControlName="numeroDeParcelas" type="number" />
+          </div>         
           <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
           <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
         </form>

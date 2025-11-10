@@ -23,6 +23,7 @@ import { Tarifario } from '../../tarifarios/tarifario.model';
 import { TarifarioService } from '../../tarifarios/tarifario.service';
 import { Financeiro } from '../../financeiros/financeiro.model';
 import { CardModule, GridModule, FormModule, ButtonModule } from '@coreui/angular';
+import { IconModule } from '@coreui/icons-angular';
 
 @Component({
   selector: 'app-tickets-form',
@@ -36,7 +37,8 @@ import { CardModule, GridModule, FormModule, ButtonModule } from '@coreui/angula
     CardModule,
     GridModule,
     FormModule,
-    ButtonModule
+    ButtonModule,
+    IconModule
   ]
 })
 export class TicketsFormComponent implements OnInit {
@@ -87,7 +89,7 @@ export class TicketsFormComponent implements OnInit {
       numAtend: ['', Validators.required],
       nomePaciente: ['', Validators.required],
       nomePagador: ['', Validators.required],
-      cpfPagador: ['', Validators.required],
+      cpfPagador: ['', [Validators.required, Validators.pattern(/^(\d{3}\.?\d{3}\.?\d{3}-?\d{2})$/)]],
       medicoExec: ['', Validators.required],
       medicoSolic: ['', Validators.required],
       nfSerie: ['', Validators.required],
@@ -95,7 +97,7 @@ export class TicketsFormComponent implements OnInit {
       formaPagamento: ['', Validators.required],
       bandeira: ['', Validators.required],
       cartaoIdent: ['', Validators.required],
-      cartaoCvv: ['', Validators.required],
+      cartaoCvv: ['', [Validators.required, Validators.pattern(/^(\d{3}|\d{4})$/)]],
       cartaoAutorizacao: ['', Validators.required],
       cartaoNsu: ['', Validators.required],
       parcelamento: ['', Validators.required],
@@ -109,7 +111,7 @@ export class TicketsFormComponent implements OnInit {
   createItemFormGroup(): FormGroup {
     return this.fb.group({
       item: ['', Validators.required],
-      valor: ['', Validators.required]
+      valor: ['', [Validators.required, Validators.min(0.01)]]
     });
   }
 

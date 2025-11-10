@@ -7,12 +7,20 @@
       <c-card-body>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="mb-3">
+            <label cLabel for="nome">Nome</label>
+            <select cSelect id="nome" formControlName="nome">
+              <option *ngFor="let nome of nomeFormaPagamentoKeys" [value]="nome">{{ NomeFormaPagamento[nome] }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
             <label cLabel for="descricao">Descrição</label>
             <input cFormControl id="descricao" formControlName="descricao" />
           </div>
           <div class="mb-3">
-            <label cLabel for="idParcelamento">ID Parcelamento</label>
-            <input cFormControl id="idParcelamento" formControlName="idParcelamento" type="number" />
+            <label cLabel for="idParcelamento">Parcelamento</label>
+            <select cSelect id="idParcelamento" formControlName="idParcelamento">
+              <option *ngFor="let parcelamento of parcelamentos" [value]="parcelamento.id">{{ parcelamento.descricao }} - {{ parcelamento.numeroDeParcelas }} Parcelas</option>
+            </select>
           </div>
           <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
           <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
