@@ -3,29 +3,71 @@
     <c-col xs="12">
       <c-card class="mb-4">
         <c-card-header>
-          <strong>{{ isEditMode ? 'Editar Contador' : 'Novo Contador' }}</strong>
+          <strong>{{
+            isEditMode ? "Editar Contador" : "Novo Contador"
+          }}</strong>
         </c-card-header>
         <c-card-body>
           <form [formGroup]="contadorForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label cLabel for="nome">Nome</label>
-              <input cFormControl id="nome" formControlName="nome">
+              <input cFormControl id="nome" formControlName="nome" />
+              <div *ngIf="f['nome'].touched && f['nome'].errors" class="text-danger small">
+                <div *ngIf="f['nome'].errors['required']">Nome é obrigatório.</div>
+              </div>
             </div>
-            <div class="mb-3">
-              <label cLabel for="email">Email</label>
-              <input cFormControl id="email" formControlName="email" type="email">
-            </div>
-            <div class="mb-3">
-              <label cLabel for="crc">CRC</label>
-              <input cFormControl id="crc" formControlName="crc">
-            </div>
-            <div class="mb-3">
-              <label cLabel for="crcUf">UF</label>
-              <input cFormControl id="crcUf" formControlName="crcUf">
-            </div>
-
-            <button cButton color="primary" type="submit" [disabled]="contadorForm.invalid">Salvar</button>
-            <button cButton color="secondary" [routerLink]="['/contadores']">Cancelar</button>
+            <div class="mb-3"></div>
+            <c-row class="mb-3">
+              <c-col md="8">
+                <label cLabel for="email">Email</label>
+                <input
+                  cFormControl
+                  id="email"
+                  formControlName="email"
+                  type="email"
+                />
+                <div *ngIf="f['email'].touched && f['email'].errors" class="text-danger small">
+                  <div *ngIf="f['email'].errors['required']">Email é obrigatório.</div>
+                  <div *ngIf="f['email'].errors['email']">Email inválido.</div>
+                </div>
+              </c-col>
+              <c-col md="2">
+                <label cLabel for="crc">CRC</label>
+                <input cFormControl id="crc" formControlName="crc" />
+                <div *ngIf="f['crc'].touched && f['crc'].errors" class="text-danger small">
+                  <div *ngIf="f['crc'].errors['required']">CRC é obrigatório.</div>
+                  <div *ngIf="f['crc'].errors['maxlength']">CRC deve ter no máximo 11 caracteres.</div>
+                  <div *ngIf="f['crc'].errors['pattern']">CRC deve ser alfanumérico.</div>
+                </div>
+              </c-col>
+              <c-col md="2">
+                <label cLabel for="crcUf">UF</label>
+                <select cSelect id="crcUf" formControlName="crcUf">
+                  <option value="" disabled>Selecione a UF</option>
+                  <option *ngFor="let uf of ufs" [value]="uf">{{ uf }}</option>
+                </select>
+                <div *ngIf="f['crcUf'].touched && f['crcUf'].errors" class="text-danger small">
+                  <div *ngIf="f['crcUf'].errors['required']">UF é obrigatório.</div>
+                </div>
+              </c-col>
+            </c-row>
+            <button
+              cButton
+              color="primary"
+              variant="outline"
+              type="submit"
+              [disabled]="contadorForm.invalid"
+            >
+              Salvar
+            </button>
+            <button
+              cButton
+              color="secondary"
+              variant="outline"
+              [routerLink]="['/contadores']"
+            >
+              Cancelar
+            </button>
           </form>
         </c-card-body>
       </c-card>

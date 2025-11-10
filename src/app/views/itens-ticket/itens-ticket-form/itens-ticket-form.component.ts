@@ -45,7 +45,7 @@ export class ItensTicketFormComponent implements OnInit {
       id: [null],
       ticket: [null, Validators.required],
       item: [null, Validators.required],
-      valor: [null, Validators.required]
+      valor: [null, [Validators.required, Validators.min(0.01)]]
     });
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ContadorService } from '../contador.service';
 import { Contador } from '../contador.model';
@@ -18,6 +18,9 @@ export class ContadoresFormComponent implements OnInit {
   contadorForm!: FormGroup;
   isEditMode = false;
   contadorId!: number;
+  ufs: string[] = [
+    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -31,12 +34,14 @@ export class ContadoresFormComponent implements OnInit {
     this.checkMode();
   }
 
+  get f(): { [key: string]: AbstractControl } { return this.contadorForm.controls; }
+
   initForm(): void {
     this.contadorForm = this.fb.group({
       nome: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      crc: ['', Validators.required],
-      crcUf: ['', Validators.required]
+      crc: ['', [Validators.required, Validators.maxLength(11), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      crcUf: ['', Validators.required] // Removed minLength and maxLength
     });
   }
 

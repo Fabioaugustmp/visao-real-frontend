@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Medico } from '../../medicos/medico.model';
 import { MedicoService } from '../../medicos/medico.service';
@@ -24,6 +24,58 @@ import { TarifarioService } from '../../tarifarios/tarifario.service';
 import { Financeiro } from '../../financeiros/financeiro.model';
 import { CardModule, GridModule, FormModule, ButtonModule } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
+
+function minLengthArray(min: number) {
+  return (c: AbstractControl): ValidationErrors | null => {
+    if (c.value.length >= min) {
+      return null;
+    }
+    return { minLengthArray: { valid: false } };
+  };
+}
+
+function cpfValidator(control: AbstractControl): ValidationErrors | null {
+  const cpf = control.value;
+  if (!cpf) {
+    return null;
+  }
+
+  const cleanCpf = cpf.replace(/[^\d]+/g, '');
+
+  if (cleanCpf.length !== 11 || !!cleanCpf.match(/(\d)\1{10}/)) {
+    return { cpfInvalid: true };
+  }
+
+  let sum = 0;
+  let remainder;
+
+  for (let i = 1; i <= 9; i++) {
+    sum = sum + parseInt(cleanCpf.substring(i - 1, i)) * (11 - i);
+  }
+  remainder = (sum * 10) % 11;
+
+  if ((remainder === 10) || (remainder === 11)) {
+    remainder = 0;
+  }
+  if (remainder !== parseInt(cleanCpf.substring(9, 10))) {
+    return { cpfInvalid: true };
+  }
+
+  sum = 0;
+  for (let i = 1; i <= 10; i++) {
+    sum = sum + parseInt(cleanCpf.substring(i - 1, i)) * (12 - i);
+  }
+  remainder = (sum * 10) % 11;
+
+  if ((remainder === 10) || (remainder === 11)) {
+    remainder = 0;
+  }
+  if (remainder !== parseInt(cleanCpf.substring(10, 11))) {
+    return { cpfInvalid: true };
+  }
+
+  return null;
+}
 
 @Component({
   selector: 'app-tickets-form',
@@ -86,25 +138,25 @@ export class TicketsFormComponent implements OnInit {
   initForm(): void {
     this.ticketForm = this.fb.group({
       dataTicket: ['', Validators.required],
-      numAtend: ['', Validators.required],
-      nomePaciente: ['', Validators.required],
-      nomePagador: ['', Validators.required],
-      cpfPagador: ['', [Validators.required, Validators.pattern(/^(\d{3}\.?\d{3}\.?\d{3}-?\d{2})$/)]],
+      numAtend: ['', [Validators.required, Validators.maxLength(20)]], // Assuming max length for attendance number
+      nomePaciente: ['', [Validators.required, Validators.maxLength(100)]], // Assuming max length for patient name
+      nomePagador: ['', [Validators.required, Validators.maxLength(100)]], // Assuming max length for payer name
+      cpfPagador: ['', [Validators.required, cpfValidator]], // Using the custom CPF validator
       medicoExec: ['', Validators.required],
       medicoSolic: ['', Validators.required],
-      nfSerie: ['', Validators.required],
-      nfNumero: ['', Validators.required],
+      nfSerie: ['', [Validators.required, Validators.maxLength(10)]], // Assuming max length for NF series
+      nfNumero: ['', [Validators.required, Validators.maxLength(20)]], // Assuming max length for NF number
       formaPagamento: ['', Validators.required],
       bandeira: ['', Validators.required],
-      cartaoIdent: ['', Validators.required],
+      cartaoIdent: ['', [Validators.required, Validators.maxLength(20)]], // Assuming max length for card identification
       cartaoCvv: ['', [Validators.required, Validators.pattern(/^(\d{3}|\d{4})$/)]],
-      cartaoAutorizacao: ['', Validators.required],
-      cartaoNsu: ['', Validators.required],
+      cartaoAutorizacao: ['', [Validators.required, Validators.maxLength(20)]], // Assuming max length for authorization
+      cartaoNsu: ['', [Validators.required, Validators.maxLength(20)]], // Assuming max length for NSU
       parcelamento: ['', Validators.required],
-      posNum: ['', Validators.required],
-      itens: this.fb.array([]),
+      posNum: ['', [Validators.required, Validators.maxLength(20)]], // Assuming max length for POS number
+      itens: this.fb.array([], minLengthArray(1)),
       indicados: this.fb.array([]),
-      tarifario: ['', Validators.required] // New control for tarifario
+      tarifario: ['', Validators.required]
     });
   }
 
@@ -146,11 +198,11 @@ export class TicketsFormComponent implements OnInit {
   }
 
   checkMode(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params: Params) => {
       if (params['id']) {
         this.isEditMode = true;
         this.ticketId = params['id'];
-        this.ticketService.getTicket(this.ticketId).subscribe(ticket => {
+        this.ticketService.getTicket(this.ticketId).subscribe((ticket: Ticket) => {
           this.ticketForm.patchValue({
             ...ticket,
             medicoExec: ticket.medicoExec.id,

@@ -8,19 +8,29 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <label cLabel for="ticket">Ticket</label>
-            <select cSelect id="ticket" formControlName="ticket">
+            <select cSelect id="ticket" formControlName="ticket" [ngClass]="{'is-invalid': form.get('ticket')?.invalid && (form.get('ticket')?.dirty || form.get('ticket')?.touched)}">
               <option *ngFor="let ticket of tickets" [value]="ticket.id">{{ ticket.id }} - {{ ticket.nomePaciente }}</option>
             </select>
+            <div *ngIf="form.get('ticket')?.invalid && (form.get('ticket')?.dirty || form.get('ticket')?.touched)" class="invalid-feedback">
+              <div *ngIf="form.get('ticket')?.errors?.['required']">Ticket é obrigatório.</div>
+            </div>
           </div>
           <div class="mb-3">
             <label cLabel for="item">Item</label>
-            <select cSelect id="item" formControlName="item">
+            <select cSelect id="item" formControlName="item" [ngClass]="{'is-invalid': form.get('item')?.invalid && (form.get('item')?.dirty || form.get('item')?.touched)}">
               <option *ngFor="let item of items" [value]="item.id">{{ item.descricao }}</option>
             </select>
+            <div *ngIf="form.get('item')?.invalid && (form.get('item')?.dirty || form.get('item')?.touched)" class="invalid-feedback">
+              <div *ngIf="form.get('item')?.errors?.['required']">Item é obrigatório.</div>
+            </div>
           </div>
           <div class="mb-3">
             <label cLabel for="valor">Valor</label>
-            <input cFormControl id="valor" formControlName="valor" type="number" />
+            <input cFormControl id="valor" formControlName="valor" type="number" [ngClass]="{'is-invalid': form.get('valor')?.invalid && (form.get('valor')?.dirty || form.get('valor')?.touched)}" />
+            <div *ngIf="form.get('valor')?.invalid && (form.get('valor')?.dirty || form.get('valor')?.touched)" class="invalid-feedback">
+              <div *ngIf="form.get('valor')?.errors?.['required']">Valor é obrigatório.</div>
+              <div *ngIf="form.get('valor')?.errors?.['min']">O valor deve ser maior que 0.</div>
+            </div>
           </div>
           <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
           <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
