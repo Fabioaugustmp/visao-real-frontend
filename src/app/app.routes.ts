@@ -57,31 +57,45 @@ export const routes: Routes = [
       },
       {
         path: 'medicos',
-        loadChildren: () => import('./views/medicos/routes').then((m) => m.MEDICO_ROUTES)
+        loadChildren: () => import('./views/medicos/routes').then((m) => m.MEDICO_ROUTES),
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'empresas',
-        loadChildren: () => import('./views/empresas/routes').then((m) => m.EMPRESA_ROUTES)
+        loadChildren: () => import('./views/empresas/routes').then((m) => m.EMPRESA_ROUTES),
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'contadores',
-        loadChildren: () => import('./views/contadores/routes').then((m) => m.CONTADOR_ROUTES)
+        loadChildren: () => import('./views/contadores/routes').then((m) => m.CONTADOR_ROUTES),
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'grupos',
-        loadChildren: () => import('./views/grupos/routes').then((m) => m.GRUPO_ROUTES)
+        loadChildren: () => import('./views/grupos/routes').then((m) => m.GRUPO_ROUTES),
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'usuarios',
-        loadChildren: () => import('./views/usuarios/routes').then((m) => m.USUARIO_ROUTES)
+        loadChildren: () => import('./views/usuarios/routes').then((m) => m.USUARIO_ROUTES),
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'itens',
-        loadChildren: () => import('./views/itens/routes').then((m) => m.ITEM_ROUTES)
+        loadChildren: () => import('./views/itens/routes').then((m) => m.ITEM_ROUTES),
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'precos',
-        loadChildren: () => import('./views/precos/routes').then((m) => m.PRECO_ROUTES)
+        loadChildren: () => import('./views/precos/routes').then((m) => m.PRECO_ROUTES),
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'profile',
@@ -97,16 +111,14 @@ export const routes: Routes = [
       {
         path: 'user-access',
         loadComponent: () => import('./views/user-access/user-access.component').then(m => m.UserAccessComponent),
-        data: {
-          title: 'Controle de Acesso'
-        }
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'subscriptions',
         loadComponent: () => import('./views/subscriptions/subscriptions.component').then(m => m.SubscriptionsComponent),
-        data: {
-          title: 'Assinaturas'
-        }
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'tickets',
@@ -114,11 +126,15 @@ export const routes: Routes = [
       },
       {
         path: 'bandeiras',
-        loadChildren: () => import('./views/bandeiras/routes').then((m) => m.routes)
+        loadChildren: () => import('./views/bandeiras/routes').then((m) => m.routes),
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'formas-pagamento',
-        loadChildren: () => import('./views/formas-pagamento/routes').then((m) => m.routes)
+        loadChildren: () => import('./views/formas-pagamento/routes').then((m) => m.routes),
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'indicacoes',
@@ -142,14 +158,15 @@ export const routes: Routes = [
       },
       {
         path: 'tarifarios',
-        loadChildren: () => import('./views/tarifarios/routes').then((m) => m.routes)
+        loadChildren: () => import('./views/tarifarios/routes').then((m) => m.routes),
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'relatorios-dashboard',
         loadChildren: () => import('./views/relatorios-dashboard/routes').then((m) => m.routes),
-        data: {
-          title: 'Relatórios'
-        }
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
       }
     ]
   },

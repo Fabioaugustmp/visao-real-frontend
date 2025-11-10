@@ -1,5 +1,7 @@
-declare module '*.json' {
-  const value: any;
-  export default value;
-}
+import '@coreui/angular';
 
+declare module '@coreui/angular' {
+  interface INavData {
+    roles?: string[];
+  }
+}

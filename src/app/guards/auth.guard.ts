@@ -14,14 +14,26 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     
+    const requiredRoles = route.data['roles'] as string[];
+
     return this.authService.isLoggedIn().pipe(
       map(isLoggedIn => {
-        if (isLoggedIn) {
-          return true;
-        } else {
-          // Redirect to the login page
+        if (!isLoggedIn) {
+          // Not logged in, redirect to login page
           return this.router.createUrlTree(['/login']);
         }
+
+        if (requiredRoles && requiredRoles.length > 0) {
+          // Logged in, check roles
+          const hasRequiredRole = this.authService.hasRole(requiredRoles);
+          if (!hasRequiredRole) {
+            // Logged in but no required role, redirect to dashboard
+            console.warn('User does not have the required roles:', requiredRoles);
+            return this.router.createUrlTree(['/']); // Redirect to dashboard
+          }
+        }
+        // Logged in and has required roles (or no roles required)
+        return true;
       })
     );
   }

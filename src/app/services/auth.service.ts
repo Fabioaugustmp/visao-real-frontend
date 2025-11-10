@@ -13,19 +13,23 @@ export class AuthService {
   private apiUrl = environment.apiUrl;
   private tokenKey = 'jwt_token';
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
+  private currentUserRoles = new BehaviorSubject<string[]>(this.getRolesFromToken());
 
   constructor(private http: HttpClient) {
     this.loggedIn.subscribe(status => console.log('AuthService - LoggedIn status:', status));
+    this.currentUserRoles.subscribe(roles => console.log('AuthService - Current User Roles:', roles));
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/api/auth/login`, credentials).pipe(
       tap(response => {
-        console.log('AuthService - API Response:', response); // Add this line
+        console.log('AuthService - API Response:', response);
         if (response && response.accessToken) {
           this.setToken(response.accessToken);
           this.loggedIn.next(true);
-          console.log('AuthService - Token set, loggedIn status updated to true.');
+          const roles = this.decodeToken(response.accessToken).roles || [];
+          this.currentUserRoles.next(roles);
+          console.log('AuthService - Token set, loggedIn status updated to true, roles updated.');
         }
       })
     );
@@ -34,7 +38,8 @@ export class AuthService {
   logout(): void {
     this.removeToken();
     this.loggedIn.next(false);
-    console.log('AuthService - Token removed, loggedIn status updated to false.');
+    this.currentUserRoles.next([]);
+    console.log('AuthService - Token removed, loggedIn status updated to false, roles cleared.');
   }
 
   public getToken(): string | null {
@@ -53,9 +58,44 @@ export class AuthService {
     return this.loggedIn.asObservable();
   }
 
+  public getUserRoles(): Observable<string[]> {
+    return this.currentUserRoles.asObservable();
+  }
+
+  public hasRole(requiredRoles: string[]): boolean {
+    const userRoles = this.currentUserRoles.getValue();
+    if (!userRoles || userRoles.length === 0) {
+      return false;
+    }
+    return requiredRoles.some(role => userRoles.includes(role));
+  }
+
   private hasToken(): boolean {
     const has = !!this.getToken();
     console.log('AuthService - Initial hasToken check:', has);
     return has;
+  }
+
+  private getRolesFromToken(): string[] {
+    const token = this.getToken();
+    if (token) {
+      const decodedToken = this.decodeToken(token);
+      return decodedToken.roles || [];
+    }
+    return [];
+  }
+
+  private decodeToken(token: string): any {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      console.error('Error decoding token:', e);
+      return {};
+    }
   }
 }

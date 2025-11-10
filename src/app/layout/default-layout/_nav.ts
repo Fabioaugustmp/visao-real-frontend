@@ -63,71 +63,85 @@ export const navItems: INavData[] = [
     name: 'Cadastros',
     url: '/cadastros',
     iconComponent: { name: 'cil-puzzle' },
+    roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'], // Apply roles to parent
     children: [
       {
         name: 'Médicos',
         url: '/medicos',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
       {
         name: 'Empresas',
         url: '/empresas',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
       {
         name: 'Contadores',
         url: '/contadores',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
       {
         name: 'Grupos',
         url: '/grupos',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
       {
         name: 'Usuários',
         url: '/usuarios',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
       {
         name: 'Itens',
         url: '/itens',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
       {
         name: 'Preços',
         url: '/precos',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
       {
         name: 'Bandeiras',
         url: '/bandeiras',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
       {
         name: 'Formas de Pagamento',
         url: '/formas-pagamento',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
       {
         name: 'Controle de Acesso',
         url: '/user-access',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
       {
         name: 'Assinaturas',
         url: '/subscriptions',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
       {
         name: 'Tarifários',
         url: '/tarifarios',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
       {
         name: 'Relatórios',
         url: '/relatorios-dashboard',
-        iconComponent: { name: 'cil-chart-pie' } // Using a chart icon for reports
+        iconComponent: { name: 'cil-chart-pie' }, // Using a chart icon for reports
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       }
     ]
   },
