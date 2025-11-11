@@ -1,0 +1,71 @@
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <h2>Faturamento x Procedimento</h2>
+      </c-card-header>
+      <c-card-body>
+        <c-chart type="bar" [data]="{
+          labels: ['Procedimento 1', 'Procedimento 2', 'Procedimento 3', 'Procedimento 4', 'Procedimento 5', 'Procedimento 6', 'Procedimento 7'],
+          datasets: [
+            {
+              label: 'Faturamento',
+              backgroundColor: '#f87979',
+              data: [40, 20, 12, 39, 10, 40, 39]
+            }
+          ]
+        }" [options]="{
+          indexAxis: 'y'
+        }"></c-chart>
+      </c-card-body>
+    </c-card>
+  </c-col>
+  <c-col xs="6">
+    <c-card class="mb-4">
+      <c-card-header>
+        <h2>Valor Faturado x Forma de Pagamento (Mês a Mês)</h2>
+      </c-card-header>
+      <c-card-body>
+        <c-chart type="bar" [data]="{
+          labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'],
+          datasets: [
+            {
+              label: 'Crédito',
+              backgroundColor: '#f87979',
+              data: [40, 20, 12, 39, 10, 40, 39]
+            },
+            {
+              label: 'Débito',
+              backgroundColor: '#36a2eb',
+              data: [20, 10, 6, 19, 5, 20, 19]
+            }
+          ]
+        }"></c-chart>
+      </c-card-body>
+    </c-card>
+  </c-col>
+  <c-col xs="6">
+    <c-card class="mb-4">
+      <c-card-header>
+        <h2>Valor Faturado x Condição de Pagamento (Mês a Mês)</h2>
+      </c-card-header>
+      <c-card-body>
+        <c-chart type="bar" [data]="{
+          labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'],
+          datasets: [
+            {
+              label: 'À Vista',
+              backgroundColor: '#f87979',
+              data: [40, 20, 12, 39, 10, 40, 39]
+            },
+            {
+              label: 'Parcelado',
+              backgroundColor: '#36a2eb',
+              data: [20, 10, 6, 19, 5, 20, 19]
+            }
+          ]
+        }"></c-chart>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

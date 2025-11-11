@@ -22,7 +22,7 @@ import { Indicacao } from '../../indicacoes/indicacao.model';
 import { Tarifario } from '../../tarifarios/tarifario.model';
 import { TarifarioService } from '../../tarifarios/tarifario.service';
 import { Financeiro } from '../../financeiros/financeiro.model';
-import { CardModule, GridModule, FormModule, ButtonModule } from '@coreui/angular';
+import { CardModule, GridModule, FormModule, ButtonModule, AlertModule } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
 
 function minLengthArray(min: number) {
@@ -90,7 +90,8 @@ function cpfValidator(control: AbstractControl): ValidationErrors | null {
     GridModule,
     FormModule,
     ButtonModule,
-    IconModule
+    IconModule,
+    AlertModule
   ]
 })
 export class TicketsFormComponent implements OnInit {
@@ -221,6 +222,70 @@ export class TicketsFormComponent implements OnInit {
         });
       }
     });
+  }
+
+  getFormErrors(): string[] {
+    const errors: string[] = [];
+    if (this.ticketForm.invalid && (this.ticketForm.dirty || this.ticketForm.touched)) {
+      Object.keys(this.ticketForm.controls).forEach(key => {
+        const control = this.ticketForm.get(key);
+        if (control && control.invalid && (control.dirty || control.touched)) {
+          const controlErrors = control.errors;
+          if (controlErrors) {
+            Object.keys(controlErrors).forEach(errorKey => {
+              const errorMessage = this.getErrorMessage(key, errorKey, controlErrors[errorKey]);
+              if (errorMessage) {
+                errors.push(errorMessage);
+              }
+            });
+          }
+        }
+      });
+    }
+    return errors;
+  }
+
+  getErrorMessage(controlName: string, errorName: string, errorValue: any): string | null {
+    const fieldNames: { [key: string]: string } = {
+      dataTicket: 'Data',
+      numAtend: 'Nº Atendimento',
+      nomePaciente: 'Paciente',
+      nomePagador: 'Pagador',
+      cpfPagador: 'CPF Pagador',
+      medicoExec: 'Médico Executante',
+      medicoSolic: 'Médico Solicitante',
+      nfSerie: 'Série NF',
+      nfNumero: 'Nº NF',
+      formaPagamento: 'Forma de Pagamento',
+      bandeira: 'Bandeira',
+      cartaoIdent: 'Identificação do Cartão',
+      cartaoCvv: 'CVV',
+      cartaoAutorizacao: 'Autorização',
+      cartaoNsu: 'NSU',
+      parcelamento: 'Parcelamento',
+      posNum: 'Número POS',
+      itens: 'Itens',
+      tarifario: 'Tarifário'
+    };
+
+    const fieldName = fieldNames[controlName] || controlName;
+
+    switch (errorName) {
+      case 'required':
+        return `${fieldName} é obrigatório.`;
+      case 'maxlength':
+        return `${fieldName} deve ter no máximo ${errorValue.requiredLength} caracteres.`;
+      case 'min':
+        return `${fieldName} deve ser maior que ${errorValue.min}.`;
+      case 'cpfInvalid':
+        return `${fieldName} é inválido.`;
+      case 'minLengthArray':
+        return `${fieldName} deve ter pelo menos 1 item.`;
+      case 'pattern':
+        return `${fieldName} tem um formato inválido.`;
+      default:
+        return `${fieldName} é inválido.`;
+    }
   }
 
   onSubmit(): void {

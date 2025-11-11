@@ -7,6 +7,12 @@
         </c-card-header>
         <c-card-body>
           <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
+            <c-alert color="danger" *ngIf="getFormErrors().length > 0">
+              <strong>Erros de Validação:</strong>
+              <ul>
+                <li *ngFor="let error of getFormErrors()">{{ error }}</li>
+              </ul>
+            </c-alert>
             <c-row class="mb-3">
               <c-col md="6">
                 <label cLabel for="dataTicket">Data</label>

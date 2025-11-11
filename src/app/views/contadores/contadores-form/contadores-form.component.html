@@ -50,6 +50,16 @@
                   <div *ngIf="f['crcUf'].errors['required']">UF é obrigatório.</div>
                 </div>
               </c-col>
+              <c-col md="4">
+                <label cLabel for="empresaId">Empresa</label>
+                <select cSelect id="empresaId" formControlName="empresaId">
+                  <option value="" disabled>Selecione a Empresa</option>
+                  <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.razaoSocial }}</option>
+                </select>
+                <div *ngIf="f['empresaId'].touched && f['empresaId'].errors" class="text-danger small">
+                  <div *ngIf="f['empresaId'].errors['required']">Empresa é obrigatória.</div>
+                </div>
+              </c-col>
             </c-row>
             <button
               cButton

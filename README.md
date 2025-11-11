@@ -284,3 +284,55 @@ copyright 2025 creativeLabs Łukasz Holeczek.
 Code released under [the MIT license](https://github.com/coreui/coreui-free-react-admin-template/blob/master/LICENSE).
 There is only one limitation you can't re-distribute the CoreUI as stock. You can’t do this if you modify the CoreUI. In the past, we faced some problems with
 persons who tried to sell CoreUI based templates.
+
+## Docker Deployment
+
+To deploy this application with Docker, you can use the provided `Dockerfile` and `nginx.conf`.
+
+### Prerequisites
+
+Ensure you have [Docker](https://www.docker.com/get-started) installed on your machine.
+
+### Overview
+
+The `Dockerfile` uses a multi-stage build to create a small, production-ready Nginx image that serves the compiled Angular application.
+
+1.  **Build Stage**: Uses a Node.js image to install dependencies and build the Angular app.
+2.  **Production Stage**: Uses a lightweight Nginx image and copies only the built artifacts.
+
+The `nginx.conf` file is configured to correctly handle Single Page Application (SPA) routing.
+
+### Step-by-Step Guide
+
+#### Step 1: Build the Docker Image
+
+Open your terminal at the project root and run the following command to build the Docker image. This will tag the image as `visao-real-frontend`.
+
+```shell
+docker build -t visao-real-frontend .
+```
+
+#### Step 2: Run the Docker Container
+
+Once the image is built, start a container from it with this command:
+
+```shell
+docker run -d -p 8080:80 --name visao-real-app visao-real-frontend
+```
+
+-   `-d`: Runs the container in detached mode (in the background).
+-   `-p 8080:80`: Maps port 8080 on your local machine to port 80 inside the container (where Nginx listens).
+-   `--name visao-real-app`: Assigns a friendly name to your container.
+-   `visao-real-frontend`: The name of the image to run.
+
+#### Step 3: Access Your Application
+
+Open your browser and navigate to **http://localhost:8080**. You should see your application running.
+
+#### Step 4: Stop the Container
+
+To stop the running container, use the following command:
+
+```shell
+docker stop visao-real-app
+```

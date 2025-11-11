@@ -5,6 +5,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ContadorService } from '../contador.service';
 import { Contador } from '../contador.model';
 import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
+import { EmpresaService } from '../../empresas/empresa.service'; // Import EmpresaService
+import { Empresa } from '../../empresas/empresa.model'; // Import Empresa model
 
 @Component({
   selector: 'app-contadores-form',
@@ -21,16 +23,19 @@ export class ContadoresFormComponent implements OnInit {
   ufs: string[] = [
     'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
   ];
+  empresas: Empresa[] = []; // Property to store companies
 
   constructor(
     private fb: FormBuilder,
     private contadorService: ContadorService,
+    private empresaService: EmpresaService, // Inject EmpresaService
     private router: Router,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.initForm();
+    this.loadEmpresas(); // Load companies
     this.checkMode();
   }
 
@@ -41,7 +46,14 @@ export class ContadoresFormComponent implements OnInit {
       nome: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       crc: ['', [Validators.required, Validators.maxLength(11), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
-      crcUf: ['', Validators.required] // Removed minLength and maxLength
+      crcUf: ['', Validators.required],
+      empresaId: ['', Validators.required] // Add empresaId form control
+    });
+  }
+
+  loadEmpresas(): void {
+    this.empresaService.getEmpresas().subscribe(empresas => {
+      this.empresas = empresas;
     });
   }
 
@@ -52,6 +64,10 @@ export class ContadoresFormComponent implements OnInit {
         this.contadorId = +params['id'];
         this.contadorService.getContador(this.contadorId).subscribe(contador => {
           this.contadorForm.patchValue(contador);
+          // Patch empresaId if contador has an associated company
+          if (contador.empresa && contador.empresa.id) {
+            this.contadorForm.patchValue({ empresaId: contador.empresa.id });
+          }
         });
       }
     });

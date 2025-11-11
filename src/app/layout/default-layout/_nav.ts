@@ -137,12 +137,20 @@ export const navItems: INavData[] = [
         icon: 'nav-icon-bullet',
         roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
+  {
+    name: 'Relatórios',
+    iconComponent: { name: 'cil-chart' },
+    children: [
       {
-        name: 'Relatórios',
-        url: '/relatorios-dashboard',
-        iconComponent: { name: 'cil-chart-pie' }, // Using a chart icon for reports
-        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
+        name: 'Dashboard',
+        url: '/relatorios-dashboard'
+      },
+      {
+        name: 'Dashboard 2',
+        url: '/relatorios-dashboard-2'
       }
+    ]
+  },
     ]
   },
   {

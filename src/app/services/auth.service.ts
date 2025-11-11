@@ -98,4 +98,13 @@ export class AuthService {
       return {};
     }
   }
+
+  public getUserName(): string | null {
+    const token = this.getToken();
+    if (token) {
+      const decodedToken = this.decodeToken(token);
+      return decodedToken.name || null;
+    }
+    return null;
+  }
 }

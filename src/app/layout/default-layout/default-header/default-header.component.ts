@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router'; // Import Router
+import { Component, computed, inject, input, OnInit } from '@angular/core'; // Import OnInit
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import {
   AvatarComponent,
@@ -23,14 +23,14 @@ import {
 } from '@coreui/angular';
 
 import { IconDirective } from '@coreui/icons-angular';
-import { AuthService } from 'src/app/services/auth.service'; // Import AuthService
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-default-header',
   templateUrl: './default-header.component.html',
   imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, NavItemComponent, NavLinkDirective, RouterLink, RouterLinkActive, NgTemplateOutlet, BreadcrumbRouterComponent, DropdownComponent, DropdownToggleDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective]
 })
-export class DefaultHeaderComponent extends HeaderComponent {
+export class DefaultHeaderComponent extends HeaderComponent implements OnInit { // Implement OnInit
 
   readonly #colorModeService = inject(ColorModeService);
   readonly colorMode = this.#colorModeService.colorMode;
@@ -46,11 +46,17 @@ export class DefaultHeaderComponent extends HeaderComponent {
     return this.colorModes.find(mode => mode.name === currentMode)?.icon ?? 'cilSun';
   });
 
+  userName: string | null = null; // Property to store user name
+
   constructor(
-    private authService: AuthService, // Inject AuthService
-    private router: Router // Inject Router
+    private authService: AuthService,
+    private router: Router
   ) {
     super();
+  }
+
+  ngOnInit(): void {
+    this.userName = this.authService.getUserName(); // Get user name on init
   }
 
   sidebarId = input('sidebar1');

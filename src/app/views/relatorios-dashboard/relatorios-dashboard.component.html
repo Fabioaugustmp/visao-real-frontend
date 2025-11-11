@@ -1,123 +1,116 @@
-<div class="animated fadeIn">
-  <c-row>
-    <c-col xs="12">
-      <c-card class="mb-4">
-        <c-card-header>
-          <strong>Relatórios Médicos</strong>
-        </c-card-header>
-        <c-card-body>
-          <form cForm [formGroup]="reportForm" (ngSubmit)="generateReport()">
-            <c-row class="mb-3">
-              <c-col md="4">
-                <label cLabel for="medicoId">Médico</label>
-                <select cSelect id="medicoId" formControlName="medicoId">
-                  <option [ngValue]="null" disabled>Selecione um médico</option>
-                  <option *ngFor="let medico of medicos" [ngValue]="medico.id">{{ medico.nome }}</option>
-                </select>
-                <div *ngIf="reportForm.get('medicoId')?.invalid && reportForm.get('medicoId')?.touched" class="text-danger">
-                  Médico é obrigatório.
-                </div>
-              </c-col>
-              <c-col md="4">
-                <label cLabel for="dataInicio">Data Início</label>
-                <input cFormControl type="date" id="dataInicio" formControlName="dataInicio">
-                <div *ngIf="reportForm.get('dataInicio')?.invalid && reportForm.get('dataInicio')?.touched" class="text-danger">
-                  Data de início é obrigatória.
-                </div>
-              </c-col>
-              <c-col md="4">
-                <label cLabel for="dataFim">Data Fim</label>
-                <input cFormControl type="date" id="dataFim" formControlName="dataFim">
-                <div *ngIf="reportForm.get('dataFim')?.invalid && reportForm.get('dataFim')?.touched" class="text-danger">
-                  Data de fim é obrigatória.
-                </div>
-              </c-col>
-            </c-row>
-            <button cButton color="primary" type="submit" [disabled]="reportForm.invalid || loading">
-              <c-spinner *ngIf="loading" size="sm" aria-hidden="true"></c-spinner>
-              Gerar Relatório
-            </button>
-            <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
-          </form>
+<c-row class="mb-4 g-4">
+  <c-col sm="6" lg="3">
+    <c-widget-stat-a color="primary" title="Faturamento do mês">
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>R$ 12.345,67</span>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+  <c-col sm="6" lg="3">
+    <c-widget-stat-a color="info" title="Faturamento da Semana">
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>R$ 3.456,78</span>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+  <c-col sm="6" lg="3">
+    <c-widget-stat-a color="warning" title="Faturamento do dia">
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>R$ 567,89</span>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+  <c-col sm="6" lg="3">
+    <c-widget-stat-a color="danger" title="Faturamento Acumulado Ano">
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>R$ 123.456,78</span>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+</c-row>
 
-          <div *ngIf="loading" class="text-center mt-5">
-            <c-spinner color="primary" size="sm"></c-spinner>
-            <p class="mt-2">Carregando relatório...</p>
-          </div>
+<c-card class="my-4">
+  <c-card-body>
+    <c-row>
+      <c-col sm="5">
+        <h4 class="card-title mb-0">Faturamento Anual</h4>
+        <div class="small text-body-secondary">Mês a Mês</div>
+      </c-col>
+      <c-col class="d-none d-md-block" sm="7">
+        <form>
+          <c-row class="float-end">
+            <c-col class="col-auto">
+              <select class="form-select" aria-label="Filtro Mês">
+                <option selected>Mês</option>
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+            </c-col>
+            <c-col class="col-auto">
+              <select class="form-select" aria-label="Filtro Ano">
+                <option selected>Ano</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+              </select>
+            </c-col>
+          </c-row>
+        </form>
+      </c-col>
+    </c-row>
+    <c-chart
+      [data]="mainChart.data"
+      [height]="300"
+      [ngStyle]="{ 'marginTop.px': 40 }"
+      [options]="mainChart.options"
+      type="bar"
+    >
+      Gráfico Barras Vertical, faturamento Anual, mês a mês
+    </c-chart>
+  </c-card-body>
+</c-card>
 
-          <div *ngIf="relatorio && !loading" class="mt-4">
-            <c-card class="mb-4">
-              <c-card-header>
-                <strong>Resumo do Relatório para {{ relatorio.nomeMedico }}</strong>
-              </c-card-header>
-              <c-card-body>
-                <c-row>
-                  <c-col md="6">
-                    <p><strong>Período:</strong> {{ relatorio.dataInicio | date }} - {{ relatorio.dataFim | date }}</p>
-                    <p><strong>Total de Atendimentos:</strong> {{ relatorio.totalAtendimentos }}</p>
-                    <p><strong>Valor Total Faturado:</strong> {{ relatorio.valorTotalFaturado | currency:'BRL':'symbol':'1.2-2' }}</p>
-                  </c-col>
-                </c-row>
-              </c-card-body>
-            </c-card>
-
-            <c-row class="mt-4">
-              <c-col md="6">
-                <c-card class="mb-4">
-                  <c-card-header>
-                    <strong>Valor Faturado por Atendimento</strong>
-                  </c-card-header>
-                  <c-card-body>
-                    <c-chart [data]="totalBilledChartData" [options]="totalBilledChartOptions" [type]="totalBilledChartType"></c-chart>
-                  </c-card-body>
-                </c-card>
-              </c-col>
-              <c-col md="6">
-                <c-card class="mb-4">
-                  <c-card-header>
-                    <strong>Número de Atendimentos por Dia</strong>
-                  </c-card-header>
-                  <c-card-body>
-                    <c-chart [data]="appointmentCountChartData" [options]="appointmentCountChartOptions" [type]="appointmentCountChartType"></c-chart>
-                  </c-card-body>
-                </c-card>
-              </c-col>
-            </c-row>
-
-            <c-card class="mt-4">
-              <c-card-header>
-                <strong>Detalhes dos Atendimentos</strong>
-              </c-card-header>
-              <c-card-body>
-                <table cTable>
-                  <thead>
-                    <tr>
-                      <th>ID Ticket</th>
-                      <th>Data Atendimento</th>
-                      <th>Paciente</th>
-                      <th>Valor Atendimento</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let detalhe of relatorio.detalhes">
-                      <td>{{ detalhe.idTicket }}</td>
-                      <td>{{ detalhe.dataAtendimento | date:'shortDate' }}</td>
-                      <td>{{ detalhe.nomePaciente }}</td>
-                      <td>{{ detalhe.valorAtendimento | currency:'BRL':'symbol':'1.2-2' }}</td>
-                    </tr>
-                    <tr *ngIf="relatorio.detalhes.length === 0">
-                      <td colspan="4" class="text-center">Nenhum atendimento encontrado para o período.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </c-card-body>
-            </c-card>
-          </div>
-          <div *ngIf="!relatorio && !loading && !error" class="mt-4 text-center">
-            <p>Selecione um médico e um período para gerar o relatório.</p>
-          </div>
-        </c-card-body>
-      </c-card>
-    </c-col>
-  </c-row>
-</div>
+<c-row>
+  <c-col md="6">
+    <c-card class="mb-4">
+      <c-card-header>
+        Indicadores
+      </c-card-header>
+      <c-card-body>
+        <c-chart
+          type="bar"
+          [data]="indicadoresChart.data"
+          [options]="indicadoresChart.options"
+        >
+          Gráfico Barras Horizontal, Indicantes 2 Barras (a Pagar, A receber)
+        </c-chart>
+      </c-card-body>
+    </c-card>
+  </c-col>
+  <c-col md="6">
+    <c-card class="mb-4">
+      <c-card-header>
+        Taxa de Cartão
+      </c-card-header>
+      <c-card-body>
+        <c-chart
+          type="bar"
+          [data]="taxaCartaoChart.data"
+          [options]="taxaCartaoChart.options"
+        >
+          Gráfico Barras, Taxa de cartão mês a mês
+        </c-chart>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

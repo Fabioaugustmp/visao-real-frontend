@@ -1,19 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RelatoriosService } from './relatorios.service';
-import { RelatorioMedicoDTO, DetalheAtendimentoDTO } from './relatorios.model';
-import { Medico } from '../medicos/medico.model';
-import { MedicoService } from '../medicos/medico.service';
+import { ReactiveFormsModule } from '@angular/forms';
 import {
-  ButtonModule,
-  CardModule,
-  GridModule,
-  FormModule,
-  SpinnerModule
+  ButtonDirective,
+  CardBodyComponent,
+  CardComponent,
+  CardFooterComponent,
+  CardHeaderComponent,
+  ColComponent,
+  FormSelectDirective,
+  ProgressComponent,
+  RowComponent,
+  TableDirective,
+  TextColorDirective,
+  WidgetModule
 } from '@coreui/angular';
-import { ChartjsModule } from '@coreui/angular-chartjs';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { ChartjsComponent } from '@coreui/angular-chartjs';
+import { IconDirective } from '@coreui/icons-angular';
+import { getStyle } from '@coreui/utils';
 
 @Component({
   selector: 'app-relatorios-dashboard',
@@ -22,208 +26,140 @@ import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
   standalone: true,
   imports: [
     CommonModule,
+    WidgetModule,
+    CardComponent,
+    CardBodyComponent,
+    RowComponent,
+    ColComponent,
+    TextColorDirective,
+    CardHeaderComponent,
+    ButtonDirective,
     ReactiveFormsModule,
-    ButtonModule,
-    CardModule,
-    GridModule,
-    FormModule,
-    ChartjsModule,
-    SpinnerModule
+    ChartjsComponent,
+    CardFooterComponent,
+    ProgressComponent,
+    TableDirective,
+    IconDirective,
+    FormSelectDirective
   ]
 })
 export class RelatoriosDashboardComponent implements OnInit {
-  reportForm: FormGroup;
-  medicos: Medico[] = [];
-  relatorio: RelatorioMedicoDTO | null = null;
-  loading = false;
-  error: string | null = null;
 
-  // Chart configurations
-  public totalBilledChartData: ChartData<'bar'> = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        label: 'Valor Faturado',
-        backgroundColor: '#42A5F5',
-        borderColor: '#1E88E5',
-        borderWidth: 1
-      }
-    ]
-  };
-  public totalBilledChartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Valor Faturado por Atendimento'
-      }
-    },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: 'Data do Atendimento'
-        }
-      },
-      y: {
-        title: {
-          display: true,
-          text: 'Valor (R$)'
-        }
-      }
-    }
-  };
-  public totalBilledChartType: ChartType = 'bar';
-
-  public appointmentCountChartData: ChartData<'line'> = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        label: 'Número de Atendimentos',
-        fill: true,
-        tension: 0.4,
-        borderColor: '#66BB6A',
-        backgroundColor: 'rgba(102, 187, 106, 0.2)'
-      }
-    ]
-  };
-  public appointmentCountChartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Número de Atendimentos por Dia'
-      }
-    },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: 'Data'
-        }
-      },
-      y: {
-        title: {
-          display: true,
-          text: 'Contagem'
-        },
-        beginAtZero: true
-      }
-    }
-  };
-  public appointmentCountChartType: ChartType = 'line';
-
-
-  constructor(
-    private fb: FormBuilder,
-    private relatoriosService: RelatoriosService,
-    private medicoService: MedicoService
-  ) {
-    this.reportForm = this.fb.group({
-      medicoId: [null, Validators.required],
-      dataInicio: ['', Validators.required],
-      dataFim: ['', Validators.required]
-    });
-  }
+  mainChart: any = {};
+  indicadoresChart: any = {};
+  taxaCartaoChart: any = {};
 
   ngOnInit(): void {
-    this.loadMedicos();
+    this.initCharts();
   }
 
-  loadMedicos(): void {
-    this.medicoService.getMedicos().subscribe(
-      (data) => {
-        this.medicos = data;
+  initCharts(): void {
+    const brandSuccess = getStyle('--cui-success') || '#4dbd74';
+    const brandInfo = getStyle('--cui-info') || '#20a8d8';
+    const brandDanger = getStyle('--cui-danger') || '#f86c6b';
+    const brandWarning = getStyle('--cui-warning') || '#f8cb00';
+
+    this.mainChart = {
+      data: {
+        labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        datasets: [
+          {
+            label: 'Faturamento',
+            backgroundColor: brandInfo,
+            borderColor: brandInfo,
+            data: [50, 20, 80, 40, 60, 30, 70, 55, 90, 65, 75, 45]
+          },
+          {
+            label: 'À Receber',
+            backgroundColor: brandSuccess,
+            borderColor: brandSuccess,
+            data: [40, 15, 70, 30, 50, 25, 60, 45, 80, 55, 65, 35]
+          },
+          {
+            label: 'Indicantes',
+            backgroundColor: brandDanger,
+            borderColor: brandDanger,
+            data: [10, 5, 10, 10, 10, 5, 10, 10, 10, 10, 10, 10]
+          }
+        ]
       },
-      (error) => {
-        console.error('Error loading medicos', error);
-        this.error = 'Erro ao carregar a lista de médicos.';
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            beginAtZero: true
+          }
+        }
       }
-    );
-  }
-
-  generateReport(): void {
-    if (this.reportForm.valid) {
-      this.loading = true;
-      this.error = null;
-      const { medicoId, dataInicio, dataFim } = this.reportForm.value;
-
-      this.relatoriosService.gerarRelatorioMedico(medicoId, dataInicio, dataFim).subscribe(
-        (data) => {
-          this.relatorio = data;
-          this.processChartData(data.detalhes);
-          this.loading = false;
-        },
-        (error) => {
-          console.error('Error generating report', error);
-          this.error = 'Erro ao gerar o relatório. Verifique os parâmetros e tente novamente.';
-          this.loading = false;
-          this.relatorio = null; // Clear previous report data
-        }
-      );
-    } else {
-      this.error = 'Por favor, preencha todos os campos obrigatórios.';
-    }
-  }
-
-  processChartData(detalhes: DetalheAtendimentoDTO[]): void {
-    // Sort details by date for chronological charts
-    detalhes.sort((a, b) => new Date(a.dataAtendimento).getTime() - new Date(b.dataAtendimento).getTime());
-
-    // Total Billed Value Chart
-    const billedValueLabels: string[] = [];
-    const billedValueData: number[] = [];
-
-    detalhes.forEach(detail => {
-      billedValueLabels.push(new Date(detail.dataAtendimento).toLocaleDateString());
-      billedValueData.push(detail.valorAtendimento);
-    });
-
-    this.totalBilledChartData = {
-      labels: billedValueLabels,
-      datasets: [
-        {
-          data: billedValueData,
-          label: 'Valor Faturado',
-          backgroundColor: '#42A5F5',
-          borderColor: '#1E88E5',
-          borderWidth: 1
-        }
-      ]
     };
 
-    // Appointment Count Chart
-    const appointmentCounts: { [key: string]: number } = {};
-    detalhes.forEach(detail => {
-      const date = new Date(detail.dataAtendimento).toLocaleDateString();
-      appointmentCounts[date] = (appointmentCounts[date] || 0) + 1;
-    });
-
-    const appointmentCountLabels = Object.keys(appointmentCounts).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-    const appointmentCountData = appointmentCountLabels.map(label => appointmentCounts[label]);
-
-    this.appointmentCountChartData = {
-      labels: appointmentCountLabels,
-      datasets: [
-        {
-          data: appointmentCountData,
-          label: 'Número de Atendimentos',
-          fill: true,
-          tension: 0.4,
-          borderColor: '#66BB6A',
-          backgroundColor: 'rgba(102, 187, 106, 0.2)'
+    this.indicadoresChart = {
+      data: {
+        labels: ['Indicadores'],
+        datasets: [
+          {
+            label: 'A Pagar',
+            backgroundColor: brandDanger,
+            borderColor: brandDanger,
+            data: [40]
+          },
+          {
+            label: 'A Receber',
+            backgroundColor: brandSuccess,
+            borderColor: brandSuccess,
+            data: [60]
+          }
+        ]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            beginAtZero: true
+          },
+          y: {
+            grid: {
+              display: false
+            }
+          }
         }
-      ]
+      }
+    };
+
+    this.taxaCartaoChart = {
+      data: {
+        labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+        datasets: [
+          {
+            label: 'Taxa de Cartão',
+            backgroundColor: brandWarning,
+            borderColor: brandWarning,
+            data: [5, 6, 4, 7, 5, 8]
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
     };
   }
 }
