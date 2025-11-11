@@ -18,13 +18,13 @@
       <c-nav-item>
         <a cNavLink routerLink="/usuarios" routerLinkActive="active">Users</a>
       </c-nav-item>
-      <c-nav-item>
+      <!-- <c-nav-item>
         <a cNavLink routerLink="/settings" routerLinkActive="active">Settings</a>
-      </c-nav-item>
+      </c-nav-item> -->
     </c-header-nav>
 
     <c-header-nav class="d-none d-md-flex ms-auto ">
-      <a cNavLink>
+      <!-- <a cNavLink>
         <svg cIcon class="my-1" name="cilBell" size="lg"></svg>
       </a>
       <a cNavLink>
@@ -32,7 +32,7 @@
       </a>
       <a cNavLink>
         <svg cIcon class="my-1" name="cilEnvelopeOpen" size="lg"></svg>
-      </a>
+      </a> -->
     </c-header-nav>
 
     <c-header-nav class="ms-auto ms-md-0">
@@ -62,11 +62,12 @@
       <c-avatar
         shape="rounded-1"
         size="md"
-        src="./assets/images/avatars/8.jpg"
         status="success"
         textColor="primary"
         alt="User avatar"
-      />
+      >
+        {{ userInitials }}
+      </c-avatar>
     </button>
     <ul cDropdownMenu class="pt-0 w-auto">
       <li>
@@ -79,7 +80,7 @@
           {{ userName }}
         </h6>
       </li>
-      <li>
+      <!-- <li>
         <a cDropdownItem routerLink="">
           <svg cIcon class="me-2" name="cilBell"></svg>
           Updates
@@ -101,8 +102,8 @@
           Tasks
           <c-badge class="ms-2 float-end" color="danger"> 42</c-badge>
         </a>
-      </li>
-      <li>
+      </li> -->
+      <!-- <li>
         <a cDropdownItem routerLink="">
           <svg cIcon class="me-2" name="cilCommentSquare"></svg>
           Comments
@@ -113,7 +114,7 @@
         <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold py-2">
           Settings
         </h6>
-      </li>
+      </li> -->
       <li></li>
       <li>
         <a cDropdownItem routerLink="/profile">
@@ -121,13 +122,13 @@
           Profile
         </a>
       </li>
-      <li>
+      <!-- <li>
         <a cDropdownItem routerLink="">
           <svg cIcon class="me-2" name="cilSettings"></svg>
           Settings
         </a>
-      </li>
-      <li>
+      </li> -->
+      <!-- <li>
         <a cDropdownItem routerLink="">
           <svg cIcon class="me-2" name="cilCreditCard"></svg>
           Payments
@@ -150,7 +151,7 @@
             42
           </c-badge>
         </a>
-      </li>
+      </li> -->
       <li>
         <hr cDropdownDivider />
       </li>

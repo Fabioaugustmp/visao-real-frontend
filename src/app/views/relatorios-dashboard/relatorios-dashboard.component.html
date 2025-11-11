@@ -80,12 +80,229 @@
   </c-card-body>
 </c-card>
 
+<c-row class="mt-4">
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>Traffic {{ "&" }} Sales</c-card-header>
+      <c-card-body>
+        <c-row>
+          <c-col class="d-none d-md-block" sm="7">
+            <form>
+              <c-row class="float-end">
+                <c-col class="col-auto">
+                  <select class="form-select" aria-label="Filtro Mês">
+                    <option selected>Mês</option>
+                    <option value="1">Janeiro</option>
+                    <option value="2">Fevereiro</option>
+                    <option value="3">Março</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Maio</option>
+                    <option value="6">Junho</option>
+                    <option value="7">Julho</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Setembro</option>
+                    <option value="10">Outubro</option>
+                    <option value="11">Novembro</option>
+                    <option value="12">Dezembro</option>
+                  </select>
+                </c-col>
+                <c-col class="col-auto">
+                  <select class="form-select" aria-label="Filtro Ano">
+                    <option selected>Ano</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                  </select>
+                </c-col>
+              </c-row>
+            </form>
+          </c-col>
+          <c-col md="12" xl="12" xs="12">
+            <c-row>
+              <c-col xs="12">
+                <div
+                  class="border-start border-start-4 border-start-info py-1 px-3 mb-3"
+                >
+                  <div class="text-body-secondary text-truncate small">
+                    Total Indicante a Receber
+                  </div>
+                  <div class="fs-5 fw-semibold">9,123</div>
+                </div>
+              </c-col>
+              <c-col xs="12">
+                <div
+                  class="border-start border-start-4 border-start-danger py-1 px-3 mb-3"
+                >
+                  <div class="text-body-secondary text-truncate small">
+                    Total Indicante a Pagar
+                  </div>
+                  <div class="fs-5 fw-semibold">22,643</div>
+                </div>
+              </c-col>
+            </c-row>
+            <hr class="mt-0" />
+            <div class="progress-group mb-4">
+              <div class="progress-group-prepend">
+                <span class="text-body-secondary small">Monday</span>
+              </div>
+              <div class="progress-group-bars">
+                <c-progress
+                  thin
+                  color="info"
+                  value="34"
+                  aria-label="Monday new clients"
+                />
+                <c-progress
+                  thin
+                  color="danger"
+                  value="78"
+                  aria-label="Monday recurring clients"
+                />
+              </div>
+            </div>
+            <div class="progress-group mb-4">
+              <div class="progress-group-prepend">
+                <span class="text-body-secondary small">Tuesday</span>
+              </div>
+              <div class="progress-group-bars">
+                <c-progress
+                  thin
+                  color="info"
+                  value="56"
+                  aria-label="Tuesday new clients"
+                />
+                <c-progress
+                  thin
+                  color="danger"
+                  value="94"
+                  aria-label="Tuesday recurring clients"
+                />
+              </div>
+            </div>
+            <div class="progress-group mb-4">
+              <div class="progress-group-prepend">
+                <span class="text-body-secondary small">Wednesday</span>
+              </div>
+              <div class="progress-group-bars">
+                <c-progress
+                  thin
+                  color="info"
+                  value="12"
+                  aria-label="Wednesday new clients"
+                />
+                <c-progress
+                  thin
+                  color="danger"
+                  value="67"
+                  aria-label="Wednesday recurring clients"
+                />
+              </div>
+            </div>
+            <div class="progress-group mb-4">
+              <div class="progress-group-prepend">
+                <span class="text-body-secondary small">Thursday</span>
+              </div>
+              <div class="progress-group-bars">
+                <c-progress
+                  thin
+                  color="info"
+                  value="43"
+                  aria-label="Thursday new clients"
+                />
+                <c-progress
+                  thin
+                  color="danger"
+                  value="91"
+                  aria-label="Thursday recurring clients"
+                />
+              </div>
+            </div>
+            <div class="progress-group mb-4">
+              <div class="progress-group-prepend">
+                <span class="text-body-secondary small">Friday</span>
+              </div>
+              <div class="progress-group-bars">
+                <c-progress
+                  thin
+                  color="info"
+                  value="22"
+                  aria-label="Friday new clients"
+                />
+                <c-progress
+                  thin
+                  color="danger"
+                  value="73"
+                  aria-label="Friday recurring clients"
+                />
+              </div>
+            </div>
+            <div class="progress-group mb-4">
+              <div class="progress-group-prepend">
+                <span class="text-body-secondary small">Saturday</span>
+              </div>
+              <div class="progress-group-bars">
+                <c-progress
+                  thin
+                  color="info"
+                  value="53"
+                  aria-label="Saturday new clients"
+                />
+                <c-progress
+                  thin
+                  color="danger"
+                  value="82"
+                  aria-label="Saturday recurring clients"
+                />
+              </div>
+            </div>
+            <div class="progress-group mb-4">
+              <div class="progress-group-prepend">
+                <span class="text-body-secondary small">Sunday</span>
+              </div>
+              <div class="progress-group-bars">
+                <c-progress
+                  thin
+                  color="info"
+                  value="9"
+                  aria-label="Sunday new clients"
+                />
+                <c-progress
+                  thin
+                  color="danger"
+                  value="69"
+                  aria-label="Sunday recurring clients"
+                />
+              </div>
+            </div>
+            <div
+              class="legend text-center d-none d-md-block"
+              ngPreserveWhitespaces
+            >
+              <small>
+                <sup>
+                  <span class="badge badge-pill badge-sm bg-info">&nbsp;</span>
+                </sup>
+                <span>Total Indicante a Receber</span>
+                &nbsp;&nbsp;
+                <sup>
+                  <span class="badge badge-pill badge-sm bg-danger"
+                    >&nbsp;</span
+                  >
+                </sup>
+                <span>Total Indicante a Pagar</span>
+              </small>
+            </div>
+          </c-col>
+        </c-row>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
 <c-row>
   <c-col md="6">
     <c-card class="mb-4">
-      <c-card-header>
-        Indicadores
-      </c-card-header>
+      <c-card-header> Indicadores </c-card-header>
       <c-card-body>
         <c-chart
           type="bar"
@@ -99,9 +316,7 @@
   </c-col>
   <c-col md="6">
     <c-card class="mb-4">
-      <c-card-header>
-        Taxa de Cartão
-      </c-card-header>
+      <c-card-header> Taxa de Cartão </c-card-header>
       <c-card-body>
         <c-chart
           type="bar"

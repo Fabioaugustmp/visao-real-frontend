@@ -47,6 +47,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit { 
   });
 
   userName: string | null = null; // Property to store user name
+  userInitials: string | null = null; // Property to store user initials
 
   constructor(
     private authService: AuthService,
@@ -57,9 +58,24 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit { 
 
   ngOnInit(): void {
     this.userName = this.authService.getUserName(); // Get user name on init
+    this.userInitials = this.getInitials(this.userName); // Calculate initials
   }
 
   sidebarId = input('sidebar1');
+
+  private getInitials(name: string | null): string | null {
+    if (!name) {
+      return null;
+    }
+    const parts = name.split(' ');
+    if (parts.length === 1) {
+      return parts[0].charAt(0).toUpperCase();
+    }
+    if (parts.length > 1) {
+      return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+    }
+    return null;
+  }
 
   public newMessages = [
     {
