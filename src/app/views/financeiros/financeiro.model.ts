@@ -11,11 +11,6 @@ export interface Financeiro {
   recebido: boolean;
   recebidoData: Date | null;
   valor: number;
-  tarifarioMedicoHistorico: TarifarioMedicoHistorico;
+  tarifarioMedicoHistorico: Tarifario;
   percentualTarifaAplicado: number;
-}
-
-export interface TarifarioMedicoHistorico {
-  id: number;
-  // TODO: Define other properties for TarifarioMedicoHistorico
 }

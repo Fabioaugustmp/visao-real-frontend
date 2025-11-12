@@ -12,6 +12,7 @@
               <th scope="col">#</th>
               <th scope="col">Médico</th>
               <th scope="col">Bandeira</th>
+              <th scope="col">Título</th>
               <th scope="col">Percentual Tarifa</th>
               <th scope="col">Início Vigência</th>
               <th scope="col">Fim Vigência</th>
@@ -21,8 +22,9 @@
           <tbody>
             <tr *ngFor="let tarifario of tarifarios">
               <th scope="row">{{ tarifario.id }}</th>
-              <td>{{ tarifario.medico.nome }}</td>
+              <td>{{ tarifario.medico?.nome }}</td>
               <td>{{ tarifario.bandeira.bandeira }}</td>
+              <td>{{ tarifario.titulo }}</td>
               <td>{{ tarifario.percentualTarifa }}%</td>
               <td>{{ tarifario.dataInicioVigencia | date:'shortDate' }}</td>
               <td>{{ tarifario.dataFimVigencia | date:'shortDate' }}</td>

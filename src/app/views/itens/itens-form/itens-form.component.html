@@ -9,11 +9,18 @@
           <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label cLabel for="tipo">Tipo</label>
-              <input cFormControl id="tipo" formControlName="tipo">
+              <input cFormControl id="tipo" formControlName="tipo" [ngClass]="{ 'is-invalid': itemForm.get('tipo')?.invalid && (itemForm.get('tipo')?.dirty || itemForm.get('tipo')?.touched) }">
+              <app-validation-feedback [control]="itemForm.get('tipo')"></app-validation-feedback>
             </div>
             <div class="mb-3">
               <label cLabel for="descricao">Descrição</label>
-              <input cFormControl id="descricao" formControlName="descricao">
+              <input cFormControl id="descricao" formControlName="descricao" [ngClass]="{ 'is-invalid': itemForm.get('descricao')?.invalid && (itemForm.get('descricao')?.dirty || itemForm.get('descricao')?.touched) }">
+              <app-validation-feedback [control]="itemForm.get('descricao')"></app-validation-feedback>
+            </div>
+            <div class="mb-3">
+              <label cLabel for="valor">Valor</label>
+              <input cFormControl id="valor" formControlName="valor" type="number" [ngClass]="{ 'is-invalid': itemForm.get('valor')?.invalid && (itemForm.get('valor')?.dirty || itemForm.get('valor')?.touched) }">
+              <app-validation-feedback [control]="itemForm.get('valor')"></app-validation-feedback>
             </div>
 
             <button cButton color="primary" type="submit" [disabled]="itemForm.invalid">Salvar</button>

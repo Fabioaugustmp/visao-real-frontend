@@ -32,6 +32,18 @@
               <div *ngIf="form.get('valor')?.errors?.['min']">O valor deve ser maior que 0.</div>
             </div>
           </div>
+          <div class="mb-3">
+            <label cLabel for="identificacaoCartao">Identificação Cartão</label>
+            <input cFormControl id="identificacaoCartao" formControlName="identificacaoCartao" type="text" maxlength="4" pattern="[0-9]{4}" [ngClass]="{'is-invalid': form.get('identificacaoCartao')?.invalid && (form.get('identificacaoCartao')?.dirty || form.get('identificacaoCartao')?.touched)}" />
+            <div *ngIf="form.get('identificacaoCartao')?.invalid && (form.get('identificacaoCartao')?.dirty || form.get('identificacaoCartao')?.touched)" class="invalid-feedback">
+              <div *ngIf="form.get('identificacaoCartao')?.errors?.['required']">Identificação do Cartão é obrigatório.</div>
+              <div *ngIf="form.get('identificacaoCartao')?.errors?.['pattern']">A identificação do cartão deve conter apenas 4 dígitos numéricos.</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label cLabel for="tarifario">Tarifário</label>
+            <div cFormControl id="tarifario">{{ form.get('tarifario')?.value }}</div>
+          </div>
           <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
           <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
         </form>

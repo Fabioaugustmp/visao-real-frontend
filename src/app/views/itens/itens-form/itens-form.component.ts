@@ -5,13 +5,14 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ItemService } from '../item.service';
 import { Item } from '../item.model';
 import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
+import { ValidationFeedbackComponent } from '../../../components/validation-feedback/validation-feedback.component';
 
 @Component({
   selector: 'app-itens-form',
   templateUrl: './itens-form.component.html',
   styleUrls: ['./itens-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, CardModule, GridModule, FormModule, ButtonModule]
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, CardModule, GridModule, FormModule, ButtonModule, ValidationFeedbackComponent]
 })
 export class ItensFormComponent implements OnInit {
 
@@ -34,7 +35,8 @@ export class ItensFormComponent implements OnInit {
   initForm(): void {
     this.itemForm = this.fb.group({
       tipo: ['', Validators.required],
-      descricao: ['', Validators.required]
+      descricao: ['', Validators.required],
+      valor: [0, Validators.required]
     });
   }
 

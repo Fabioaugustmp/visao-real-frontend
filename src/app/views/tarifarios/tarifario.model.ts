@@ -5,6 +5,7 @@ export interface Tarifario {
   id: number;
   medico: Medico;
   bandeira: Bandeira;
+  titulo: string;
   percentualTarifa: number;
   dataInicioVigencia: Date;
   dataFimVigencia: Date;

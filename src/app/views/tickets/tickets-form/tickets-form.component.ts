@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule, Params } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, startWith } from 'rxjs/operators';
 import { Medico } from '../../medicos/medico.model';
 import { MedicoService } from '../../medicos/medico.service';
 import { FormaPagamento } from '../../formas-pagamento/forma-pagamento.model';
@@ -24,6 +25,7 @@ import { TarifarioService } from '../../tarifarios/tarifario.service';
 import { Financeiro } from '../../financeiros/financeiro.model';
 import { CardModule, GridModule, FormModule, ButtonModule, AlertModule } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
+import { NgxCurrencyDirective, NgxCurrencyInputMode } from 'ngx-currency';
 
 function minLengthArray(min: number) {
   return (c: AbstractControl): ValidationErrors | null => {
@@ -91,7 +93,8 @@ function cpfValidator(control: AbstractControl): ValidationErrors | null {
     FormModule,
     ButtonModule,
     IconModule,
-    AlertModule
+    AlertModule,
+    NgxCurrencyDirective
   ]
 })
 export class TicketsFormComponent implements OnInit {
@@ -103,10 +106,26 @@ export class TicketsFormComponent implements OnInit {
   formasPagamento$!: Observable<FormaPagamento[]>;
   bandeiras$!: Observable<Bandeira[]>;
   parcelamentos$!: Observable<Parcelamento[]>;
-  itens$!: Observable<Item[]>;
+  itensList: Item[] = [];
   indicados$!: Observable<Indicado[]>;
   indicacoes$!: Observable<Indicacao[]>;
   tarifarios$!: Observable<Tarifario[]>;
+  totalItensValue: number = 0;
+
+  public customCurrencyMaskConfig = {
+    align: "right",
+    allowNegative: true,
+    allowZero: true,
+    decimal: ",",
+    precision: 2,
+    prefix: "R$ ",
+    suffix: "",
+    thousands: ".",
+    nullable: true,
+    min: null,
+    max: null,
+    inputMode: NgxCurrencyInputMode.Financial
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -125,15 +144,26 @@ export class TicketsFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.checkMode();
     this.medicos$ = this.medicoService.getMedicos();
     this.formasPagamento$ = this.formaPagamentoService.getFormasPagamento();
     this.bandeiras$ = this.bandeiraService.getBandeiras();
     this.parcelamentos$ = this.parcelamentoService.getParcelamentos();
-    this.itens$ = this.itemService.getItens();
+    this.itemService.getItens().subscribe(itens => this.itensList = itens);
     this.indicados$ = this.indicadoService.getIndicados();
     this.indicacoes$ = this.indicacaoService.getIndicacoes();
-    this.tarifarios$ = this.tarifarioService.getTarifarios();
+
+    this.checkMode();
+
+    this.itens.valueChanges.subscribe(() => {
+      this.calculateTotalItensValue();
+    });
+    this.calculateTotalItensValue(); // Initial calculation
+  }
+
+  calculateTotalItensValue(): void {
+    this.totalItensValue = this.itens.value.reduce((total: number, item: { valor: number }) => {
+      return total + (item.valor || 0);
+    }, 0);
   }
 
   initForm(): void {
@@ -198,27 +228,64 @@ export class TicketsFormComponent implements OnInit {
     this.indicados.removeAt(index);
   }
 
+  onItemChange(event: any, index: number): void {
+    const itemId = event.target.value;
+    const selectedItem = this.itensList.find(item => item.id === +itemId);
+    this.calculateTotalItensValue();
+    if (selectedItem) {
+      this.calculateTotalItensValue();
+      this.itens.at(index).patchValue({ valor: selectedItem.valor });
+    }
+  }
+
   checkMode(): void {
-    this.route.params.subscribe((params: Params) => {
-      if (params['id']) {
-        this.isEditMode = true;
-        this.ticketId = params['id'];
-        this.ticketService.getTicket(this.ticketId).subscribe((ticket: Ticket) => {
-          this.ticketForm.patchValue({
-            ...ticket,
-            medicoExec: ticket.medicoExec.id,
-            medicoSolic: ticket.medicoSolic.id,
-            formaPagamento: ticket.formaPagamento.id,
-            bandeira: ticket.bandeira.id,
-            parcelamento: ticket.parcelamento.id,
-            tarifario: ticket.financeiro.tarifarioMedicoHistorico.id // Patch tarifario
-          });
-          ticket.itens.forEach(item => {
-            this.itens.push(this.fb.group(item));
-          });
-          ticket.indicados.forEach(indicado => {
-            this.indicados.push(this.fb.group(indicado));
-          });
+    this.route.params.pipe(
+      switchMap(params => {
+        if (params['id']) {
+          this.isEditMode = true;
+          this.ticketId = params['id'];
+          return this.ticketService.getTicket(this.ticketId);
+        }
+        return of(null);
+      })
+    ).subscribe(ticket => {
+      const medicoExecControl = this.ticketForm.get('medicoExec')!;
+      
+      this.tarifarios$ = medicoExecControl.valueChanges.pipe(
+        startWith(ticket ? ticket.medicoExec.id : null),
+        switchMap(medicoId => {
+          if (medicoId) {
+            return this.medicoService.getTarifariosAtuais(medicoId).pipe(
+              map(tarifarios => {
+                if (ticket && ticket.financeiro.tarifarioMedicoHistorico) {
+                  const ticketTarifario = ticket.financeiro.tarifarioMedicoHistorico;
+                  if (!tarifarios.some(t => t.id === ticketTarifario.id)) {
+                    return [ticketTarifario, ...tarifarios];
+                  }
+                }
+                return tarifarios;
+              })
+            );
+          }
+          return of([]);
+        })
+      );
+
+      if (ticket) {
+        this.ticketForm.patchValue({
+          ...ticket,
+          medicoExec: ticket.medicoExec.id,
+          medicoSolic: ticket.medicoSolic.id,
+          formaPagamento: ticket.formaPagamento.id,
+          bandeira: ticket.bandeira.id,
+          parcelamento: ticket.parcelamento.id,
+          tarifario: ticket.financeiro.tarifarioMedicoHistorico.id
+        });
+        ticket.itens.forEach(item => {
+          this.itens.push(this.fb.group(item));
+        });
+        ticket.indicados.forEach(indicado => {
+          this.indicados.push(this.fb.group(indicado));
         });
       }
     });

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Medico } from './medico.model';
 import { environment } from '../../../environments/environment';
+import { Tarifario } from '../tarifarios/tarifario.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,5 +32,9 @@ export class MedicoService {
 
   deleteMedico(id: number): Observable<any> {
     return this.http.delete(`${this.API_URL}/${id}`);
+  }
+
+  getTarifariosAtuais(medicoId: number): Observable<Tarifario[]> {
+    return this.http.get<Tarifario[]>(`${this.API_URL}/${medicoId}/tarifarios-atuais`);
   }
 }

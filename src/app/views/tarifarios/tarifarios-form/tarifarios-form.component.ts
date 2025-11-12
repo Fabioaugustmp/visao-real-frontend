@@ -9,6 +9,7 @@ import { Bandeira } from '../../bandeiras/bandeira.model';
 import { BandeiraService } from '../../bandeiras/bandeira.service';
 import { CommonModule } from '@angular/common';
 import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
+import { ValidationFeedbackComponent } from '../../../components/validation-feedback/validation-feedback.component';
 
 @Component({
   selector: 'app-tarifarios-form',
@@ -22,7 +23,8 @@ import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angula
     CardModule,
     GridModule,
     FormModule,
-    ButtonModule
+    ButtonModule,
+    ValidationFeedbackComponent
   ]
 })
 export class TarifariosFormComponent implements OnInit {
@@ -45,9 +47,10 @@ export class TarifariosFormComponent implements OnInit {
       id: [null],
       medico: [null, Validators.required],
       bandeira: [null, Validators.required],
+      titulo: [null, Validators.required],
       percentualTarifa: [null, Validators.required],
       dataInicioVigencia: [null, Validators.required],
-      dataFimVigencia: [null, Validators.required]
+      dataFimVigencia: [null]
     });
   }
 
@@ -60,8 +63,9 @@ export class TarifariosFormComponent implements OnInit {
       this.tarifarioService.getTarifario(this.tarifarioId).subscribe(data => {
         this.form.patchValue({
           ...data,
-          medico: data.medico.id,
-          bandeira: data.bandeira.id
+          medico: data.medico ? data.medico.id : null,
+          bandeira: data.bandeira ? data.bandeira.id : null,
+          titulo: data.titulo
         });
       });
     }
@@ -88,6 +92,7 @@ export class TarifariosFormComponent implements OnInit {
         id: formValue.id,
         medico: selectedMedico!,
         bandeira: selectedBandeira!,
+        titulo: formValue.titulo,
         percentualTarifa: formValue.percentualTarifa,
         dataInicioVigencia: formValue.dataInicioVigencia,
         dataFimVigencia: formValue.dataFimVigencia
