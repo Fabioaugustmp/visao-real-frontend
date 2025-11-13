@@ -3,7 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { Financeiro } from '../financeiro.model';
 import { FinanceiroService } from '../financeiro.service';
 import { CommonModule } from '@angular/common';
-import { BadgeModule, ButtonModule, CardModule, GridModule, TableModule } from '@coreui/angular';
+import { BadgeModule, ButtonModule, CardModule, GridModule, PaginationModule, TableModule } from '@coreui/angular';
 
 @Component({
   selector: 'app-financeiros-list',
@@ -17,12 +17,17 @@ import { BadgeModule, ButtonModule, CardModule, GridModule, TableModule } from '
     GridModule,
     TableModule,
     ButtonModule,
-    BadgeModule
+    BadgeModule,
+    PaginationModule
   ]
 })
 export class FinanceirosListComponent implements OnInit {
 
   financeiros: Financeiro[] = [];
+  currentPage = 0;
+  size = 10;
+  totalElements = 0;
+  totalPages = 0;
 
   constructor(
     private financeiroService: FinanceiroService,
@@ -34,9 +39,17 @@ export class FinanceirosListComponent implements OnInit {
   }
 
   loadFinanceiros(): void {
-    this.financeiroService.getFinanceiros().subscribe(data => {
-      this.financeiros = data;
+    this.financeiroService.getFinanceiros(this.currentPage, this.size).subscribe(data => {
+      this.financeiros = data.content;
+      this.totalElements = data.totalElements;
+      this.totalPages = data.totalPages;
+      this.currentPage = data.number;
     });
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadFinanceiros();
   }
 
   excluirFinanceiro(id: number): void {

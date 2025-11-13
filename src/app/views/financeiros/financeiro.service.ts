@@ -13,8 +13,8 @@ export class FinanceiroService {
 
   constructor(private http: HttpClient) { }
 
-  getFinanceiros(): Observable<Financeiro[]> {
-    return this.http.get<Financeiro[]>(this.API_URL);
+  getFinanceiros(page: number, size: number): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}?page=${page}&size=${size}`);
   }
 
   getFinanceiro(id: number): Observable<Financeiro> {

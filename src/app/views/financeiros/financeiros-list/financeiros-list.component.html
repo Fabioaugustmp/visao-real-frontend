@@ -41,6 +41,25 @@
             </tr>
           </tbody>
         </table>
+        <c-pagination align="center" aria-label="Page navigation">
+          <c-page-item [disabled]="currentPage === 0" class="mx-1">
+            <a cButton color="secondary" c-page-link (click)="onPageChange(0)">First</a>
+          </c-page-item>
+          <c-page-item [disabled]="currentPage === 0" class="mx-1">
+            <a cButton color="secondary" c-page-link (click)="onPageChange(currentPage - 1)">Prev</a>
+          </c-page-item>
+          <ng-container *ngFor="let pageNumber of [].constructor(totalPages); let i = index">
+            <c-page-item [active]="currentPage === i" class="mx-1">
+              <a cButton color="secondary" c-page-link (click)="onPageChange(i)">{{ i + 1 }}</a>
+            </c-page-item>
+          </ng-container>
+          <c-page-item [disabled]="currentPage === totalPages - 1" class="mx-1">
+            <a cButton color="secondary" c-page-link (click)="onPageChange(currentPage + 1)">Next</a>
+          </c-page-item>
+          <c-page-item [disabled]="currentPage === totalPages - 1" class="mx-1">
+            <a cButton color="secondary" c-page-link (click)="onPageChange(totalPages - 1)">Last</a>
+          </c-page-item>
+        </c-pagination>
       </c-card-body>
     </c-card>
   </c-col>

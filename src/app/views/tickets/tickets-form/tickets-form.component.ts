@@ -251,7 +251,7 @@ export class TicketsFormComponent implements OnInit {
       const medicoExecControl = this.ticketForm.get('medicoExec')!;
       
       this.tarifarios$ = medicoExecControl.valueChanges.pipe(
-        startWith(ticket ? ticket.medicoExec.id : null),
+        startWith(ticket ? ticket.medicoExecId : null),
         switchMap(medicoId => {
           if (medicoId) {
             return this.medicoService.getTarifariosAtuais(medicoId).pipe(
@@ -273,12 +273,13 @@ export class TicketsFormComponent implements OnInit {
       if (ticket) {
         this.ticketForm.patchValue({
           ...ticket,
-          medicoExec: ticket.medicoExec.id,
-          medicoSolic: ticket.medicoSolic.id,
-          formaPagamento: ticket.formaPagamento.id,
-          bandeira: ticket.bandeira.id,
-                    parcelamento: ticket.parcelamento.numeroDeParcelas,
-          tarifario: ticket.financeiro.tarifarioMedicoHistorico.id
+          medicoExec: ticket.medicoExecId,
+          medicoSolic: ticket.medicoSolicId,
+          formaPagamento: ticket.formaPagamentoId,
+          bandeira: ticket.bandeiraId,
+                    parcelamento: ticket.parcela,
+          // tarifario: ticket.financeiro.tarifarioMedicoHistorico.id
+          tarifario: undefined
         });
         ticket.itens.forEach(item => {
           this.itens.push(this.fb.group(item));
