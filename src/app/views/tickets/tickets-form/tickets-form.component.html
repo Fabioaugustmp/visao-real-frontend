@@ -129,8 +129,8 @@
               </div>
             </div>
 
-            <c-row class="mb-3">          
-              <c-col md="4">
+            <c-row class="mb-3">
+              <c-col md="6">
                 <label cLabel for="cartaoAutorizacao">Autorização</label>
                 <input cFormControl id="cartaoAutorizacao" formControlName="cartaoAutorizacao" [ngClass]="{'is-invalid': ticketForm.get('cartaoAutorizacao')?.invalid && (ticketForm.get('cartaoAutorizacao')?.dirty || ticketForm.get('cartaoAutorizacao')?.touched)}">
                 <div *ngIf="ticketForm.get('cartaoAutorizacao')?.invalid && (ticketForm.get('cartaoAutorizacao')?.dirty || ticketForm.get('cartaoAutorizacao')?.touched)" class="invalid-feedback">
@@ -138,7 +138,7 @@
                   <div *ngIf="ticketForm.get('cartaoAutorizacao')?.errors?.['maxlength']">Máximo de {{ ticketForm.get('cartaoAutorizacao')?.errors?.['maxlength']?.requiredLength }} caracteres.</div>
                 </div>
               </c-col>
-              <c-col md="4">
+              <c-col md="6">
                 <label cLabel for="cartaoNsu">NSU</label>
                 <input cFormControl id="cartaoNsu" formControlName="cartaoNsu" [ngClass]="{'is-invalid': ticketForm.get('cartaoNsu')?.invalid && (ticketForm.get('cartaoNsu')?.dirty || ticketForm.get('cartaoNsu')?.touched)}">
                 <div *ngIf="ticketForm.get('cartaoNsu')?.invalid && (ticketForm.get('cartaoNsu')?.dirty || ticketForm.get('cartaoNsu')?.touched)" class="invalid-feedback">
@@ -152,7 +152,7 @@
               <c-col md="4">
                 <label cLabel for="parcelamento">Parcelamento</label>
                 <select cSelect id="parcelamento" formControlName="parcelamento" [ngClass]="{'is-invalid': ticketForm.get('parcelamento')?.invalid && (ticketForm.get('parcelamento')?.dirty || ticketForm.get('parcelamento')?.touched)}">
-                  <option *ngFor="let parcelamento of parcelamentos$ | async" [value]="parcelamento.id">{{ parcelamento.numeroDeParcelas }}</option>
+                  <option *ngFor="let parcelamento of parcelamentos$ | async" [value]="parcelamento.numeroDeParcelas">{{ parcelamento.numeroDeParcelas }}</option>
                 </select>
                 <div *ngIf="ticketForm.get('parcelamento')?.invalid && (ticketForm.get('parcelamento')?.dirty || ticketForm.get('parcelamento')?.touched)" class="invalid-feedback">
                   <div *ngIf="ticketForm.get('parcelamento')?.errors?.['required']">Parcelamento é obrigatório.</div>
@@ -213,7 +213,7 @@
                 </c-row>
               </div>
             </div>
-
+<!-- 
             <div class="mb-3" formArrayName="indicados">
               <h4>Indicante</h4>
               <button cButton color="success" variant="outline" type="button" (click)="addIndicado()" class="mb-2">Adicionar Indicante</button>
@@ -235,7 +235,7 @@
                   </c-col>
                 </c-row>
               </div>
-            </div>
+            </div> -->
 
             <button cButton color="primary" variant="outline" type="submit" [disabled]="ticketForm.invalid">
               <c-icon name="cil-save" class="me-1"></c-icon> Salvar

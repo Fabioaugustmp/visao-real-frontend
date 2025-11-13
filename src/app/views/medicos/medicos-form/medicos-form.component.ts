@@ -8,14 +8,18 @@ import { Empresa } from '../../empresas/empresa.model';
 import { Usuario } from '../../usuarios/usuario.model';
 import { EmpresaService } from '../../empresas/empresa.service';
 import { UsuarioService } from '../../usuarios/usuario.service';
-import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
+import { ButtonModule, CardModule, FormModule, GridModule, AlertModule } from '@coreui/angular';
+import { ValidationFeedbackComponent } from '../../../components/validation-feedback/validation-feedback.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-medicos-form',
   templateUrl: './medicos-form.component.html',
   styleUrls: ['./medicos-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, CardModule, GridModule, FormModule, ButtonModule]
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, CardModule, GridModule, FormModule, ButtonModule, ValidationFeedbackComponent, AlertModule]
 })
 export class MedicosFormComponent implements OnInit {
 
@@ -100,15 +104,73 @@ export class MedicosFormComponent implements OnInit {
         usuario: selectedUsuario!
       };
 
+      const handleErrors = catchError((error: HttpErrorResponse) => {
+        if (error.status === 400 && error.error && typeof error.error === 'object') {
+          for (const key in error.error) {
+            if (this.medicoForm.controls[key]) {
+              this.medicoForm.controls[key].setErrors({ backend: error.error[key] });
+            }
+          }
+        }
+        return throwError(() => error);
+      });
+
       if (this.isEditMode) {
-        this.medicoService.updateMedico(medicoData).subscribe(() => {
+        this.medicoService.updateMedico(medicoData).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/medicos']);
         });
       } else {
-        this.medicoService.createMedico(medicoData).subscribe(() => {
+        this.medicoService.createMedico(medicoData).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/medicos']);
         });
       }
+    }
+  }
+
+  getFormErrors(): string[] {
+    const errors: string[] = [];
+    if (this.medicoForm.invalid && (this.medicoForm.dirty || this.medicoForm.touched)) {
+      Object.keys(this.medicoForm.controls).forEach(key => {
+        const control = this.medicoForm.get(key);
+        if (control && control.invalid && (control.dirty || control.touched)) {
+          const controlErrors = control.errors;
+          if (controlErrors) {
+            Object.keys(controlErrors).forEach(errorKey => {
+              const errorMessage = this.getErrorMessage(key, errorKey, controlErrors[errorKey]);
+              if (errorMessage) {
+                errors.push(errorMessage);
+              }
+            });
+          }
+        }
+      });
+    }
+    return errors;
+  }
+
+  getErrorMessage(controlName: string, errorName: string, errorValue: any): string | null {
+    const fieldNames: { [key: string]: string } = {
+      crm: 'CRM',
+      nome: 'Nome',
+      email: 'Email',
+      dataNasc: 'Data de Nascimento',
+      cpf: 'CPF',
+      taxaImposto: 'Taxa de Imposto',
+      empresa: 'Empresa',
+      usuario: 'Usuário'
+    };
+
+    const fieldName = fieldNames[controlName] || controlName;
+
+    switch (errorName) {
+      case 'required':
+        return `${fieldName} é obrigatório.`;
+      case 'email':
+        return `${fieldName} inválido.`;
+      case 'backend':
+        return `${fieldName}: ${errorValue}`;
+      default:
+        return `${fieldName} é inválido.`;
     }
   }
 }

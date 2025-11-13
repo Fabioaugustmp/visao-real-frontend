@@ -12,7 +12,10 @@
               <th scope="col">#</th>
               <th scope="col">Ticket</th>
               <th scope="col">Médico</th>
-              <th scope="col">Valor</th>
+              <th scope="col">Parcela Referência</th>
+              <th scope="col">Total de Parcelas</th>
+              <th scope="col">Valor Parcela</th>
+              <th scope="col">Valor Total</th>
               <th scope="col">Recebido</th>
               <th scope="col">Ações</th>
             </tr>
@@ -20,8 +23,11 @@
           <tbody>
             <tr *ngFor="let financeiro of financeiros">
               <th scope="row">{{ financeiro.id }}</th>
-              <td>{{ financeiro.ticket?.id }}</td>
-              <td>{{ financeiro.medico.nome }}</td>
+              <td>{{ financeiro.ticketId }}</td>
+              <td>{{ financeiro.medicoNome }}</td>
+              <td>{{ financeiro.parcela }}</td>            
+              <td>{{ financeiro.totalParcelas }}</td>
+              <td>{{ financeiro.valorParcela | currency:'BRL' }}</td>
               <td>{{ financeiro.valor | currency:'BRL' }}</td>
               <td>
                 <c-badge [color]="financeiro.recebido ? 'success' : 'danger'">

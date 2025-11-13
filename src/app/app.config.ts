@@ -1,5 +1,5 @@
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, LOCALE_ID } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
   provideRouter,
@@ -15,6 +15,11 @@ import { IconSetService } from '@coreui/icons-angular';
 import { routes } from './app.routes';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { AuthInterceptor } from './interceptors/auth.interceptor'; // Import AuthInterceptor
+
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,6 +40,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } // Provide AuthInterceptor
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, // Provide AuthInterceptor
+    { provide: LOCALE_ID, useValue: 'pt' }
   ]
 };

@@ -7,41 +7,55 @@
         </c-card-header>
         <c-card-body>
           <form [formGroup]="medicoForm" (ngSubmit)="onSubmit()">
+            <c-alert color="danger" *ngIf="getFormErrors().length > 0">
+              <strong>Erros de Validação:</strong>
+              <ul>
+                <li *ngFor="let error of getFormErrors()">{{ error }}</li>
+              </ul>
+            </c-alert>
             <div class="mb-3">
               <label cLabel for="crm">CRM</label>
-              <input cFormControl id="crm" formControlName="crm" type="text">
+              <input cFormControl id="crm" formControlName="crm" type="text" [ngClass]="{'is-invalid': medicoForm.get('crm')?.invalid && (medicoForm.get('crm')?.dirty || medicoForm.get('crm')?.touched)}">
+              <app-validation-feedback [control]="medicoForm.get('crm')"></app-validation-feedback>
             </div>
             <div class="mb-3">
               <label cLabel for="nome">Nome</label>
-              <input cFormControl id="nome" formControlName="nome">
+              <input cFormControl id="nome" formControlName="nome" [ngClass]="{'is-invalid': medicoForm.get('nome')?.invalid && (medicoForm.get('nome')?.dirty || medicoForm.get('nome')?.touched)}">
+              <app-validation-feedback [control]="medicoForm.get('nome')"></app-validation-feedback>
             </div>
             <div class="mb-3">
               <label cLabel for="email">Email</label>
-              <input cFormControl id="email" formControlName="email" type="email">
+              <input cFormControl id="email" formControlName="email" type="email" [ngClass]="{'is-invalid': medicoForm.get('email')?.invalid && (medicoForm.get('email')?.dirty || medicoForm.get('email')?.touched)}">
+              <app-validation-feedback [control]="medicoForm.get('email')"></app-validation-feedback>
             </div>
             <div class="mb-3">
               <label cLabel for="dataNasc">Data de Nascimento</label>
-              <input cFormControl id="dataNasc" formControlName="dataNasc" type="date">
+              <input cFormControl id="dataNasc" formControlName="dataNasc" type="date" [ngClass]="{'is-invalid': medicoForm.get('dataNasc')?.invalid && (medicoForm.get('dataNasc')?.dirty || medicoForm.get('dataNasc')?.touched)}">
+              <app-validation-feedback [control]="medicoForm.get('dataNasc')"></app-validation-feedback>
             </div>
             <div class="mb-3">
               <label cLabel for="cpf">CPF</label>
-              <input cFormControl id="cpf" formControlName="cpf" type="text">
+              <input cFormControl id="cpf" formControlName="cpf" type="text" [ngClass]="{'is-invalid': medicoForm.get('cpf')?.invalid && (medicoForm.get('cpf')?.dirty || medicoForm.get('cpf')?.touched)}">
+              <app-validation-feedback [control]="medicoForm.get('cpf')"></app-validation-feedback>
             </div>
             <div class="mb-3">
               <label cLabel for="taxaImposto">Taxa de Imposto</label>
-              <input cFormControl id="taxaImposto" formControlName="taxaImposto" type="number">
+              <input cFormControl id="taxaImposto" formControlName="taxaImposto" type="number" [ngClass]="{'is-invalid': medicoForm.get('taxaImposto')?.invalid && (medicoForm.get('taxaImposto')?.dirty || medicoForm.get('taxaImposto')?.touched)}">
+              <app-validation-feedback [control]="medicoForm.get('taxaImposto')"></app-validation-feedback>
             </div>
             <div class="mb-3">
               <label cLabel for="empresa">Empresa</label>
-              <select cSelect id="empresa" formControlName="empresa">
+              <select cSelect id="empresa" formControlName="empresa" [ngClass]="{'is-invalid': medicoForm.get('empresa')?.invalid && (medicoForm.get('empresa')?.dirty || medicoForm.get('empresa')?.touched)}">
                 <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.razaoSocial }}</option>
               </select>
+              <app-validation-feedback [control]="medicoForm.get('empresa')"></app-validation-feedback>
             </div>
             <div class="mb-3">
               <label cLabel for="usuario">Usuário</label>
-              <select cSelect id="usuario" formControlName="usuario">
+              <select cSelect id="usuario" formControlName="usuario" [ngClass]="{'is-invalid': medicoForm.get('usuario')?.invalid && (medicoForm.get('usuario')?.dirty || medicoForm.get('usuario')?.touched)}">
                 <option *ngFor="let usuario of usuarios" [value]="usuario.id">{{ usuario.nome }}</option>
               </select>
+              <app-validation-feedback [control]="medicoForm.get('usuario')"></app-validation-feedback>
             </div>
 
             <button cButton color="primary" type="submit" [disabled]="medicoForm.invalid">Salvar</button>

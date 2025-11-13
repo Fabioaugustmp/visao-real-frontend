@@ -19,11 +19,15 @@ export interface Ticket {
   nfNumero: string;
   formaPagamento: FormaPagamento;
   bandeira: Bandeira;
+  bandeiraId: number;
+  formaPagamentoId: number;
+  medicoExecId: number,
+  medicoSolicId: number,
   cartaoIdent: string;
-  cartaoCvv: string;
   cartaoAutorizacao: string;
   cartaoNsu: string;
   parcelamento: Parcelamento;
+  parcela: number;
   posNum: string;
   itens: ItemTicket[];
   indicados: Indicado[];
@@ -55,7 +59,6 @@ export interface TicketDTO {
   bandeiraId?: string;
   bandeiraDescricao?: string;
   cartaoIdent?: string;
-  cartaoCvv?: string;
   cartaoAutorizacao?: string;
   cartaoNsu?: string;
   parcelamentoId?: string;
