@@ -6,6 +6,25 @@
           <strong>Tickets</strong>
         </c-card-header>
         <c-card-body>
+          <c-row class="mb-3">
+            <c-col md="3">
+              <label for="medicoId">Médico ID</label>
+              <input cFormControl id="medicoId" type="number" [(ngModel)]="searchMedicoId">
+            </c-col>
+            <c-col md="3">
+              <label for="ticketId">Ticket ID</label>
+              <input cFormControl id="ticketId" type="text" [(ngModel)]="searchTicketId">
+            </c-col>
+            <c-col md="3">
+              <label for="cpf">CPF</label>
+              <input cFormControl id="cpf" type="text" [(ngModel)]="searchCpf">
+            </c-col>
+            <c-col md="3" class="d-flex align-items-end">
+              <button cButton color="primary" class="me-2" (click)="searchTickets()">Buscar</button>
+              <button cButton color="secondary" (click)="clearSearch()">Limpar</button>
+            </c-col>
+          </c-row>
+
           <button cButton color="primary" class="mb-3" [routerLink]="['/tickets/novo']">Novo Ticket</button>
           <table cTable>
             <thead>
