@@ -62,24 +62,13 @@ export class FinanceirosFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTickets();
-    this.loadMedicos();
     this.loadTarifarios();
     this.financeiroId = this.route.snapshot.params['id'];
-    if (this.financeiroId) {
-      this.isEditMode = true;
-      this.financeiroService.getFinanceiro(this.financeiroId).subscribe(data => {
-        this.form.patchValue({
-          ...data,
-          ticket: data.ticket?.id,
-          medico: data.medico.id,
-          tarifario: data.tarifarioMedicoHistorico.id
-        });
-      });
-    }
+    this.loadMedicos(); // Call loadMedicos last to handle financeiro loading
   }
 
   loadTickets(): void {
-    const pageable = { page: 0, size: 9999, sort: ['id,asc'] }; // Assuming a large enough size to get all tickets
+    const pageable = { page: 0, size: 100, sort: ['id,asc'] }; // Assuming a large enough size to get all tickets
     this.ticketService.getTickets(pageable).subscribe(data => {
       this.tickets = data.content;
     });
@@ -88,6 +77,17 @@ export class FinanceirosFormComponent implements OnInit {
   loadMedicos(): void {
     this.medicoService.getMedicos().subscribe(data => {
       this.medicos = data;
+      if (this.financeiroId) {
+        this.isEditMode = true;
+        this.financeiroService.getFinanceiro(this.financeiroId).subscribe((financeiroData: any) => {
+          this.form.patchValue({
+            ...financeiroData,
+            ticket: financeiroData.ticketId,
+            medico: financeiroData.medicoId,
+            tarifario: financeiroData.tarifarioId
+          });
+        });
+      }
     });
   }
 
