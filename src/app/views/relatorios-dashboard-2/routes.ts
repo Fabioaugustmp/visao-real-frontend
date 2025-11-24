@@ -7,7 +7,7 @@ export const routes: Routes = [
     path: '',
     component: RelatoriosDashboard2Component,
     data: {
-      title: 'Relatórios 2'
+      title: 'Relatório Sumarizado'
     }
   }
 ];

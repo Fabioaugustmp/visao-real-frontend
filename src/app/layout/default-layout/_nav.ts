@@ -14,6 +14,24 @@ export const navItems: INavData[] = [
       text: 'NEW'
     }
   },
+   {
+    title: true,
+    name: 'Visão'
+  },
+  {
+    name: 'Relatórios',
+    iconComponent: { name: 'cil-chart' },
+    children: [
+      {
+        name: 'Detalhado',
+        url: '/relatorios-dashboard'
+      },
+      {
+        name: 'Sumarizado',
+        url: '/relatorios-dashboard-2'
+      }
+    ]
+  },
   {
     title: true,
     name: 'Operacional'
@@ -137,20 +155,6 @@ export const navItems: INavData[] = [
         icon: 'nav-icon-bullet',
         roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
-  {
-    name: 'Relatórios',
-    iconComponent: { name: 'cil-chart' },
-    children: [
-      {
-        name: 'Dashboard',
-        url: '/relatorios-dashboard'
-      },
-      {
-        name: 'Dashboard 2',
-        url: '/relatorios-dashboard-2'
-      }
-    ]
-  },
     ]
   },
   {
