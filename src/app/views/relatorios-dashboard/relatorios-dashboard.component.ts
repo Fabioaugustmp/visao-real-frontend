@@ -18,6 +18,7 @@ import {
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { IconDirective } from '@coreui/icons-angular';
 import { getStyle } from '@coreui/utils';
+import { Faturamento, RelatoriosDashboardService } from './relatorios-dashboard.service';
 
 @Component({
   selector: 'app-relatorios-dashboard',
@@ -48,9 +49,16 @@ export class RelatoriosDashboardComponent implements OnInit {
   mainChart: any = {};
   indicadoresChart: any = {};
   taxaCartaoChart: any = {};
+  faturamento: Faturamento | undefined;
+
+  constructor(private relatoriosDashboardService: RelatoriosDashboardService) {
+  }
 
   ngOnInit(): void {
     this.initCharts();
+    this.relatoriosDashboardService.getFaturamento().subscribe(data => {
+      this.faturamento = data;
+    });
   }
 
   initCharts(): void {

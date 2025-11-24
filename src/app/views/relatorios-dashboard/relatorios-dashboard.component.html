@@ -1,29 +1,30 @@
+{{ faturamento?.faturamentoMes | currency:'BRL' }}
 <c-row class="mb-4 g-4">
   <c-col sm="6" lg="3">
     <c-widget-stat-a color="primary" title="Faturamento do mês">
       <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
-        <span>R$ 12.345,67</span>
+        <span>{{ faturamento?.faturamentoMes | currency:'BRL' }}</span>
       </ng-template>
     </c-widget-stat-a>
   </c-col>
   <c-col sm="6" lg="3">
     <c-widget-stat-a color="info" title="Faturamento da Semana">
       <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
-        <span>R$ 3.456,78</span>
+        <span>{{ faturamento?.faturamentoSemana | currency:'BRL' }}</span>
       </ng-template>
     </c-widget-stat-a>
   </c-col>
   <c-col sm="6" lg="3">
     <c-widget-stat-a color="warning" title="Faturamento do dia">
       <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
-        <span>R$ 567,89</span>
+        <span>{{ faturamento?.faturamentoDia | currency:'BRL' }}</span>
       </ng-template>
     </c-widget-stat-a>
   </c-col>
   <c-col sm="6" lg="3">
     <c-widget-stat-a color="danger" title="Faturamento Acumulado Ano">
       <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
-        <span>R$ 123.456,78</span>
+        <span>{{ faturamento?.faturamentoAnual | currency:'BRL' }}</span>
       </ng-template>
     </c-widget-stat-a>
   </c-col>

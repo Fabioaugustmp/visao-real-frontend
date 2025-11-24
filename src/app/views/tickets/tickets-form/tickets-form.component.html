@@ -191,7 +191,7 @@
                   <c-col md="6">
                     <label cLabel for="item-{{ i }}">Item</label>
                     <select cSelect id="item-{{ i }}" formControlName="item" (change)="onItemChange($event, i)" [ngClass]="{'is-invalid': item.get('item')?.invalid && (item.get('item')?.dirty || item.get('item')?.touched)}">
-                      <option *ngFor="let item of itensList" [value]="item.id">{{ item.tipo }}</option>
+                      <option *ngFor="let item of itensList" [value]="item.id">{{ item.descricao }}</option>
                     </select>
                     <div *ngIf="item.get('item')?.invalid && (item.get('item')?.dirty || item.get('item')?.touched)" class="invalid-feedback">
                       <div *ngIf="item.get('item')?.errors?.['required']">Item é obrigatório.</div>

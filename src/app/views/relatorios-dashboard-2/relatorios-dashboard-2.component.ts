@@ -1,16 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
-import { RowComponent, ColComponent, TextColorDirective, CardComponent, CardHeaderComponent, CardBodyComponent } from '@coreui/angular';
+import { RowComponent, ColComponent, TextColorDirective, CardComponent, CardHeaderComponent, CardBodyComponent, WidgetModule } from '@coreui/angular';
+import { Faturamento, RelatoriosDashboard2Service } from './relatorios-dashboard-2.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-relatorios-dashboard-2',
   templateUrl: './relatorios-dashboard-2.component.html',
   styleUrls: ['./relatorios-dashboard-2.component.scss'],
   standalone: true,
-  imports: [RowComponent, ColComponent, TextColorDirective, CardComponent, CardHeaderComponent, CardBodyComponent, ChartjsComponent]
+  imports: [RowComponent, ColComponent, TextColorDirective, CardComponent, CardHeaderComponent, CardBodyComponent, ChartjsComponent, WidgetModule, CommonModule]
 })
-export class RelatoriosDashboard2Component {
+export class RelatoriosDashboard2Component implements OnInit {
 
-  constructor() { }
+  faturamento: Faturamento | undefined;
 
+  constructor(private relatoriosDashboard2Service: RelatoriosDashboard2Service) { }
+
+  ngOnInit(): void {
+    this.relatoriosDashboard2Service.getFaturamento().subscribe(data => {
+      this.faturamento = data;
+    });
+  }
 }

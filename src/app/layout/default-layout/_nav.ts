@@ -56,11 +56,11 @@ export const navItems: INavData[] = [
         url: '/parcelamentos',
         icon: 'nav-icon-bullet'
       },
-      {
-        name: 'Itens do Ticket',
-        url: '/itens-ticket',
-        icon: 'nav-icon-bullet'
-      },
+      // {
+      //   name: 'Itens do Ticket',
+      //   url: '/itens-ticket',
+      //   icon: 'nav-icon-bullet'
+      // },
       {
         name: 'Indicados',
         url: '/indicados',
@@ -119,12 +119,12 @@ export const navItems: INavData[] = [
         icon: 'nav-icon-bullet',
         roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
-      {
-        name: 'Preços',
-        url: '/precos',
-        icon: 'nav-icon-bullet',
-        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
-      },
+      // {
+      //   name: 'Preços',
+      //   url: '/precos',
+      //   icon: 'nav-icon-bullet',
+      //   roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
+      // },
       {
         name: 'Bandeiras',
         url: '/bandeiras',
@@ -143,12 +143,12 @@ export const navItems: INavData[] = [
         icon: 'nav-icon-bullet',
         roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },
-      {
-        name: 'Assinaturas',
-        url: '/subscriptions',
-        icon: 'nav-icon-bullet',
-        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
-      },
+      // {
+      //   name: 'Assinaturas',
+      //   url: '/subscriptions',
+      //   icon: 'nav-icon-bullet',
+      //   roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
+      // },
       {
         name: 'Tarifários',
         url: '/tarifarios',
