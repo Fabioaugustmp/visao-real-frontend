@@ -1,0 +1,83 @@
+// Custom styles for Relatorios Dashboard Component
+// These styles are designed to work with CoreUI's dark mode
+
+// Gradient cards - keep the gradients but ensure they work in both modes
+.revenue-card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+}
+
+// Summary card - adapt background to theme
+.summary-card {
+    background-color: var(--cui-card-bg);
+    border-color: var(--cui-card-border-color);
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+
+    .border-end {
+        border-color: var(--cui-border-color) !important;
+    }
+
+    .text-muted {
+        color: var(--cui-body-color) !important;
+        opacity: 0.7;
+    }
+}
+
+// Chart cards
+.chart-card {
+    background-color: var(--cui-card-bg);
+    border-color: var(--cui-card-border-color);
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+
+    c-card-header {
+        background-color: var(--cui-card-cap-bg);
+        border-bottom-color: var(--cui-border-color);
+    }
+
+    .text-body-secondary {
+        color: var(--cui-body-color);
+        opacity: 0.7;
+    }
+}
+
+// Chart card header - theme-aware
+.chart-card-header {
+    background-color: var(--cui-card-cap-bg);
+    border-bottom-color: var(--cui-border-color) !important;
+
+    .text-muted {
+        color: var(--cui-body-color);
+        opacity: 0.7;
+    }
+}
+
+// Form controls in charts
+.form-select {
+    background-color: var(--cui-body-bg);
+    border-color: var(--cui-border-color);
+    color: var(--cui-body-color);
+
+    &:focus {
+        background-color: var(--cui-body-bg);
+        border-color: var(--cui-primary);
+        color: var(--cui-body-color);
+    }
+}
+
+// Ensure text colors adapt
+.card-title {
+    color: var(--cui-body-color);
+}
+
+// Progress bars
+c-progress {
+    background-color: var(--cui-tertiary-bg);
+}

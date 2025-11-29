@@ -149,8 +149,8 @@ export class TicketsFormComponent implements OnInit {
     this.bandeiras$ = this.bandeiraService.getBandeiras();
     this.parcelamentos$ = this.parcelamentoService.getParcelamentos();
     this.itemService.getItens().subscribe(itens => this.itensList = itens);
-    this.indicados$ = this.indicadoService.getIndicados();
-    this.indicacoes$ = this.indicacaoService.getIndicacoes();
+    this.indicados$ = this.indicadoService.getAllIndicados();
+    this.indicacoes$ = this.indicacaoService.getAllIndicacoes();
 
     this.checkMode();
 
@@ -249,7 +249,7 @@ export class TicketsFormComponent implements OnInit {
       })
     ).subscribe(ticket => {
       const medicoExecControl = this.ticketForm.get('medicoExec')!;
-      
+
       this.tarifarios$ = medicoExecControl.valueChanges.pipe(
         startWith(ticket ? ticket.medicoExecId : null),
         switchMap(medicoId => {
@@ -372,93 +372,93 @@ export class TicketsFormComponent implements OnInit {
     }
   }
 
-onSubmit(): void {
-  if (this.ticketForm.valid) {
-    const formValue = this.ticketForm.value;
+  onSubmit(): void {
+    if (this.ticketForm.valid) {
+      const formValue = this.ticketForm.value;
 
-    // Find selected objects
-    let selectedMedicoExec: Medico | undefined;
-    this.medicos$.subscribe(medicos => {
-      selectedMedicoExec = medicos.find(m => m.id === +formValue.medicoExec);
-    }).unsubscribe();
+      // Find selected objects
+      let selectedMedicoExec: Medico | undefined;
+      this.medicos$.subscribe(medicos => {
+        selectedMedicoExec = medicos.find(m => m.id === +formValue.medicoExec);
+      }).unsubscribe();
 
-    let selectedMedicoSolic: Medico | undefined;
-    this.medicos$.subscribe(medicos => {
-      selectedMedicoSolic = medicos.find(m => m.id === +formValue.medicoSolic);
-    }).unsubscribe();
+      let selectedMedicoSolic: Medico | undefined;
+      this.medicos$.subscribe(medicos => {
+        selectedMedicoSolic = medicos.find(m => m.id === +formValue.medicoSolic);
+      }).unsubscribe();
 
-    let selectedFormaPagamento: FormaPagamento | undefined;
-    this.formasPagamento$.subscribe(formas => {
-      selectedFormaPagamento = formas.find(f => f.id === +formValue.formaPagamento);
-    }).unsubscribe();
+      let selectedFormaPagamento: FormaPagamento | undefined;
+      this.formasPagamento$.subscribe(formas => {
+        selectedFormaPagamento = formas.find(f => f.id === +formValue.formaPagamento);
+      }).unsubscribe();
 
-    let selectedBandeira: Bandeira | undefined;
-    this.bandeiras$.subscribe(bandeiras => {
-      selectedBandeira = bandeiras.find(b => b.id === +formValue.bandeira);
-    }).unsubscribe();
+      let selectedBandeira: Bandeira | undefined;
+      this.bandeiras$.subscribe(bandeiras => {
+        selectedBandeira = bandeiras.find(b => b.id === +formValue.bandeira);
+      }).unsubscribe();
 
-    let selectedParcelamento: Parcelamento | undefined;
-    this.parcelamentos$.subscribe(parcelamentos => {
-      selectedParcelamento = parcelamentos.find(p => p.id === +formValue.parcelamento);
-    }).unsubscribe();
+      let selectedParcelamento: Parcelamento | undefined;
+      this.parcelamentos$.subscribe(parcelamentos => {
+        selectedParcelamento = parcelamentos.find(p => p.id === +formValue.parcelamento);
+      }).unsubscribe();
 
-    let selectedTarifario: Tarifario | undefined;
-    this.tarifarios$.subscribe(tarifarios => {
-      selectedTarifario = tarifarios.find(t => t.id === +formValue.tarifario);
-    }).unsubscribe();
+      let selectedTarifario: Tarifario | undefined;
+      this.tarifarios$.subscribe(tarifarios => {
+        selectedTarifario = tarifarios.find(t => t.id === +formValue.tarifario);
+      }).unsubscribe();
 
-    // Create Financeiro object
-    const financeiro: Financeiro = {
-      id: 0,
-      ticket: null,
-      medico: selectedMedicoExec!,
-      totalParcelas: selectedParcelamento?.numeroDeParcelas ?? 0,
-      parcela: selectedParcelamento?.numeroDeParcelas ?? 0,      
-      vencimentoData: new Date(),
-      recebido: false,
-      recebidoData: null,
-      valor: 0,
-      tarifarioMedicoHistorico: selectedTarifario!,
-      percentualTarifaAplicado: selectedTarifario?.percentualTarifa || 0
-    };
+      // Create Financeiro object
+      const financeiro: Financeiro = {
+        id: 0,
+        ticket: null,
+        medico: selectedMedicoExec!,
+        totalParcelas: selectedParcelamento?.numeroDeParcelas ?? 0,
+        parcela: selectedParcelamento?.numeroDeParcelas ?? 0,
+        vencimentoData: new Date(),
+        recebido: false,
+        recebidoData: null,
+        valor: 0,
+        tarifarioMedicoHistorico: selectedTarifario!,
+        percentualTarifaAplicado: selectedTarifario?.percentualTarifa || 0
+      };
 
-    const ticketData: Ticket = {
-      id: this.ticketId,
-      dataTicket: formValue.dataTicket,
-      numAtend: formValue.numAtend,
-      nomePaciente: formValue.nomePaciente,
-      nomePagador: formValue.nomePagador,
-      cpfPagador: formValue.cpfPagador,
-      medicoExec: selectedMedicoExec!,
-      medicoSolic: selectedMedicoSolic!,
-      nfSerie: formValue.nfSerie,
-      nfNumero: formValue.nfNumero,
-      formaPagamento: selectedFormaPagamento!,
-      formaPagamentoId: formValue.formaPagamento,
-      bandeiraId: formValue.bandeira,
-      medicoExecId: formValue.medicoExec,
-      medicoSolicId: formValue.medicoSolic,
-      bandeira: selectedBandeira!,
-      cartaoIdent: formValue.cartaoIdent,
-      cartaoAutorizacao: formValue.cartaoAutorizacao,
-      cartaoNsu: formValue.cartaoNsu,
-      parcela: formValue.parcelamento,
-      parcelamento: selectedParcelamento!,
-      posNum: formValue.posNum,
-      itens: formValue.itens,
-      indicados: formValue.indicados,
-      financeiro: financeiro
-    };
+      const ticketData: Ticket = {
+        id: this.ticketId,
+        dataTicket: formValue.dataTicket,
+        numAtend: formValue.numAtend,
+        nomePaciente: formValue.nomePaciente,
+        nomePagador: formValue.nomePagador,
+        cpfPagador: formValue.cpfPagador,
+        medicoExec: selectedMedicoExec!,
+        medicoSolic: selectedMedicoSolic!,
+        nfSerie: formValue.nfSerie,
+        nfNumero: formValue.nfNumero,
+        formaPagamento: selectedFormaPagamento!,
+        formaPagamentoId: formValue.formaPagamento,
+        bandeiraId: formValue.bandeira,
+        medicoExecId: formValue.medicoExec,
+        medicoSolicId: formValue.medicoSolic,
+        bandeira: selectedBandeira!,
+        cartaoIdent: formValue.cartaoIdent,
+        cartaoAutorizacao: formValue.cartaoAutorizacao,
+        cartaoNsu: formValue.cartaoNsu,
+        parcela: formValue.parcelamento,
+        parcelamento: selectedParcelamento!,
+        posNum: formValue.posNum,
+        itens: formValue.itens,
+        indicados: formValue.indicados,
+        financeiro: financeiro
+      };
 
-    if (this.isEditMode) {
-      this.ticketService.updateTicket(ticketData).subscribe(() => {
-        this.router.navigate(['/tickets']);
-      });
-    } else {
-      this.ticketService.createTicket(ticketData).subscribe(() => {
-        this.router.navigate(['/tickets']);
-      });
+      if (this.isEditMode) {
+        this.ticketService.updateTicket(ticketData).subscribe(() => {
+          this.router.navigate(['/tickets']);
+        });
+      } else {
+        this.ticketService.createTicket(ticketData).subscribe(() => {
+          this.router.navigate(['/tickets']);
+        });
+      }
     }
   }
-}
 }

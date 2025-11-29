@@ -100,26 +100,26 @@
 <!-- Summary Card -->
 <c-row class="mb-4">
   <c-col xs="12">
-    <c-card style="border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
+    <c-card class="summary-card">
       <c-card-body>
         <c-row class="text-center">
           <c-col md="3" class="border-end">
-            <div class="text-muted small mb-1">RECEITA MENSAL</div>
+            <div class="small mb-1 opacity-75">RECEITA MENSAL</div>
             <div class="fs-5 fw-bold text-primary">{{ faturamento?.faturamentoMes | currency:'BRL':'symbol':'1.2-2' }}
             </div>
           </c-col>
           <c-col md="3" class="border-end">
-            <div class="text-muted small mb-1">RECEITA SEMANAL</div>
+            <div class="small mb-1 opacity-75">RECEITA SEMANAL</div>
             <div class="fs-5 fw-bold text-info">{{ faturamento?.faturamentoSemana | currency:'BRL':'symbol':'1.2-2' }}
             </div>
           </c-col>
           <c-col md="3" class="border-end">
-            <div class="text-muted small mb-1">RECEITA DIÁRIA</div>
+            <div class="small mb-1 opacity-75">RECEITA DIÁRIA</div>
             <div class="fs-5 fw-bold text-warning">{{ faturamento?.faturamentoDia | currency:'BRL':'symbol':'1.2-2' }}
             </div>
           </c-col>
           <c-col md="3">
-            <div class="text-muted small mb-1">ACUMULADO ANUAL</div>
+            <div class="small mb-1 opacity-75">ACUMULADO ANUAL</div>
             <div class="fs-5 fw-bold text-success">{{ faturamento?.faturamentoAnual | currency:'BRL':'symbol':'1.2-2' }}
             </div>
           </c-col>
@@ -130,7 +130,7 @@
 </c-row>
 
 <!-- Main Chart - Faturamento Anual -->
-<c-card class="my-4" style="border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
+<c-card class="my-4 chart-card">
   <c-card-body>
     <c-row>
       <c-col sm="5">
@@ -179,8 +179,8 @@
 <!-- Charts Row -->
 <c-row class="mt-4">
   <c-col md="6">
-    <c-card class="mb-4" style="border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
-      <c-card-header class="bg-white border-bottom">
+    <c-card class="mb-4 chart-card">
+      <c-card-header class="chart-card-header border-bottom">
         <h5 class="mb-0 fw-semibold">Indicadores</h5>
         <small class="text-muted">A Pagar vs A Receber</small>
       </c-card-header>
@@ -192,8 +192,8 @@
     </c-card>
   </c-col>
   <c-col md="6">
-    <c-card class="mb-4" style="border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
-      <c-card-header class="bg-white border-bottom">
+    <c-card class="mb-4 chart-card">
+      <c-card-header class="chart-card-header border-bottom">
         <h5 class="mb-0 fw-semibold">Taxa de Cartão</h5>
         <small class="text-muted">Evolução mensal</small>
       </c-card-header>
@@ -209,8 +209,8 @@
 <!-- Traffic & Sales Section -->
 <c-row class="mt-4">
   <c-col xs>
-    <c-card class="mb-4" style="border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
-      <c-card-header class="bg-white border-bottom">
+    <c-card class="mb-4 chart-card">
+      <c-card-header class="chart-card-header border-bottom">
         <h5 class="mb-0 fw-semibold">Traffic & Sales</h5>
       </c-card-header>
       <c-card-body>

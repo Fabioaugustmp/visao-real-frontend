@@ -1,35 +1,151 @@
-<c-row>
-  <c-col>
-    <c-card>
-      <c-card-header>
-        Lista de Indicações
-      </c-card-header>
-      <c-card-body>
-        <button cButton color="primary" [routerLink]="['/indicacoes/nova']">Nova Indicação</button>
-        <table cTable class="mt-3">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Médico</th>
-              <th scope="col">Tipo</th>
-              <th scope="col">Valor</th>
-              <th scope="col">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let indicacao of indicacoes">
-              <th scope="row">{{ indicacao.id }}</th>
-              <td>{{ indicacao.medico.nome }}</td>
-              <td>{{ indicacao.tipo }}</td>
-              <td>{{ indicacao.valorIndicacao | currency:'BRL' }}</td>
-              <td>
-                <button cButton color="secondary" size="sm" [routerLink]="['/indicacoes/editar', indicacao.id]">Editar</button>
-                <button cButton color="danger" size="sm" class="ms-1" (click)="excluirIndicacao(indicacao.id)">Excluir</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4 shadow-sm border-0">
+        <c-card-header class="border-bottom-0 pt-4 pb-0">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-primary fw-bold">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                class="bi bi-people-fill me-2" viewBox="0 0 16 16">
+                <path
+                  d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+              </svg>
+              Gestão de Indicações
+            </h4>
+            <button cButton color="primary" class="d-flex align-items-center shadow-sm"
+              [routerLink]="['/indicacoes/nova']">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+              </svg>
+              Nova Indicação
+            </button>
+          </div>
+        </c-card-header>
+        <c-card-body class="p-4">
+
+          <!-- Table Section -->
+          <div class="table-responsive">
+            <table cTable hover striped class="align-middle mb-0 border">
+              <thead>
+                <tr>
+                  <th class="py-3 ps-3">ID</th>
+                  <th class="py-3">Médico</th>
+                  <th class="py-3">CRM</th>
+                  <th class="py-3">Tipo</th>
+                  <th class="py-3">Valor</th>
+                  <th class="py-3 text-end pe-3">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let indicacao of indicacoes">
+                  <td class="ps-3 fw-semibold text-primary">
+                    #{{ indicacao.id }}
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div
+                        class="avatar avatar-sm bg-primary text-white me-2 rounded-circle d-flex align-items-center justify-content-center"
+                        style="width: 32px; height: 32px;">
+                        {{ indicacao.medico.nome?.charAt(0) }}
+                      </div>
+                      <div class="fw-semibold">{{ indicacao.medico.nome }}</div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge bg-secondary">{{ indicacao.medico.crm }}</span>
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="indicacao.tipo === 'Online' ? 'bg-info' : 'bg-success'">
+                      {{ indicacao.tipo }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="fw-semibold text-success">{{ indicacao.valorIndicacao | currency:'BRL':'symbol':'1.2-2'
+                      }}</div>
+                  </td>
+                  <td class="text-end pe-3">
+                    <div class="btn-group" role="group">
+                      <button cButton color="light" size="sm" class="border text-primary"
+                        [routerLink]="['/indicacoes/editar', indicacao.id]" title="Editar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-pencil-square" viewBox="0 0 16 16">
+                          <path
+                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                          <path fill-rule="evenodd"
+                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                        </svg>
+                      </button>
+                      <button cButton color="light" size="sm" class="border text-danger ms-1"
+                        (click)="excluirIndicacao(indicacao.id)" title="Excluir">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-trash" viewBox="0 0 16 16">
+                          <path
+                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                          <path
+                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="indicacoes.length === 0">
+                  <td colspan="6" class="text-center py-5 text-muted">
+                    <div class="mb-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                        class="bi bi-inbox opacity-25" viewBox="0 0 16 16">
+                        <path
+                          d="M4.98 4a.5.5 0 0 0-.39.188L1.54 8H6a.5.5 0 0 1 .5.5 1.5 1.5 0 1 0 3 0A.5.5 0 0 1 10 8h4.46l-3.05-3.812A.5.5 0 0 0 11.02 4H4.98zm9.954 5H10.45a2.5 2.5 0 0 1-4.9 0H1.066l.32 2.562a.5.5 0 0 0 .497.438h12.234a.5.5 0 0 0 .496-.438L14.933 9zM3.809 3.563A1.5 1.5 0 0 1 4.981 3h6.038a1.5 1.5 0 0 1 1.172.563l3.7 4.625a.5.5 0 0 1 .105.374l-.19 1.518a1.5 1.5 0 0 1-1.489 1.312H1.883a1.5 1.5 0 0 1-1.489-1.312l-.19-1.518a.5.5 0 0 1 .106-.374l3.7-4.625z" />
+                      </svg>
+                    </div>
+                    Nenhuma indicação encontrada
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Controls -->
+          <div class="d-flex justify-content-between align-items-center mt-4">
+            <div class="text-muted small">
+              Mostrando {{ indicacoes.length }} de {{ totalElements }} indicações
+            </div>
+            <c-pagination align="center" aria-label="Page navigation">
+              <c-page-item [disabled]="currentPage === 0" class="mx-1">
+                <a cButton color="white" class="border" c-page-link (click)="onPageChange(0)">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </c-page-item>
+              <c-page-item [disabled]="currentPage === 0" class="mx-1">
+                <a cButton color="white" class="border" c-page-link (click)="onPageChange(currentPage - 1)">
+                  <span aria-hidden="true">&lsaquo;</span>
+                </a>
+              </c-page-item>
+
+              <ng-container *ngFor="let pageNumber of [].constructor(totalPages); let i = index">
+                <c-page-item [active]="currentPage === i" class="mx-1"
+                  *ngIf="i >= currentPage - 2 && i <= currentPage + 2">
+                  <a cButton [color]="currentPage === i ? 'primary' : 'white'" [class.border]="currentPage !== i"
+                    c-page-link (click)="onPageChange(i)">{{ i + 1 }}</a>
+                </c-page-item>
+              </ng-container>
+
+              <c-page-item [disabled]="currentPage === totalPages - 1" class="mx-1">
+                <a cButton color="white" class="border" c-page-link (click)="onPageChange(currentPage + 1)">
+                  <span aria-hidden="true">&rsaquo;</span>
+                </a>
+              </c-page-item>
+              <c-page-item [disabled]="currentPage === totalPages - 1" class="mx-1">
+                <a cButton color="white" class="border" c-page-link (click)="onPageChange(totalPages - 1)">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </c-page-item>
+            </c-pagination>
+          </div>
+
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

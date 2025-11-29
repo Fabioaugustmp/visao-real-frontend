@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Indicacao } from './indicacao.model';
+import { map } from 'rxjs/operators';
+import { Indicacao, PageIndicacao, Pageable } from './indicacao.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -13,8 +14,33 @@ export class IndicacaoService {
 
   constructor(private http: HttpClient) { }
 
-  getIndicacoes(): Observable<Indicacao[]> {
-    return this.http.get<Indicacao[]>(this.API_URL);
+  getIndicacoes(pageable?: Pageable): Observable<PageIndicacao> {
+    let params = new HttpParams();
+
+    if (pageable) {
+      if (pageable.page !== undefined && pageable.page !== null) {
+        params = params.append('page', pageable.page.toString());
+      }
+      if (pageable.size !== undefined && pageable.size !== null) {
+        params = params.append('size', pageable.size.toString());
+      }
+      if (pageable.sort && pageable.sort.length > 0) {
+        pageable.sort.forEach(s => {
+          params = params.append('sort', s);
+        });
+      }
+    }
+
+    return this.http.get<PageIndicacao>(this.API_URL, { params });
+  }
+
+  // Get all indicacoes without pagination (for use in forms/dropdowns)
+  getAllIndicacoes(): Observable<Indicacao[]> {
+    return this.http.get<PageIndicacao>(this.API_URL, {
+      params: new HttpParams().set('size', '1000') // Get a large page
+    }).pipe(
+      map(response => response.content)
+    );
   }
 
   getIndicacao(id: number): Observable<Indicacao> {
