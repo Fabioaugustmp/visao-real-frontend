@@ -47,7 +47,7 @@ export class ContadoresFormComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       crc: ['', [Validators.required, Validators.maxLength(11), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       crcUf: ['', Validators.required],
-      // empresaId: ['', Validators.required] // Add empresaId form control
+      empresaId: ['']
     });
   }
 

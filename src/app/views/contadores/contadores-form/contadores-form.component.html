@@ -5,7 +5,7 @@
         <c-card-header>
           <strong>{{
             isEditMode ? "Editar Contador" : "Novo Contador"
-          }}</strong>
+            }}</strong>
         </c-card-header>
         <c-card-body>
           <form [formGroup]="contadorForm" (ngSubmit)="onSubmit()">
@@ -20,12 +20,7 @@
             <c-row class="mb-3">
               <c-col md="8">
                 <label cLabel for="email">Email</label>
-                <input
-                  cFormControl
-                  id="email"
-                  formControlName="email"
-                  type="email"
-                />
+                <input cFormControl id="email" formControlName="email" type="email" />
                 <div *ngIf="f['email'].touched && f['email'].errors" class="text-danger small">
                   <div *ngIf="f['email'].errors['required']">Email é obrigatório.</div>
                   <div *ngIf="f['email'].errors['email']">Email inválido.</div>
@@ -56,26 +51,13 @@
                   <option value="" disabled>Selecione a Empresa</option>
                   <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.razaoSocial }}</option>
                 </select>
-                <div *ngIf="f['empresaId'].touched && f['empresaId'].errors" class="text-danger small">
-                  <div *ngIf="f['empresaId'].errors['required']">Empresa é obrigatória.</div>
-                </div>
+
               </c-col>
             </c-row>
-            <button
-              cButton
-              color="primary"
-              variant="outline"
-              type="submit"
-              [disabled]="contadorForm.invalid"
-            >
+            <button cButton color="primary" variant="outline" type="submit" [disabled]="contadorForm.invalid">
               Salvar
             </button>
-            <button
-              cButton
-              color="secondary"
-              variant="outline"
-              [routerLink]="['/contadores']"
-            >
+            <button cButton color="secondary" variant="outline" [routerLink]="['/contadores']">
               Cancelar
             </button>
           </form>
