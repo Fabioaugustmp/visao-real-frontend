@@ -1,39 +1,141 @@
-<c-row class="mb-4 g-4">
+<c-row class="mb-4">
+  <!-- Faturamento do Mês -->
   <c-col sm="6" lg="3">
-    <c-widget-stat-a color="primary" title="Faturamento do mês">
-      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
-        <span>{{ faturamento?.faturamentoMes | currency:'BRL' }}</span>
-      </ng-template>
-    </c-widget-stat-a>
+    <c-card class="text-white bg-gradient"
+      style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <c-card-body class="pb-0 d-flex justify-content-between align-items-start">
+        <div>
+          <div class="text-white-50 small text-uppercase fw-semibold">Faturamento do Mês</div>
+          <div class="fs-4 fw-bold mt-2">{{ faturamento?.faturamentoMes | currency:'BRL':'symbol':'1.2-2' }}</div>
+        </div>
+        <div class="text-white-50">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor"
+            class="bi bi-calendar-month" viewBox="0 0 16 16">
+            <path
+              d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm10 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-4 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM2 14V5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1zm12-9H2V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v3z" />
+          </svg>
+        </div>
+      </c-card-body>
+      <c-card-footer class="bg-transparent border-0 pt-3">
+        <small class="text-white-50">Período: Mês atual</small>
+      </c-card-footer>
+    </c-card>
   </c-col>
+
+  <!-- Faturamento da Semana -->
   <c-col sm="6" lg="3">
-    <c-widget-stat-a color="info" title="Faturamento da Semana">
-      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
-        <span>{{ faturamento?.faturamentoSemana | currency:'BRL' }}</span>
-      </ng-template>
-    </c-widget-stat-a>
+    <c-card class="text-white bg-gradient"
+      style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <c-card-body class="pb-0 d-flex justify-content-between align-items-start">
+        <div>
+          <div class="text-white-50 small text-uppercase fw-semibold">Faturamento da Semana</div>
+          <div class="fs-4 fw-bold mt-2">{{ faturamento?.faturamentoSemana | currency:'BRL':'symbol':'1.2-2' }}</div>
+        </div>
+        <div class="text-white-50">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-calendar-week"
+            viewBox="0 0 16 16">
+            <path
+              d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
+            <path
+              d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+          </svg>
+        </div>
+      </c-card-body>
+      <c-card-footer class="bg-transparent border-0 pt-3">
+        <small class="text-white-50">Período: Últimos 7 dias</small>
+      </c-card-footer>
+    </c-card>
   </c-col>
+
+  <!-- Faturamento do Dia -->
   <c-col sm="6" lg="3">
-    <c-widget-stat-a color="warning" title="Faturamento do dia">
-      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
-        <span>{{ faturamento?.faturamentoDia | currency:'BRL' }}</span>
-      </ng-template>
-    </c-widget-stat-a>
+    <c-card class="text-white bg-gradient"
+      style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <c-card-body class="pb-0 d-flex justify-content-between align-items-start">
+        <div>
+          <div class="text-dark small text-uppercase fw-semibold opacity-75">Faturamento do Dia</div>
+          <div class="fs-4 fw-bold mt-2 text-dark">{{ faturamento?.faturamentoDia | currency:'BRL':'symbol':'1.2-2' }}
+          </div>
+        </div>
+        <div class="text-dark opacity-50">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-calendar-day"
+            viewBox="0 0 16 16">
+            <path
+              d="M4.684 11.523v-2.3h2.261v-.61H4.684V6.801h2.464v-.61H4v5.332h.684zm3.296 0h.676V8.98c0-.554.227-1.007.953-1.007.125 0 .258.004.329.015v-.613a1.806 1.806 0 0 0-.254-.02c-.582 0-.891.32-1.012.567h-.02v-.504H7.98v4.105zm2.805-5.093c0 .238.192.425.43.425a.428.428 0 1 0 0-.855.426.426 0 0 0-.43.43zm.094 5.093h.672V7.418h-.672v4.105z" />
+            <path
+              d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+          </svg>
+        </div>
+      </c-card-body>
+      <c-card-footer class="bg-transparent border-0 pt-3">
+        <small class="text-dark opacity-75">Período: Hoje</small>
+      </c-card-footer>
+    </c-card>
   </c-col>
+
+  <!-- Faturamento Acumulado Ano -->
   <c-col sm="6" lg="3">
-    <c-widget-stat-a color="danger" title="Faturamento Acumulado Ano">
-      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
-        <span>{{ faturamento?.faturamentoAnual | currency:'BRL' }}</span>
-      </ng-template>
-    </c-widget-stat-a>
+    <c-card class="text-white bg-gradient"
+      style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <c-card-body class="pb-0 d-flex justify-content-between align-items-start">
+        <div>
+          <div class="text-white-50 small text-uppercase fw-semibold">Acumulado Anual</div>
+          <div class="fs-4 fw-bold mt-2">{{ faturamento?.faturamentoAnual | currency:'BRL':'symbol':'1.2-2' }}</div>
+        </div>
+        <div class="text-white-50">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor"
+            class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+              d="M0 0h1v15h15v1H0V0Zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5Z" />
+          </svg>
+        </div>
+      </c-card-body>
+      <c-card-footer class="bg-transparent border-0 pt-3">
+        <small class="text-white-50">Período: Ano atual</small>
+      </c-card-footer>
+    </c-card>
   </c-col>
 </c-row>
 
+<!-- Summary Card -->
+<c-row class="mb-4">
+  <c-col xs="12">
+    <c-card style="border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
+      <c-card-body>
+        <c-row class="text-center">
+          <c-col md="3" class="border-end">
+            <div class="text-muted small mb-1">RECEITA MENSAL</div>
+            <div class="fs-5 fw-bold text-primary">{{ faturamento?.faturamentoMes | currency:'BRL':'symbol':'1.2-2' }}
+            </div>
+          </c-col>
+          <c-col md="3" class="border-end">
+            <div class="text-muted small mb-1">RECEITA SEMANAL</div>
+            <div class="fs-5 fw-bold text-info">{{ faturamento?.faturamentoSemana | currency:'BRL':'symbol':'1.2-2' }}
+            </div>
+          </c-col>
+          <c-col md="3" class="border-end">
+            <div class="text-muted small mb-1">RECEITA DIÁRIA</div>
+            <div class="fs-5 fw-bold text-warning">{{ faturamento?.faturamentoDia | currency:'BRL':'symbol':'1.2-2' }}
+            </div>
+          </c-col>
+          <c-col md="3">
+            <div class="text-muted small mb-1">ACUMULADO ANUAL</div>
+            <div class="fs-5 fw-bold text-success">{{ faturamento?.faturamentoAnual | currency:'BRL':'symbol':'1.2-2' }}
+            </div>
+          </c-col>
+        </c-row>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+<!-- Charts Section -->
 <c-row>
   <c-col xs="12">
-    <c-card class="mb-4">
-      <c-card-header>
-        <h2>Faturamento x Procedimento</h2>
+    <c-card class="mb-4" style="border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
+      <c-card-header class="bg-white border-bottom">
+        <h5 class="mb-0 fw-semibold">Faturamento x Procedimento</h5>
+        <small class="text-muted">Análise por tipo de procedimento</small>
       </c-card-header>
       <c-card-body>
         <c-chart type="bar" [data]="{
@@ -41,20 +143,45 @@
           datasets: [
             {
               label: 'Faturamento',
-              backgroundColor: '#f87979',
+              backgroundColor: '#667eea',
+              borderRadius: 8,
               data: [40, 20, 12, 39, 10, 40, 39]
             }
           ]
         }" [options]="{
-          indexAxis: 'y'
-        }"></c-chart>
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                display: true,
+                color: 'rgba(0,0,0,0.05)'
+              }
+            },
+            y: {
+              grid: {
+                display: false
+              }
+            }
+          }
+        }" style="height: 300px;"></c-chart>
       </c-card-body>
     </c-card>
   </c-col>
-  <c-col xs="6">
-    <c-card class="mb-4">
-      <c-card-header>
-        <h2>Valor Faturado x Forma de Pagamento (Mês a Mês)</h2>
+</c-row>
+
+<c-row>
+  <c-col xs="12" md="6">
+    <c-card class="mb-4" style="border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
+      <c-card-header class="bg-white border-bottom">
+        <h5 class="mb-0 fw-semibold">Forma de Pagamento</h5>
+        <small class="text-muted">Distribuição mensal por forma de pagamento</small>
       </c-card-header>
       <c-card-body>
         <c-chart type="bar" [data]="{
@@ -62,23 +189,47 @@
           datasets: [
             {
               label: 'Crédito',
-              backgroundColor: '#f87979',
+              backgroundColor: '#f093fb',
+              borderRadius: 6,
               data: [40, 20, 12, 39, 10, 40, 39]
             },
             {
               label: 'Débito',
-              backgroundColor: '#36a2eb',
+              backgroundColor: '#4facfe',
+              borderRadius: 6,
               data: [20, 10, 6, 19, 5, 20, 19]
             }
           ]
-        }"></c-chart>
+        }" [options]="{
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false
+              }
+            },
+            y: {
+              grid: {
+                color: 'rgba(0,0,0,0.05)'
+              }
+            }
+          }
+        }" style="height: 300px;"></c-chart>
       </c-card-body>
     </c-card>
   </c-col>
-  <c-col xs="6">
-    <c-card class="mb-4">
-      <c-card-header>
-        <h2>Valor Faturado x Condição de Pagamento (Mês a Mês)</h2>
+
+  <c-col xs="12" md="6">
+    <c-card class="mb-4" style="border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
+      <c-card-header class="bg-white border-bottom">
+        <h5 class="mb-0 fw-semibold">Condição de Pagamento</h5>
+        <small class="text-muted">Distribuição mensal por condição de pagamento</small>
       </c-card-header>
       <c-card-body>
         <c-chart type="bar" [data]="{
@@ -86,16 +237,40 @@
           datasets: [
             {
               label: 'À Vista',
-              backgroundColor: '#f87979',
+              backgroundColor: '#ffecd2',
+              borderColor: '#fcb69f',
+              borderWidth: 2,
+              borderRadius: 6,
               data: [40, 20, 12, 39, 10, 40, 39]
             },
             {
               label: 'Parcelado',
-              backgroundColor: '#36a2eb',
+              backgroundColor: '#667eea',
+              borderRadius: 6,
               data: [20, 10, 6, 19, 5, 20, 19]
             }
           ]
-        }"></c-chart>
+        }" [options]="{
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false
+              }
+            },
+            y: {
+              grid: {
+                color: 'rgba(0,0,0,0.05)'
+              }
+            }
+          }
+        }" style="height: 300px;"></c-chart>
       </c-card-body>
     </c-card>
   </c-col>
