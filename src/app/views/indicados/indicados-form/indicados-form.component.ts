@@ -79,8 +79,9 @@ export class IndicadosFormComponent implements OnInit {
   }
 
   loadIndicacoes(): void {
-    this.indicacaoService.getIndicacoes().subscribe(data => {
-      this.indicacoes = data;
+    this.indicacaoService.getIndicacoes().subscribe((data: any) => {
+      // Handle both array and paginated response
+      this.indicacoes = Array.isArray(data) ? data : (data.content || []);
     });
   }
 

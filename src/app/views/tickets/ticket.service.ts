@@ -16,9 +16,10 @@ export class TicketService {
   // Modified to support pagination and search filters
   getTickets(
     pageable: Pageable,
-    medicoId: number | null = null,
+    numAtend: string | null = null,
     ticketId: string | null = null,
-    cpf: string | null = null
+    cpf: string | null = null,
+    dataTicket: string | null = null
   ): Observable<PageTicketDTO> {
     let params = new HttpParams();
     if (pageable.page !== undefined && pageable.page !== null) {
@@ -33,14 +34,17 @@ export class TicketService {
       });
     }
 
-    if (medicoId !== null) {
-      params = params.append('medicoId', medicoId.toString());
+    if (numAtend !== null && numAtend !== '') {
+      params = params.append('numAtend', numAtend);
     }
-    if (ticketId !== null) {
+    if (ticketId !== null && ticketId !== '') {
       params = params.append('ticketId', ticketId);
     }
-    if (cpf !== null) {
+    if (cpf !== null && cpf !== '') {
       params = params.append('cpf', cpf);
+    }
+    if (dataTicket !== null && dataTicket !== '') {
+      params = params.append('dataTicket', dataTicket);
     }
 
     return this.http.get<PageTicketDTO>(this.API_URL, { params });
