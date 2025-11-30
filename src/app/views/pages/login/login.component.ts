@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder, // Inject FormBuilder
     private authService: AuthService, // Inject AuthService
     private router: Router // Inject Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -62,7 +62,22 @@ export class LoginComponent implements OnInit {
       this.authService.login({ email, password }).subscribe({
         next: (response: LoginResponse) => {
           console.log('Login successful', response);
-          this.router.navigate(['/']); // Redirect to root, AuthGuard will handle further redirection
+
+          // Validate user has at least one valid role
+          const validRoles = ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR', 'MEDICO', 'ROLE_MEDICO'];
+          this.authService.getUserRoles().subscribe(userRoles => {
+            const hasValidRole = userRoles.some(role => validRoles.includes(role));
+
+            if (!hasValidRole) {
+              console.error('User does not have any valid roles');
+              alert('Acesso negado: Seu usuário não possui permissões válidas para acessar o sistema.');
+              this.authService.logout();
+              return;
+            }
+
+            // User has valid role, proceed to dashboard
+            this.router.navigate(['/']); // Redirect to root, AuthGuard will handle further redirection
+          });
         },
         error: (error: any) => {
           console.error('Login failed', error);

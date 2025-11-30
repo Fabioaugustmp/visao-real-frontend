@@ -64,14 +64,17 @@ export class RelatoriosDashboardComponent implements OnInit {
   }
 
   private loadDashboardData(): void {
-    // Check user role and get appropriate data
-    const userRoles = this.authService.getUserRoles();
+    // Get user roles synchronously from current value
+    const roles = this.authService.getUserRoles();
 
-    userRoles.subscribe(roles => {
+    roles.subscribe(userRoles => {
       let medicoId: string | null = null;
 
       // If user is MEDICO (and not ADMIN), get their ID
-      if (roles.includes('MEDICO') && !roles.includes('ADMIN') && !roles.includes('ADMINISTRADOR')) {
+      const isMedico = userRoles.includes('MEDICO') || userRoles.includes('ROLE_MEDICO');
+      const isAdmin = userRoles.includes('ADMIN') || userRoles.includes('ADMINISTRADOR') || userRoles.includes('ROLE_ADMINISTRADOR');
+
+      if (isMedico && !isAdmin) {
         medicoId = this.authService.getUserId();
       }
 

@@ -33,7 +33,8 @@ export interface DashboardData {
 })
 export class RelatoriosDashboardService {
 
-  private apiUrl = `${environment.apiUrl}/dashboard`;
+  private dashboardApiUrl = `${environment.apiUrl}/dashboard`;
+  private faturamentoApiUrl = `${environment.apiUrl}/dashboard/faturamento`;
 
   constructor(private http: HttpClient) { }
 
@@ -42,11 +43,10 @@ export class RelatoriosDashboardService {
     if (medicoId) {
       params = params.set('medicoId', medicoId);
     }
-    return this.http.get<DashboardData>(this.apiUrl, { params });
+    return this.http.get<DashboardData>(this.dashboardApiUrl, { params });
   }
 
-  // Keep for backward compatibility
   getFaturamento(): Observable<Faturamento> {
-    return this.http.get<Faturamento>(`${this.apiUrl}/faturamento`);
+    return this.http.get<Faturamento>(this.faturamentoApiUrl);
   }
 }
