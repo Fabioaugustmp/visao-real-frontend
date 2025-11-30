@@ -4,7 +4,7 @@
 .filter-section {
   background-color: var(--cui-tertiary-bg); // Use CoreUI variable for tertiary background
   border-color: var(--cui-border-color) !important;
-  
+
   .form-label {
     color: var(--cui-body-color-rgb);
     opacity: 0.8;
@@ -26,7 +26,7 @@
       border-bottom-color: var(--cui-border-color);
     }
   }
-  
+
   td {
     border-bottom-color: var(--cui-border-color);
     color: var(--cui-body-color);
@@ -50,15 +50,93 @@ c-pagination {
     background-color: var(--cui-body-bg);
     border-color: var(--cui-border-color);
     color: var(--cui-body-color);
-    
+
     &:hover {
       background-color: var(--cui-tertiary-bg);
     }
   }
-  
+
   .active .page-link {
     background-color: var(--cui-primary);
     border-color: var(--cui-primary);
     color: white;
+  }
+}
+
+// Skeleton Loader Styles
+.skeleton-loader {
+  .skeleton-header {
+    height: 40px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+  }
+
+  .skeleton-row {
+    height: 60px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Ticket Row Styles
+.ticket-row {
+  transition: all 0.2s ease-in-out;
+  border: 1px solid transparent;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    border-color: var(--cui-primary) !important;
+    z-index: 1;
+  }
+
+  td {
+    background-color: var(--cui-card-bg); // Ensure row background matches card
+    border-top: 1px solid var(--cui-border-color);
+    border-bottom: 1px solid var(--cui-border-color);
+
+    &:first-child {
+      border-left: 1px solid var(--cui-border-color);
+    }
+
+    &:last-child {
+      border-right: 1px solid var(--cui-border-color);
+    }
+  }
+
+  &:hover td {
+    border-top-color: var(--cui-primary);
+    border-bottom-color: var(--cui-primary);
+
+    &:first-child {
+      border-left-color: var(--cui-primary);
+    }
+
+    &:last-child {
+      border-right-color: var(--cui-primary);
+    }
+  }
+}
+
+// Action Buttons
+.action-btn {
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
   }
 }

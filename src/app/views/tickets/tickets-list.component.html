@@ -105,32 +105,39 @@
             </c-row>
           </div>
 
+          <!-- Skeleton Loader -->
+          <div *ngIf="isLoading" class="skeleton-loader">
+            <div class="skeleton-header mb-4"></div>
+            <div class="skeleton-row mb-3" *ngFor="let i of [1,2,3,4,5]"></div>
+          </div>
+
           <!-- Table Section -->
-          <div class="table-responsive">
-            <table cTable hover striped class="align-middle mb-0 border">
-              <thead>
+          <div class="table-responsive" *ngIf="!isLoading">
+            <table cTable hover class="align-middle mb-0 border-separate"
+              style="border-spacing: 0 10px; border-collapse: separate;">
+              <thead class="bg-light">
                 <tr>
-                  <th class="py-3 ps-3">Nº Atendimento</th>
-                  <th class="py-3">Paciente</th>
-                  <th class="py-3">Pagador</th>
-                  <th class="py-3">Médico Exec.</th>
-                  <th class="py-3">Data</th>
-                  <th class="py-3 text-end pe-3">Ações</th>
+                  <th class="py-3 ps-3 border-0 rounded-start">Nº Atendimento</th>
+                  <th class="py-3 border-0">Paciente</th>
+                  <th class="py-3 border-0">Pagador</th>
+                  <th class="py-3 border-0">Médico Exec.</th>
+                  <th class="py-3 border-0">Data</th>
+                  <th class="py-3 text-end pe-3 border-0 rounded-end">Ações</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let ticket of tickets">
-                  <td class="ps-3 fw-semibold text-primary">
+                <tr *ngFor="let ticket of tickets" class="shadow-sm bg-white rounded-3 position-relative ticket-row">
+                  <td class="ps-3 fw-semibold text-primary py-3 rounded-start border-0">
                     #{{ ticket.numAtend }}
                   </td>
-                  <td>
+                  <td class="py-3 border-0">
                     <div class="fw-semibold">{{ ticket.nomePaciente }}</div>
                   </td>
-                  <td>
+                  <td class="py-3 border-0">
                     <div class="small text-muted">Pagador</div>
                     <div>{{ ticket.nomePagador }}</div>
                   </td>
-                  <td>
+                  <td class="py-3 border-0">
                     <div class="d-flex align-items-center">
                       <div
                         class="avatar avatar-sm bg-primary text-white me-2 rounded-circle d-flex align-items-center justify-content-center"
@@ -140,13 +147,14 @@
                       <div>{{ ticket.medicoExecNome }}</div>
                     </div>
                   </td>
-                  <td>
+                  <td class="py-3 border-0">
                     <div class="small text-muted">Emissão</div>
                     <div class="fw-semibold">{{ ticket.dataTicket | date: 'dd/MM/yyyy' }}</div>
                   </td>
-                  <td class="text-end pe-3">
+                  <td class="text-end pe-3 py-3 rounded-end border-0">
                     <div class="btn-group" role="group">
-                      <button cButton color="light" size="sm" class="border text-primary"
+                      <button cButton color="light" size="sm"
+                        class="border text-primary shadow-sm me-2 rounded-2 action-btn"
                         [routerLink]="['/tickets/editar', ticket.id]" title="Editar">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                           class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -156,7 +164,7 @@
                             d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                         </svg>
                       </button>
-                      <button cButton color="light" size="sm" class="border text-danger ms-1"
+                      <button cButton color="light" size="sm" class="border text-danger shadow-sm rounded-2 action-btn"
                         (click)="deleteTicket(ticket.id)" title="Excluir">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                           class="bi bi-trash" viewBox="0 0 16 16">

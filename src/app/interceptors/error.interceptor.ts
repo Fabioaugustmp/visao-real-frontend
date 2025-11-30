@@ -13,7 +13,7 @@ import { NotificationService } from '../services/notification.service';
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationService) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
@@ -24,14 +24,14 @@ export class ErrorInterceptor implements HttpInterceptor {
           errorMessage = `Error: ${error.error.message}`;
         } else {
           // Server-side errors
-          if (error.status === 409 && error.error && typeof error.error === 'object' && 'message' in error.error) {
+          if (error.status === 0) {
+            errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão com a internet ou tente novamente mais tarde.';
+          } else if (error.status === 409 && error.error && typeof error.error === 'object' && 'message' in error.error) {
             errorMessage = error.error.message;
-          } else if (error.status) {
-            errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+          } else {
+            errorMessage = `Código de Erro: ${error.status}\nMensagem: ${error.message}`;
             if (error.error && error.error.message) {
-              errorMessage = `Error Code: ${error.status}\nMessage: ${error.error.message}`;
-            } else if (error.status === 0) {
-              errorMessage = 'Could not connect to the server. Please check your internet connection or try again later.';
+              errorMessage = `Código de Erro: ${error.status}\nMensagem: ${error.error.message}`;
             }
           }
         }

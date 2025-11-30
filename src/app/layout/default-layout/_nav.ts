@@ -5,19 +5,19 @@ export const navItems: INavData[] = [
     title: true,
     name: 'Visão Real'
   },
-  {
-    name: 'Dashboard',
-    url: '/dashboard',
-    iconComponent: { name: 'cil-speedometer' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
-  },
-   {
-    title: true,
-    name: 'Visão'
-  },
+  // {
+  //   name: 'Dashboard',
+  //   url: '/dashboard',
+  //   iconComponent: { name: 'cil-speedometer' },
+  //   badge: {
+  //     color: 'info',
+  //     text: 'NEW'
+  //   }
+  // },
+  //  {
+  //   title: true,
+  //   name: 'Visão'
+  // },
   {
     name: 'Relatórios',
     iconComponent: { name: 'cil-chart' },

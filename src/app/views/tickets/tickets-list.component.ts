@@ -26,6 +26,7 @@ import { FormsModule } from '@angular/forms';
 export class TicketsListComponent implements OnInit {
 
   tickets: TicketDTO[] = [];
+  isLoading = false;
   currentPage = 0;
   pageSize = 10;
   totalElements = 0;
@@ -44,6 +45,7 @@ export class TicketsListComponent implements OnInit {
   }
 
   loadTickets(page: number, size: number): void {
+    this.isLoading = true;
     const pageable: Pageable = { page, size, sort: this.sort };
     this.ticketService.getTickets(pageable, this.searchNumAtend, this.searchTicketId, this.searchCpf, this.searchDataTicket).subscribe(
       (response: PageTicketDTO) => {
@@ -51,9 +53,11 @@ export class TicketsListComponent implements OnInit {
         this.totalElements = response.totalElements;
         this.totalPages = response.totalPages;
         this.currentPage = response.number;
+        this.isLoading = false;
       },
       error => {
         console.error('Error loading tickets', error);
+        this.isLoading = false;
       }
     );
   }

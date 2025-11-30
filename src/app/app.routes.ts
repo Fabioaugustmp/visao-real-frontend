@@ -4,7 +4,7 @@ import { AuthGuard } from './guards/auth.guard'; // Import AuthGuard
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard', // Redirect to dashboard for authenticated users
+    redirectTo: 'relatorios-dashboard', // Redirect to relatorios-dashboard for authenticated users
     pathMatch: 'full'
   },
   {

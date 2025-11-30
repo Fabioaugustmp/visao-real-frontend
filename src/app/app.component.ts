@@ -11,8 +11,8 @@ import { iconSubset } from './icons/icon-subset';
 import { NotificationService, ToastConfig } from './services/notification.service';
 
 @Component({
-    selector: 'app-root',
-    template: `
+  selector: 'app-root',
+  template: `
       <c-toaster #toaster placement="top-end">
         <c-toast *ngFor="let toast of toasts" [autohide]="toast.autohide ?? true" [delay]="toast.delay" [fade]="toast.fade ?? true" [color]="toast.color" [visible]="true" (visibleChange)="onToastVisibleChange(toast, $event)">
           <c-toast-header>
@@ -24,19 +24,19 @@ import { NotificationService, ToastConfig } from './services/notification.servic
       </c-toaster>
       <router-outlet />
     `,
-    standalone: true,
-    imports: [
-      RouterOutlet,
-      CommonModule, // Add CommonModule here
-      ToasterComponent,
-      ToastComponent,
-      ToastHeaderComponent,
-      ToastBodyComponent,
-      ButtonCloseDirective // Import ButtonCloseDirective
-    ]
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    CommonModule, // Add CommonModule here
+    ToasterComponent,
+    ToastComponent,
+    ToastHeaderComponent,
+    ToastBodyComponent,
+    ButtonCloseDirective // Import ButtonCloseDirective
+  ]
 })
 export class AppComponent implements OnInit {
-  title = 'CoreUI Angular Admin Template';
+  title = 'Visao Real';
   toasts: ToastConfig[] = []; // Array to hold toast configurations
 
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
@@ -58,8 +58,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.#router.events.pipe(
-        takeUntilDestroyed(this.#destroyRef)
-      ).subscribe((evt) => {
+      takeUntilDestroyed(this.#destroyRef)
+    ).subscribe((evt) => {
       if (!(evt instanceof NavigationEnd)) {
         return;
       }
