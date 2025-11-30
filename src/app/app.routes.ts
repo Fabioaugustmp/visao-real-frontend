@@ -171,8 +171,8 @@ export const routes: Routes = [
       {
         path: 'relatorios-dashboard-2',
         loadChildren: () => import('./views/relatorios-dashboard-2/routes').then((m) => m.routes),
-        // canActivate: [AuthGuard],
-        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR'] }
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR', 'MEDICO', 'ROLE_MEDICO'] }
       }
     ]
   },
