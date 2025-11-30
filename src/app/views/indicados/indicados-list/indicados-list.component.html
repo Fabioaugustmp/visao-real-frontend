@@ -33,7 +33,9 @@
                 <tr>
                   <th class="py-3 ps-3">ID</th>
                   <th class="py-3">Ticket</th>
-                  <th class="py-3">Indicação (Médico)</th>
+                  <th class="py-3">Médico Indicador</th>
+                  <th class="py-3">Médico Indicado</th>
+                  <th class="py-3">Parcela</th>
                   <th class="py-3">Valor</th>
                   <th class="py-3">Pago</th>
                   <th class="py-3">Recebido</th>
@@ -46,19 +48,38 @@
                     #{{ indicado.id }}
                   </td>
                   <td>
-                    <span class="badge bg-light text-dark border" *ngIf="indicado.ticket">#{{ indicado.ticket.id
+                    <span class="badge bg-light text-dark border" *ngIf="indicado.ticket">{{ indicado.ticket.numAtend
                       }}</span>
                     <span class="text-muted fst-italic" *ngIf="!indicado.ticket">N/A</span>
                   </td>
                   <td>
                     <div class="d-flex align-items-center">
                       <div
+                        class="avatar avatar-sm bg-primary text-white me-2 rounded-circle d-flex align-items-center justify-content-center"
+                        style="width: 32px; height: 32px;">
+                        {{ indicado.medicoIndicador?.nome?.charAt(0) || '?' }}
+                      </div>
+                      <div>
+                        <div class="fw-semibold">{{ indicado.medicoIndicador?.nome || 'Não informado' }}</div>
+                        <small class="text-muted">{{ indicado.medicoIndicador?.crm || '' }}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div
                         class="avatar avatar-sm bg-info text-white me-2 rounded-circle d-flex align-items-center justify-content-center"
                         style="width: 32px; height: 32px;">
-                        {{ indicado.indicacao?.medico?.nome?.charAt(0) || '?' }}
+                        {{ indicado.medicoIndicado?.nome?.charAt(0) || '?' }}
                       </div>
-                      <div class="fw-semibold">{{ indicado.indicacao?.medico?.nome || 'Não informado' }}</div>
+                      <div>
+                        <div class="fw-semibold">{{ indicado.medicoIndicado?.nome || 'Não informado' }}</div>
+                        <small class="text-muted">{{ indicado.medicoIndicado?.crm || '' }}</small>
+                      </div>
                     </div>
+                  </td>
+                  <td>
+                    <span class="badge bg-secondary">{{ indicado.parcela }}/{{ indicado.totalParcelas }}</span>
                   </td>
                   <td>
                     <div class="fw-semibold text-success">{{ indicado.valorIndicacao | currency:'BRL':'symbol':'1.2-2'
@@ -100,7 +121,7 @@
                   </td>
                 </tr>
                 <tr *ngIf="indicados.length === 0">
-                  <td colspan="7" class="text-center py-5 text-muted">
+                  <td colspan="9" class="text-center py-5 text-muted">
                     <div class="mb-2">
                       <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
                         class="bi bi-inbox opacity-25" viewBox="0 0 16 16">
