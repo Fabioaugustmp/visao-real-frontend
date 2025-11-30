@@ -18,7 +18,8 @@ import {
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { IconDirective } from '@coreui/icons-angular';
 import { getStyle } from '@coreui/utils';
-import { Faturamento, RelatoriosDashboardService } from './relatorios-dashboard.service';
+import { Faturamento, RelatoriosDashboardService, DashboardData } from './relatorios-dashboard.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-relatorios-dashboard',
@@ -51,17 +52,149 @@ export class RelatoriosDashboardComponent implements OnInit {
   taxaCartaoChart: any = {};
   faturamento: Faturamento | undefined;
 
-  constructor(private relatoriosDashboardService: RelatoriosDashboardService) {
+  constructor(
+    private relatoriosDashboardService: RelatoriosDashboardService,
+    private authService: AuthService
+  ) {
   }
 
   ngOnInit(): void {
-    this.initCharts();
-    this.relatoriosDashboardService.getFaturamento().subscribe(data => {
-      this.faturamento = data;
+    this.loadDashboardData();
+    this.loadFaturamento();
+  }
+
+  private loadDashboardData(): void {
+    // Check user role and get appropriate data
+    const userRoles = this.authService.getUserRoles();
+
+    userRoles.subscribe(roles => {
+      let medicoId: string | null = null;
+
+      // If user is MEDICO (and not ADMIN), get their ID
+      if (roles.includes('MEDICO') && !roles.includes('ADMIN') && !roles.includes('ADMINISTRADOR')) {
+        medicoId = this.authService.getUserId();
+      }
+
+      // Fetch dashboard data
+      this.relatoriosDashboardService.getDashboardData(medicoId || undefined).subscribe({
+        next: (data: DashboardData) => {
+          this.initChartsFromAPI(data);
+        },
+        error: (error) => {
+          console.error('Error loading dashboard data:', error);
+          // Fallback to default charts if API fails
+          this.initDefaultCharts();
+        }
+      });
     });
   }
 
-  initCharts(): void {
+  private loadFaturamento(): void {
+    this.relatoriosDashboardService.getFaturamento().subscribe({
+      next: (data) => {
+        this.faturamento = data;
+      },
+      error: (error) => {
+        console.error('Error loading faturamento:', error);
+      }
+    });
+  }
+
+  private initChartsFromAPI(data: DashboardData): void {
+    const brandSuccess = getStyle('--cui-success') || '#4dbd74';
+    const brandInfo = getStyle('--cui-info') || '#20a8d8';
+    const brandDanger = getStyle('--cui-danger') || '#f86c6b';
+    const brandWarning = getStyle('--cui-warning') || '#f8cb00';
+
+    // Main Chart
+    this.mainChart = {
+      data: {
+        labels: data.mainChart.labels,
+        datasets: data.mainChart.datasets.map((dataset, index) => ({
+          label: dataset.label,
+          backgroundColor: dataset.backgroundColor || this.getDefaultColor(index, brandInfo, brandSuccess, brandDanger),
+          borderColor: dataset.borderColor || this.getDefaultColor(index, brandInfo, brandSuccess, brandDanger),
+          data: dataset.data
+        }))
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    };
+
+    // Indicadores Chart
+    this.indicadoresChart = {
+      data: {
+        labels: data.indicadoresChart.labels,
+        datasets: data.indicadoresChart.datasets.map((dataset, index) => ({
+          label: dataset.label,
+          backgroundColor: dataset.backgroundColor || (index === 0 ? brandDanger : brandSuccess),
+          borderColor: dataset.borderColor || (index === 0 ? brandDanger : brandSuccess),
+          data: dataset.data
+        }))
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            beginAtZero: true
+          },
+          y: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    };
+
+    // Taxa Cartão Chart
+    this.taxaCartaoChart = {
+      data: {
+        labels: data.taxaCartaoChart.labels,
+        datasets: data.taxaCartaoChart.datasets.map(dataset => ({
+          label: dataset.label,
+          backgroundColor: dataset.backgroundColor || brandWarning,
+          borderColor: dataset.borderColor || brandWarning,
+          data: dataset.data
+        }))
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    };
+  }
+
+  private getDefaultColor(index: number, color1: string, color2: string, color3: string): string {
+    const colors = [color1, color2, color3];
+    return colors[index % colors.length];
+  }
+
+  private initDefaultCharts(): void {
     const brandSuccess = getStyle('--cui-success') || '#4dbd74';
     const brandInfo = getStyle('--cui-info') || '#20a8d8';
     const brandDanger = getStyle('--cui-danger') || '#f86c6b';

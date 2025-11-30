@@ -1,83 +1,143 @@
 // Custom styles for Relatorios Dashboard Component
-// These styles are designed to work with CoreUI's dark mode
+// Designed for a premium, modern look with dark mode support
 
-// Gradient cards - keep the gradients but ensure they work in both modes
-.revenue-card {
+// KPI Cards
+.kpi-card {
     border: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
 
     &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    // Background shapes/blobs for visual interest (optional, keeping it clean for now)
+
+    .card-body {
+        position: relative;
+        z-index: 2;
+    }
+
+    // Gradients
+    &.bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+
+        .text-white-50 {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+    }
+
+    &.bg-gradient-danger {
+        background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+        color: white;
+
+        .text-white-50 {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+    }
+
+    &.bg-gradient-warning {
+        background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+        color: #fff; // Changed to white for consistency, ensure gradient is dark enough or text has shadow
+        // Or use a darker orange gradient for better contrast with white text
+        background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%);
+
+        .text-white-50 {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+    }
+
+    &.bg-gradient-info {
+        background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+        color: white;
+
+        .text-white-50 {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
     }
 }
 
-// Summary card - adapt background to theme
+// Summary Card
 .summary-card {
-    background-color: var(--cui-card-bg);
-    border-color: var(--cui-card-border-color);
     border: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    background-color: var(--cui-card-bg);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    margin-bottom: 1.5rem;
 
     .border-end {
         border-color: var(--cui-border-color) !important;
     }
 
-    .text-muted {
-        color: var(--cui-body-color) !important;
-        opacity: 0.7;
+    // Remove border on small screens for the last item in a row if needed, 
+    // but Bootstrap handles stacking. We might want to remove borders on mobile.
+    @media (max-width: 767.98px) {
+        .border-end {
+            border-right: none !important;
+            border-bottom: 1px solid var(--cui-border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+
+            &:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+        }
     }
 }
 
-// Chart cards
+// Chart Cards
 .chart-card {
-    background-color: var(--cui-card-bg);
-    border-color: var(--cui-card-border-color);
     border: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    background-color: var(--cui-card-bg);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 
     c-card-header {
-        background-color: var(--cui-card-cap-bg);
-        border-bottom-color: var(--cui-border-color);
+        background-color: transparent;
+        border-bottom: 1px solid var(--cui-border-color);
+        padding: 1.25rem 1.5rem;
     }
 
-    .text-body-secondary {
-        color: var(--cui-body-color);
-        opacity: 0.7;
-    }
-}
-
-// Chart card header - theme-aware
-.chart-card-header {
-    background-color: var(--cui-card-cap-bg);
-    border-bottom-color: var(--cui-border-color) !important;
-
-    .text-muted {
-        color: var(--cui-body-color);
-        opacity: 0.7;
+    c-card-body {
+        padding: 1.5rem;
     }
 }
 
-// Form controls in charts
+// Form Select Customization
 .form-select {
-    background-color: var(--cui-body-bg);
+    border-radius: 8px;
     border-color: var(--cui-border-color);
+    background-color: var(--cui-body-bg);
     color: var(--cui-body-color);
 
     &:focus {
-        background-color: var(--cui-body-bg);
+        box-shadow: 0 0 0 0.25rem rgba(var(--cui-primary-rgb), 0.25);
         border-color: var(--cui-primary);
-        color: var(--cui-body-color);
     }
 }
 
-// Ensure text colors adapt
-.card-title {
-    color: var(--cui-body-color);
+// Typography & Utilities
+.text-white-50 {
+    opacity: 0.8;
 }
 
-// Progress bars
-c-progress {
-    background-color: var(--cui-tertiary-bg);
+.fw-semibold {
+    font-weight: 600 !important;
+}
+
+.fs-4 {
+    font-size: 1.75rem !important; // Slightly larger for KPIs
+}
+
+// Dark Mode Overrides (if needed beyond CoreUI vars)
+@media (prefers-color-scheme: dark) {
+    // Adjust shadows for dark mode if they are too subtle
 }

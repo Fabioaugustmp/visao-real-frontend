@@ -1,8 +1,7 @@
 <c-row class="mb-4">
   <!-- Faturamento do Mês -->
   <c-col sm="6" lg="3">
-    <c-card class="text-white bg-gradient"
-      style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <c-card class="kpi-card bg-gradient-primary">
       <c-card-body class="pb-0 d-flex justify-content-between align-items-start">
         <div>
           <div class="text-white-50 small text-uppercase fw-semibold">Faturamento do Mês</div>
@@ -24,8 +23,7 @@
 
   <!-- Faturamento da Semana -->
   <c-col sm="6" lg="3">
-    <c-card class="text-white bg-gradient"
-      style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <c-card class="kpi-card bg-gradient-danger">
       <c-card-body class="pb-0 d-flex justify-content-between align-items-start">
         <div>
           <div class="text-white-50 small text-uppercase fw-semibold">Faturamento da Semana</div>
@@ -49,15 +47,14 @@
 
   <!-- Faturamento do Dia -->
   <c-col sm="6" lg="3">
-    <c-card class="text-white bg-gradient"
-      style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <c-card class="kpi-card bg-gradient-warning">
       <c-card-body class="pb-0 d-flex justify-content-between align-items-start">
         <div>
-          <div class="text-dark small text-uppercase fw-semibold opacity-75">Faturamento do Dia</div>
-          <div class="fs-4 fw-bold mt-2 text-dark">{{ faturamento?.faturamentoDia | currency:'BRL':'symbol':'1.2-2' }}
+          <div class="text-white-50 small text-uppercase fw-semibold">Faturamento do Dia</div>
+          <div class="fs-4 fw-bold mt-2">{{ faturamento?.faturamentoDia | currency:'BRL':'symbol':'1.2-2' }}
           </div>
         </div>
-        <div class="text-dark opacity-50">
+        <div class="text-white-50">
           <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-calendar-day"
             viewBox="0 0 16 16">
             <path
@@ -68,15 +65,14 @@
         </div>
       </c-card-body>
       <c-card-footer class="bg-transparent border-0 pt-3">
-        <small class="text-dark opacity-75">Período: Hoje</small>
+        <small class="text-white-50">Período: Hoje</small>
       </c-card-footer>
     </c-card>
   </c-col>
 
   <!-- Faturamento Acumulado Ano -->
   <c-col sm="6" lg="3">
-    <c-card class="text-white bg-gradient"
-      style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <c-card class="kpi-card bg-gradient-info">
       <c-card-body class="pb-0 d-flex justify-content-between align-items-start">
         <div>
           <div class="text-white-50 small text-uppercase fw-semibold">Acumulado Anual</div>
