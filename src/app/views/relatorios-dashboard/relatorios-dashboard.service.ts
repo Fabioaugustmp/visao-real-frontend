@@ -38,15 +38,34 @@ export class RelatoriosDashboardService {
 
   constructor(private http: HttpClient) { }
 
-  getDashboardData(medicoId?: string): Observable<DashboardData> {
+  getDashboardData(medicoId?: number, startDate?: string, finishDate?: string, year?: number): Observable<DashboardData> {
     let params = new HttpParams();
     if (medicoId) {
-      params = params.set('medicoId', medicoId);
+      params = params.set('medicoId', medicoId.toString());
+    }
+    if (startDate) {
+      params = params.set('startDate', startDate);
+    }
+    if (finishDate) {
+      params = params.set('finishDate', finishDate);
+    }
+    if (year) {
+      params = params.set('year', year.toString());
     }
     return this.http.get<DashboardData>(this.dashboardApiUrl, { params });
   }
 
-  getFaturamento(): Observable<Faturamento> {
-    return this.http.get<Faturamento>(this.faturamentoApiUrl);
+  getFaturamento(medicoId?: number, startDate?: string, finishDate?: string): Observable<Faturamento> {
+    let params = new HttpParams();
+    if (medicoId) {
+      params = params.set('medicoId', medicoId.toString());
+    }
+    if (startDate) {
+      params = params.set('startDate', startDate);
+    }
+    if (finishDate) {
+      params = params.set('finishDate', finishDate);
+    }
+    return this.http.get<Faturamento>(this.faturamentoApiUrl, { params });
   }
 }

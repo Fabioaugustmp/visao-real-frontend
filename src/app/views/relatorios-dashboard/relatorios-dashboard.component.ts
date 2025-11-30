@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   ButtonDirective,
   CardBodyComponent,
@@ -9,6 +9,9 @@ import {
   CardHeaderComponent,
   ColComponent,
   FormSelectDirective,
+  FormDirective,
+  FormLabelDirective,
+  FormControlDirective,
   ProgressComponent,
   RowComponent,
   TableDirective,
@@ -20,6 +23,8 @@ import { IconDirective } from '@coreui/icons-angular';
 import { getStyle } from '@coreui/utils';
 import { Faturamento, RelatoriosDashboardService, DashboardData } from './relatorios-dashboard.service';
 import { AuthService } from '../../services/auth.service';
+import { MedicoService } from '../medicos/medico.service';
+import { Medico } from '../medicos/medico.model';
 
 @Component({
   selector: 'app-relatorios-dashboard',
@@ -28,6 +33,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     WidgetModule,
     CardComponent,
     CardBodyComponent,
@@ -36,69 +42,188 @@ import { AuthService } from '../../services/auth.service';
     TextColorDirective,
     CardHeaderComponent,
     ButtonDirective,
-    ReactiveFormsModule,
     ChartjsComponent,
     CardFooterComponent,
     ProgressComponent,
     TableDirective,
     IconDirective,
-    FormSelectDirective
+    FormSelectDirective,
+    FormDirective,
+    FormLabelDirective,
+    FormControlDirective
   ]
 })
 export class RelatoriosDashboardComponent implements OnInit {
 
+  // Filter form
+  filterForm!: FormGroup;
+
+  // User role info
+  isAdmin = false;
+  isMedico = false;
+  currentMedicoId: number | null = null;
+
+  // Medicos list for admin dropdown
+  medicos: Medico[] = [];
+
+  // Loading states
+  loadingDashboard = false;
+  loadingFaturamento = false;
+
+  // Filter collapse state
+  isFilterCollapsed = true;
+
+  // Chart data
   mainChart: any = {};
   indicadoresChart: any = {};
   taxaCartaoChart: any = {};
   faturamento: Faturamento | undefined;
 
+  // Years for dropdown
+  years: number[] = [];
+
   constructor(
+    private fb: FormBuilder,
     private relatoriosDashboardService: RelatoriosDashboardService,
+    private medicoService: MedicoService,
     private authService: AuthService
   ) {
+    // Generate years (current year and 5 years back)
+    const currentYear = new Date().getFullYear();
+    for (let i = 0; i < 6; i++) {
+      this.years.push(currentYear - i);
+    }
   }
 
   ngOnInit(): void {
-    this.loadDashboardData();
-    this.loadFaturamento();
+    this.initializeForm();
+    this.detectUserRole();
   }
 
-  private loadDashboardData(): void {
-    // Get user roles synchronously from current value
-    const roles = this.authService.getUserRoles();
-
-    roles.subscribe(userRoles => {
-      let medicoId: string | null = null;
-
-      // If user is MEDICO (and not ADMIN), get their ID
-      const isMedico = userRoles.includes('MEDICO') || userRoles.includes('ROLE_MEDICO');
-      const isAdmin = userRoles.includes('ADMIN') || userRoles.includes('ADMINISTRADOR') || userRoles.includes('ROLE_ADMINISTRADOR');
-
-      if (isMedico && !isAdmin) {
-        medicoId = this.authService.getUserId();
-      }
-
-      // Fetch dashboard data
-      this.relatoriosDashboardService.getDashboardData(medicoId || undefined).subscribe({
-        next: (data: DashboardData) => {
-          this.initChartsFromAPI(data);
-        },
-        error: (error) => {
-          console.error('Error loading dashboard data:', error);
-          // Fallback to default charts if API fails
-          this.initDefaultCharts();
-        }
-      });
+  private initializeForm(): void {
+    this.filterForm = this.fb.group({
+      startDate: [''],
+      finishDate: [''],
+      medicoId: [null],
+      year: [new Date().getFullYear()]
     });
   }
 
-  private loadFaturamento(): void {
-    this.relatoriosDashboardService.getFaturamento().subscribe({
+  private detectUserRole(): void {
+    this.authService.getUserRoles().subscribe(roles => {
+      this.isMedico = roles.includes('MEDICO') || roles.includes('ROLE_MEDICO');
+      this.isAdmin = roles.includes('ADMIN') || roles.includes('ADMINISTRADOR') || roles.includes('ROLE_ADMINISTRADOR');
+
+      if (this.isMedico && !this.isAdmin) {
+        // MEDICO user - get their ID
+        const userId = this.authService.getUserId();
+        this.currentMedicoId = userId ? parseInt(userId) : null;
+      } else if (this.isAdmin) {
+        // ADMIN user - load medicos list
+        this.loadMedicos();
+      }
+
+      // Load initial data
+      this.loadAllData();
+    });
+  }
+
+  private loadMedicos(): void {
+    this.medicoService.getMedicos().subscribe({
+      next: (medicos) => {
+        this.medicos = medicos;
+      },
+      error: (error) => {
+        console.error('Error loading medicos:', error);
+      }
+    });
+  }
+
+  toggleFilter(): void {
+    this.isFilterCollapsed = !this.isFilterCollapsed;
+  }
+
+  onApplyFilters(): void {
+    this.loadAllData();
+  }
+
+  onClearFilters(): void {
+    this.filterForm.patchValue({
+      startDate: '',
+      finishDate: '',
+      medicoId: null,
+      year: new Date().getFullYear()
+    });
+    this.loadAllData();
+    this.isFilterCollapsed = true; // Collapse after clearing
+  }
+
+  private loadAllData(): void {
+    const filters = this.getFilters();
+    this.checkFilterState();
+    this.loadDashboardData(filters.medicoId, filters.startDate, filters.finishDate, filters.year);
+    this.loadFaturamento(filters.medicoId, filters.startDate, filters.finishDate);
+  }
+
+  private checkFilterState(): void {
+    const formValue = this.filterForm.value;
+    // Keep filter expanded if user has entered any data
+    const hasFilterData = formValue.startDate || formValue.finishDate ||
+      (this.isAdmin && formValue.medicoId) ||
+      formValue.year !== new Date().getFullYear();
+
+    if (hasFilterData && this.isFilterCollapsed) {
+      this.isFilterCollapsed = false;
+    }
+  }
+
+  private getFilters() {
+    const formValue = this.filterForm.value;
+
+    // Determine medicoId based on role
+    let medicoId: number | undefined;
+    if (this.isMedico && !this.isAdmin) {
+      // MEDICO user - always use their own ID
+      medicoId = this.currentMedicoId || undefined;
+    } else if (this.isAdmin) {
+      // ADMIN user - use selected medico or undefined for all
+      medicoId = formValue.medicoId || undefined;
+    }
+
+    return {
+      medicoId,
+      startDate: formValue.startDate || undefined,
+      finishDate: formValue.finishDate || undefined,
+      year: formValue.year || undefined
+    };
+  }
+
+  private loadDashboardData(medicoId?: number, startDate?: string, finishDate?: string, year?: number): void {
+    this.loadingDashboard = true;
+    this.relatoriosDashboardService.getDashboardData(medicoId, startDate, finishDate, year).subscribe({
+      next: (data: DashboardData) => {
+        this.initChartsFromAPI(data);
+        this.loadingDashboard = false;
+      },
+      error: (error) => {
+        console.error('Error loading dashboard data:', error);
+        // Fallback to default charts if API fails
+        this.initDefaultCharts();
+        this.loadingDashboard = false;
+      }
+    });
+  }
+
+  private loadFaturamento(medicoId?: number, startDate?: string, finishDate?: string): void {
+    this.loadingFaturamento = true;
+    this.relatoriosDashboardService.getFaturamento(medicoId, startDate, finishDate).subscribe({
       next: (data) => {
         this.faturamento = data;
+        this.loadingFaturamento = false;
       },
       error: (error) => {
         console.error('Error loading faturamento:', error);
+        this.loadingFaturamento = false;
       }
     });
   }

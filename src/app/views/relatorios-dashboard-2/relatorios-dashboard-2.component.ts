@@ -66,6 +66,9 @@ export class RelatoriosDashboard2Component implements OnInit {
   loadingPaymentCondition = false;
   loadingAnnual = false;
 
+  // Filter collapse state
+  isFilterCollapsed = true;
+
   // Chart data
   procedureData: BillingByProcedureDTO[] = [];
   paymentMethodChart: any = {};
@@ -132,6 +135,10 @@ export class RelatoriosDashboard2Component implements OnInit {
     });
   }
 
+  toggleFilter(): void {
+    this.isFilterCollapsed = !this.isFilterCollapsed;
+  }
+
   onApplyFilters(): void {
     this.loadAllData();
   }
@@ -144,15 +151,29 @@ export class RelatoriosDashboard2Component implements OnInit {
       year: new Date().getFullYear()
     });
     this.loadAllData();
+    this.isFilterCollapsed = true; // Collapse after clearing
   }
 
   private loadAllData(): void {
     const filters = this.getFilters();
+    this.checkFilterState();
 
     this.loadBillingByProcedure(filters.medicoId, filters.startDate, filters.finishDate);
     this.loadBillingByPaymentMethod(filters.medicoId, filters.startDate, filters.finishDate);
     this.loadBillingByPaymentCondition(filters.medicoId, filters.startDate, filters.finishDate);
     this.loadAnnualBilling(filters.year, filters.medicoId);
+  }
+
+  private checkFilterState(): void {
+    const formValue = this.filterForm.value;
+    // Keep filter expanded if user has entered any data
+    const hasFilterData = formValue.startDate || formValue.finishDate ||
+      (this.isAdmin && formValue.medicoId) ||
+      formValue.year !== new Date().getFullYear();
+
+    if (hasFilterData && this.isFilterCollapsed) {
+      this.isFilterCollapsed = false;
+    }
   }
 
   private getFilters() {

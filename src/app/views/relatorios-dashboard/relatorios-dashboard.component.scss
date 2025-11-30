@@ -1,64 +1,161 @@
 // Custom styles for Relatorios Dashboard Component
-// Designed for a premium, modern look with dark mode support
+// Designed for premium look with WCAG AA compliant contrast ratios
+
+// ============================================
+// LIGHT THEME (Default)
+// ============================================
+
+// Filter Card Styling
+.filter-card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #ffffff;
+
+    c-card-header {
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        border-bottom: none;
+        padding: 1.25rem 1.5rem;
+        color: #ffffff;
+
+        h5 {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        svg {
+            color: #ffffff;
+        }
+    }
+
+    c-card-body {
+        padding: 1.5rem;
+        background-color: #ffffff;
+    }
+
+    .form-label {
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 6px;
+        border: 1.5px solid #cbd5e0;
+        padding: 0.625rem 0.875rem;
+        font-size: 0.9375rem;
+        transition: all 0.2s ease;
+        background-color: #ffffff;
+        color: #1a202c;
+
+        &::placeholder {
+            color: #718096;
+        }
+
+        &:focus {
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.15);
+            outline: none;
+        }
+
+        &:disabled {
+            background-color: #f7fafc;
+            color: #a0aec0;
+            cursor: not-allowed;
+        }
+    }
+
+    button {
+        border-radius: 6px;
+        padding: 0.625rem 1.25rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+
+        &:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        &:active:not(:disabled) {
+            transform: translateY(0);
+        }
+    }
+}
 
 // KPI Cards
 .kpi-card {
     border: none;
     border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
     position: relative;
-    z-index: 1;
 
     &:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
     }
-
-    // Background shapes/blobs for visual interest (optional, keeping it clean for now)
 
     .card-body {
         position: relative;
         z-index: 2;
     }
 
-    // Gradients
+    // Enhanced gradients with better contrast
     &.bg-gradient-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        color: #ffffff;
 
         .text-white-50 {
-            color: rgba(255, 255, 255, 0.7) !important;
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+
+        svg {
+            opacity: 0.9;
         }
     }
 
     &.bg-gradient-danger {
-        background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
-        color: white;
+        background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+        color: #ffffff;
 
         .text-white-50 {
-            color: rgba(255, 255, 255, 0.8) !important;
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+
+        svg {
+            opacity: 0.9;
         }
     }
 
     &.bg-gradient-warning {
-        background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-        color: #fff; // Changed to white for consistency, ensure gradient is dark enough or text has shadow
-        // Or use a darker orange gradient for better contrast with white text
-        background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%);
+        background: linear-gradient(135deg, #dd6b20 0%, #c05621 100%);
+        color: #ffffff;
 
         .text-white-50 {
-            color: rgba(255, 255, 255, 0.8) !important;
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+
+        svg {
+            opacity: 0.9;
         }
     }
 
     &.bg-gradient-info {
-        background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-        color: white;
+        background: linear-gradient(135deg, #0987a0 0%, #086f83 100%);
+        color: #ffffff;
 
         .text-white-50 {
-            color: rgba(255, 255, 255, 0.7) !important;
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+
+        svg {
+            opacity: 0.9;
         }
     }
 }
@@ -67,20 +164,27 @@
 .summary-card {
     border: none;
     border-radius: 16px;
-    background-color: var(--cui-card-bg);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    background-color: #ffffff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     margin-bottom: 1.5rem;
 
     .border-end {
-        border-color: var(--cui-border-color) !important;
+        border-color: #e2e8f0 !important;
     }
 
-    // Remove border on small screens for the last item in a row if needed, 
-    // but Bootstrap handles stacking. We might want to remove borders on mobile.
+    .small {
+        color: #4a5568;
+        font-weight: 600;
+    }
+
+    .fs-5 {
+        color: #1a202c;
+    }
+
     @media (max-width: 767.98px) {
         .border-end {
             border-right: none !important;
-            border-bottom: 1px solid var(--cui-border-color);
+            border-bottom: 1px solid #e2e8f0;
             padding-bottom: 1rem;
             margin-bottom: 1rem;
 
@@ -96,37 +200,109 @@
 // Chart Cards
 .chart-card {
     border: none;
-    border-radius: 16px;
-    background-color: var(--cui-card-bg);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background-color: #ffffff;
+
+    &:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+    }
 
     c-card-header {
-        background-color: transparent;
-        border-bottom: 1px solid var(--cui-border-color);
+        background: #f7fafc;
+        border-bottom: 2px solid #e2e8f0;
         padding: 1.25rem 1.5rem;
+
+        h5 {
+            color: #1a202c;
+            font-weight: 700;
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        small {
+            color: #4a5568;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
     }
 
     c-card-body {
         padding: 1.5rem;
+        background-color: #ffffff;
+    }
+}
+
+// Table Styling
+.table {
+    margin-bottom: 0;
+
+    thead {
+        background: #f7fafc;
+
+        th {
+            border-bottom: 2px solid #cbd5e0;
+            color: #1a202c;
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+        }
+    }
+
+    tbody {
+        tr {
+            transition: all 0.2s ease;
+
+            &:hover {
+                background: #f7fafc;
+            }
+
+            td {
+                padding: 1rem;
+                vertical-align: middle;
+                border-bottom: 1px solid #e2e8f0;
+                color: #2d3748;
+            }
+        }
+    }
+}
+
+// Loading Spinner
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+// Empty State
+.text-muted {
+    color: #718096 !important;
+
+    svg {
+        opacity: 0.6;
     }
 }
 
 // Form Select Customization
 .form-select {
     border-radius: 8px;
-    border-color: var(--cui-border-color);
-    background-color: var(--cui-body-bg);
-    color: var(--cui-body-color);
+    border: 1.5px solid #cbd5e0;
+    background-color: #ffffff;
+    color: #1a202c;
 
     &:focus {
-        box-shadow: 0 0 0 0.25rem rgba(var(--cui-primary-rgb), 0.25);
-        border-color: var(--cui-primary);
+        box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.15);
+        border-color: #5a67d8;
     }
 }
 
 // Typography & Utilities
 .text-white-50 {
-    opacity: 0.8;
+    opacity: 0.85;
 }
 
 .fw-semibold {
@@ -134,10 +310,178 @@
 }
 
 .fs-4 {
-    font-size: 1.75rem !important; // Slightly larger for KPIs
+    font-size: 1.75rem !important;
 }
 
-// Dark Mode Overrides (if needed beyond CoreUI vars)
+// Responsive
+@media (max-width: 768px) {
+    .filter-card {
+        c-card-body {
+            padding: 1rem;
+        }
+    }
+
+    .chart-card {
+        margin-bottom: 1rem !important;
+    }
+}
+
+// ============================================
+// DARK THEME
+// ============================================
 @media (prefers-color-scheme: dark) {
-    // Adjust shadows for dark mode if they are too subtle
+    .filter-card {
+        background: #1a202c;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+        c-card-header {
+            background: linear-gradient(135deg, #6b7fd8 0%, #8b5cf6 100%);
+
+            h5 {
+                color: #ffffff;
+            }
+
+            svg {
+                color: #ffffff;
+            }
+        }
+
+        c-card-body {
+            background-color: #1a202c;
+        }
+
+        .form-label {
+            color: #f7fafc;
+            font-weight: 600;
+        }
+
+        .form-control,
+        .form-select {
+            background: #2d3748;
+            border-color: #4a5568;
+            color: #f7fafc;
+
+            &::placeholder {
+                color: #a0aec0;
+            }
+
+            &:focus {
+                background: #2d3748;
+                border-color: #8b5cf6;
+                box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+            }
+
+            &:disabled {
+                background-color: #1a202c;
+                color: #718096;
+            }
+        }
+    }
+
+    .kpi-card {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+
+        &:hover {
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+        }
+
+        // Brighter gradients for dark mode
+        &.bg-gradient-primary {
+            background: linear-gradient(135deg, #6b7fd8 0%, #8b5cf6 100%);
+        }
+
+        &.bg-gradient-danger {
+            background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+        }
+
+        &.bg-gradient-warning {
+            background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+        }
+
+        &.bg-gradient-info {
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+        }
+    }
+
+    .summary-card {
+        background-color: #1a202c;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+
+        .border-end {
+            border-color: #4a5568 !important;
+        }
+
+        .small {
+            color: #cbd5e0;
+        }
+
+        .fs-5 {
+            color: #f7fafc;
+        }
+    }
+
+    .chart-card {
+        background: #1a202c;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+        &:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        c-card-header {
+            background: #2d3748;
+            border-bottom-color: #4a5568;
+
+            h5 {
+                color: #f7fafc;
+            }
+
+            small {
+                color: #cbd5e0;
+            }
+        }
+
+        c-card-body {
+            background-color: #1a202c;
+        }
+    }
+
+    .table {
+        thead {
+            background: #2d3748;
+
+            th {
+                color: #f7fafc;
+                border-bottom-color: #4a5568;
+            }
+        }
+
+        tbody {
+            tr {
+                &:hover {
+                    background: #2d3748;
+                }
+
+                td {
+                    color: #e2e8f0;
+                    border-bottom-color: #4a5568;
+                }
+            }
+        }
+    }
+
+    .text-muted {
+        color: #a0aec0 !important;
+    }
+
+    .form-select {
+        background-color: #2d3748;
+        border-color: #4a5568;
+        color: #f7fafc;
+
+        &:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+        }
+    }
 }

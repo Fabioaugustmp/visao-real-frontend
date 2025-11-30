@@ -1,3 +1,94 @@
+<c-row>
+  <!-- Filter Section -->
+  <c-col xs="12">
+    <c-card class="mb-4 filter-card">
+      <c-card-header class="bg-gradient-primary text-white d-flex justify-content-between align-items-center"
+        style="cursor: pointer;" (click)="toggleFilter()">
+        <h5 class="mb-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-funnel me-2"
+            viewBox="0 0 16 16">
+            <path
+              d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z" />
+          </svg>
+          Filtros de Pesquisa
+        </h5>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down"
+          viewBox="0 0 16 16" [style.transform]="isFilterCollapsed ? 'rotate(0deg)' : 'rotate(180deg)'"
+          style="transition: transform 0.3s ease;">
+          <path fill-rule="evenodd"
+            d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+        </svg>
+      </c-card-header>
+      <c-card-body [hidden]="isFilterCollapsed">
+        <form [formGroup]="filterForm" cForm>
+          <c-row>
+            <!-- Date Range -->
+            <c-col md="3">
+              <div class="mb-3">
+                <label cLabel for="startDate" class="form-label">Data Início</label>
+                <input cFormControl type="date" id="startDate" formControlName="startDate" class="form-control">
+              </div>
+            </c-col>
+            <c-col md="3">
+              <div class="mb-3">
+                <label cLabel for="finishDate" class="form-label">Data Fim</label>
+                <input cFormControl type="date" id="finishDate" formControlName="finishDate" class="form-control">
+              </div>
+            </c-col>
+
+            <!-- Medico Dropdown (Admin Only) -->
+            <c-col md="3" *ngIf="isAdmin">
+              <div class="mb-3">
+                <label cLabel for="medicoId" class="form-label">Médico</label>
+                <select cFormSelect id="medicoId" formControlName="medicoId" class="form-select">
+                  <option [value]="null">Todos os Médicos</option>
+                  <option *ngFor="let medico of medicos" [value]="medico.id">
+                    {{ medico.nome }} - {{ medico.crm }}
+                  </option>
+                </select>
+              </div>
+            </c-col>
+
+            <!-- Year Selector -->
+            <c-col md="3">
+              <div class="mb-3">
+                <label cLabel for="year" class="form-label">Ano</label>
+                <select cFormSelect id="year" formControlName="year" class="form-select">
+                  <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+                </select>
+              </div>
+            </c-col>
+          </c-row>
+
+          <!-- Action Buttons -->
+          <c-row>
+            <c-col xs="12">
+              <button cButton color="primary" (click)="onApplyFilters()" class="me-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-search me-1" viewBox="0 0 16 16">
+                  <path
+                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                </svg>
+                Aplicar Filtros
+              </button>
+              <button cButton color="secondary" variant="outline" (click)="onClearFilters()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-x-circle me-1" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                  <path
+                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                </svg>
+                Limpar
+              </button>
+            </c-col>
+          </c-row>
+        </form>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+<!-- KPI Cards Row -->
 <c-row class="mb-4">
   <!-- Faturamento do Mês -->
   <c-col sm="6" lg="3">
@@ -129,44 +220,18 @@
 <c-card class="my-4 chart-card">
   <c-card-body>
     <c-row>
-      <c-col sm="5">
+      <c-col sm="12">
         <h4 class="card-title mb-0 fw-semibold">Faturamento Anual</h4>
         <div class="small text-body-secondary">Mês a Mês</div>
       </c-col>
-      <c-col class="d-none d-md-block" sm="7">
-        <form>
-          <c-row class="float-end">
-            <c-col class="col-auto">
-              <select class="form-select" aria-label="Filtro Mês">
-                <option selected>Mês</option>
-                <option value="1">Janeiro</option>
-                <option value="2">Fevereiro</option>
-                <option value="3">Março</option>
-                <option value="4">Abril</option>
-                <option value="5">Maio</option>
-                <option value="6">Junho</option>
-                <option value="7">Julho</option>
-                <option value="8">Agosto</option>
-                <option value="9">Setembro</option>
-                <option value="10">Outubro</option>
-                <option value="11">Novembro</option>
-                <option value="12">Dezembro</option>
-              </select>
-            </c-col>
-            <c-col class="col-auto">
-              <select class="form-select" aria-label="Filtro Ano">
-                <option selected>Ano</option>
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-              </select>
-            </c-col>
-          </c-row>
-        </form>
-      </c-col>
     </c-row>
-    <c-chart [data]="mainChart.data" [height]="300" [ngStyle]="{ 'marginTop.px': 40 }" [options]="mainChart.options"
-      type="bar">
+    <div *ngIf="loadingDashboard" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
+    </div>
+    <c-chart *ngIf="!loadingDashboard" [data]="mainChart.data" [height]="300" [ngStyle]="{ 'marginTop.px': 40 }"
+      [options]="mainChart.options" type="bar">
       Gráfico Barras Vertical, faturamento Anual, mês a mês
     </c-chart>
   </c-card-body>
@@ -181,7 +246,13 @@
         <small class="text-muted">A Pagar vs A Receber</small>
       </c-card-header>
       <c-card-body>
-        <c-chart type="bar" [data]="indicadoresChart.data" [options]="indicadoresChart.options" style="height: 300px;">
+        <div *ngIf="loadingDashboard" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+        <c-chart *ngIf="!loadingDashboard" type="bar" [data]="indicadoresChart.data"
+          [options]="indicadoresChart.options" style="height: 300px;">
           Gráfico Barras Horizontal, Indicantes 2 Barras (a Pagar, A receber)
         </c-chart>
       </c-card-body>
@@ -194,7 +265,13 @@
         <small class="text-muted">Evolução mensal</small>
       </c-card-header>
       <c-card-body>
-        <c-chart type="bar" [data]="taxaCartaoChart.data" [options]="taxaCartaoChart.options" style="height: 300px;">
+        <div *ngIf="loadingDashboard" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+        <c-chart *ngIf="!loadingDashboard" type="bar" [data]="taxaCartaoChart.data" [options]="taxaCartaoChart.options"
+          style="height: 300px;">
           Gráfico Barras, Taxa de cartão mês a mês
         </c-chart>
       </c-card-body>
@@ -211,37 +288,6 @@
       </c-card-header>
       <c-card-body>
         <c-row>
-          <c-col class="d-none d-md-block" sm="7">
-            <form>
-              <c-row class="float-end">
-                <c-col class="col-auto">
-                  <select class="form-select" aria-label="Filtro Mês">
-                    <option selected>Mês</option>
-                    <option value="1">Janeiro</option>
-                    <option value="2">Fevereiro</option>
-                    <option value="3">Março</option>
-                    <option value="4">Abril</option>
-                    <option value="5">Maio</option>
-                    <option value="6">Junho</option>
-                    <option value="7">Julho</option>
-                    <option value="8">Agosto</option>
-                    <option value="9">Setembro</option>
-                    <option value="10">Outubro</option>
-                    <option value="11">Novembro</option>
-                    <option value="12">Dezembro</option>
-                  </select>
-                </c-col>
-                <c-col class="col-auto">
-                  <select class="form-select" aria-label="Filtro Ano">
-                    <option selected>Ano</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                  </select>
-                </c-col>
-              </c-row>
-            </form>
-          </c-col>
           <c-col md="12" xl="12" xs="12">
             <c-row>
               <c-col xs="12">

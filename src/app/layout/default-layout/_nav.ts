@@ -51,11 +51,6 @@ export const navItems: INavData[] = [
         url: '/indicacoes',
         icon: 'nav-icon-bullet'
       },
-      {
-        name: 'Parcelamentos',
-        url: '/parcelamentos',
-        icon: 'nav-icon-bullet'
-      },
       // {
       //   name: 'Itens do Ticket',
       //   url: '/itens-ticket',
@@ -134,6 +129,12 @@ export const navItems: INavData[] = [
       {
         name: 'Formas de Pagamento',
         url: '/formas-pagamento',
+        icon: 'nav-icon-bullet',
+        roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
+      },
+      {
+        name: 'Parcelamentos',
+        url: '/parcelamentos',
         icon: 'nav-icon-bullet',
         roles: ['ADMIN', 'ADMINISTRADOR', 'ROLE_ADMINISTRADOR']
       },

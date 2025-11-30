@@ -1,56 +1,81 @@
-// Filter Card Styling
+// Filter Card Styling - Enhanced contrast for accessibility
 .filter-card {
     border: none;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
+    background-color: #ffffff;
 
     c-card-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
         border-bottom: none;
         padding: 1.25rem 1.5rem;
+        color: #ffffff;
 
         h5 {
             display: flex;
             align-items: center;
             font-weight: 600;
+            color: #ffffff;
+        }
+
+        svg {
+            color: #ffffff;
         }
     }
 
     c-card-body {
         padding: 1.5rem;
+        background-color: #ffffff;
     }
 
     .form-label {
-        font-weight: 500;
+        font-weight: 600;
         font-size: 0.875rem;
-        color: #4a5568;
+        color: #1a202c;
         margin-bottom: 0.5rem;
     }
 
     .form-control,
     .form-select {
         border-radius: 6px;
-        border: 1px solid #e2e8f0;
+        border: 1.5px solid #cbd5e0;
         padding: 0.625rem 0.875rem;
         font-size: 0.9375rem;
         transition: all 0.2s ease;
+        background-color: #ffffff;
+        color: #1a202c;
+
+        &::placeholder {
+            color: #718096;
+        }
 
         &:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.15);
+            outline: none;
+        }
+
+        &:disabled {
+            background-color: #f7fafc;
+            color: #a0aec0;
+            cursor: not-allowed;
         }
     }
 
     button {
         border-radius: 6px;
         padding: 0.625rem 1.25rem;
-        font-weight: 500;
+        font-weight: 600;
         transition: all 0.2s ease;
 
-        &:hover {
+        &:hover:not(:disabled) {
             transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        &:active:not(:disabled) {
+            transform: translateY(0);
         }
     }
 }
@@ -62,6 +87,7 @@
     border-radius: 8px;
     overflow: hidden;
     transition: all 0.3s ease;
+    background-color: #ffffff;
 
     &:hover {
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
@@ -69,35 +95,37 @@
     }
 
     c-card-header {
-        background: #ffffff;
-        border-bottom: 1px solid #e2e8f0;
+        background: #f7fafc;
+        border-bottom: 2px solid #e2e8f0;
         padding: 1.25rem 1.5rem;
 
         h5 {
-            color: #2d3748;
-            font-weight: 600;
+            color: #1a202c;
+            font-weight: 700;
             font-size: 1.125rem;
             margin-bottom: 0.25rem;
         }
 
         small {
-            color: #718096;
+            color: #4a5568;
             font-size: 0.875rem;
+            font-weight: 500;
         }
     }
 
     c-card-body {
         padding: 1.5rem;
+        background-color: #ffffff;
     }
 }
 
 // Badge Gradient
 .bg-primary-gradient {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    color: #ffffff;
     padding: 0.5rem 1rem;
     border-radius: 20px;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.875rem;
 }
 
@@ -109,9 +137,9 @@
         background: #f7fafc;
 
         th {
-            border-bottom: 2px solid #e2e8f0;
-            color: #4a5568;
-            font-weight: 600;
+            border-bottom: 2px solid #cbd5e0;
+            color: #1a202c;
+            font-weight: 700;
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -131,6 +159,7 @@
                 padding: 1rem;
                 vertical-align: middle;
                 border-bottom: 1px solid #e2e8f0;
+                color: #2d3748;
             }
         }
     }
@@ -144,8 +173,20 @@
 
 // Empty State
 .text-muted {
+    color: #718096 !important;
+
     svg {
-        opacity: 0.5;
+        opacity: 0.6;
+    }
+}
+
+// Badge Info Subtle
+.bg-info-subtle {
+    background-color: #e6fffa !important;
+
+    &.text-info {
+        color: #086f83 !important;
+        font-weight: 600;
     }
 }
 
@@ -166,39 +207,80 @@
 @media (prefers-color-scheme: dark) {
     .filter-card {
         background: #1a202c;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+        c-card-header {
+            background: linear-gradient(135deg, #6b7fd8 0%, #8b5cf6 100%);
+
+            h5 {
+                color: #ffffff;
+            }
+
+            svg {
+                color: #ffffff;
+            }
+        }
+
+        c-card-body {
+            background-color: #1a202c;
+        }
 
         .form-label {
-            color: #cbd5e0;
+            color: #f7fafc;
+            font-weight: 600;
         }
 
         .form-control,
         .form-select {
             background: #2d3748;
             border-color: #4a5568;
-            color: #e2e8f0;
+            color: #f7fafc;
+
+            &::placeholder {
+                color: #a0aec0;
+            }
 
             &:focus {
                 background: #2d3748;
-                border-color: #667eea;
+                border-color: #8b5cf6;
+                box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+            }
+
+            &:disabled {
+                background-color: #1a202c;
+                color: #718096;
             }
         }
     }
 
     .chart-card {
         background: #1a202c;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+        &:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
 
         c-card-header {
             background: #2d3748;
             border-bottom-color: #4a5568;
 
             h5 {
-                color: #e2e8f0;
+                color: #f7fafc;
             }
 
             small {
-                color: #a0aec0;
+                color: #cbd5e0;
             }
         }
+
+        c-card-body {
+            background-color: #1a202c;
+        }
+    }
+
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #6b7fd8 0%, #8b5cf6 100%);
     }
 
     .table {
@@ -206,7 +288,7 @@
             background: #2d3748;
 
             th {
-                color: #cbd5e0;
+                color: #f7fafc;
                 border-bottom-color: #4a5568;
             }
         }
@@ -222,6 +304,18 @@
                     border-bottom-color: #4a5568;
                 }
             }
+        }
+    }
+
+    .text-muted {
+        color: #a0aec0 !important;
+    }
+
+    .bg-info-subtle {
+        background-color: #234e52 !important;
+
+        &.text-info {
+            color: #81e6d9 !important;
         }
     }
 }
