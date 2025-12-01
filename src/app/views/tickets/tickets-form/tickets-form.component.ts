@@ -422,6 +422,13 @@ export class TicketsFormComponent implements OnInit {
         percentualTarifaAplicado: selectedTarifario?.percentualTarifa || 0
       };
 
+      // console.log('Form itens:', JSON.stringify(formValue.itens, null, 2));
+      const transformedItens = formValue.itens.map((item: any) => ({
+        ticketId: null,
+        itemId: item.item ? +item.item : null,
+        valor: item.valor
+      }));
+
       const ticketData: Ticket = {
         id: this.ticketId,
         dataTicket: formValue.dataTicket,
@@ -445,7 +452,7 @@ export class TicketsFormComponent implements OnInit {
         parcela: formValue.parcelamento,
         parcelamento: selectedParcelamento!,
         posNum: formValue.posNum,
-        itens: formValue.itens,
+        itens: transformedItens,
         indicados: formValue.indicados,
         financeiro: financeiro
       };
