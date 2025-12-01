@@ -70,4 +70,8 @@ export class TicketService {
   deleteTicket(id: string): Observable<any> {
     return this.http.delete(`${this.API_URL}/${id}`);
   }
+
+  getTicketItems(ticketId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/itens_ticket/${ticketId}`);
+  }
 }

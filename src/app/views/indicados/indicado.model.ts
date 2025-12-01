@@ -1,9 +1,12 @@
 import { Indicacao } from '../indicacoes/indicacao.model';
+import { Medico } from '../medicos/medico.model';
 
 export interface Indicado {
   id: number;
   ticket: any;
   indicacao: Indicacao;
+  medicoIndicador?: Medico;  // The doctor who is referring
+  medicoIndicado?: any;   // The doctor being referred
   venctoIndicacao: Date;
   totalParcelas: number;
   parcela: number;

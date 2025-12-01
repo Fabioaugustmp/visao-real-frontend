@@ -161,11 +161,11 @@ export const navItems: INavData[] = [
   {
     divider: true,
     class: 'mt-auto'
-  },
-  {
-    name: 'Docs',
-    url: 'https://coreui.io/angular/docs/',
-    iconComponent: { name: 'cil-description' },
-    attributes: { target: '_blank' }
   }
+  // {
+  //   name: 'Docs',
+  //   url: 'https://coreui.io/angular/docs/',
+  //   iconComponent: { name: 'cil-description' },
+  //   attributes: { target: '_blank' }
+  // }
 ];
