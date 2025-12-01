@@ -21,7 +21,7 @@ import {
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { IconDirective } from '@coreui/icons-angular';
 import { getStyle } from '@coreui/utils';
-import { Faturamento, RelatoriosDashboardService, DashboardData } from './relatorios-dashboard.service';
+import { Faturamento, RelatoriosDashboardService, DashboardData, TrafficAndSales } from './relatorios-dashboard.service';
 import { AuthService } from '../../services/auth.service';
 import { MedicoService } from '../medicos/medico.service';
 import { Medico } from '../medicos/medico.model';
@@ -78,6 +78,8 @@ export class RelatoriosDashboardComponent implements OnInit {
   indicadoresChart: any = {};
   taxaCartaoChart: any = {};
   faturamento: Faturamento | undefined;
+  trafficAndSales: TrafficAndSales | undefined;
+  loadingTrafficAndSales = false;
 
   // Years for dropdown
   years: number[] = [];
@@ -163,6 +165,7 @@ export class RelatoriosDashboardComponent implements OnInit {
     this.checkFilterState();
     this.loadDashboardData(filters.medicoId, filters.startDate, filters.finishDate, filters.year);
     this.loadFaturamento(filters.medicoId, filters.startDate, filters.finishDate);
+    this.loadTrafficAndSales(filters.medicoId, filters.startDate, filters.finishDate);
   }
 
   private checkFilterState(): void {
@@ -224,6 +227,20 @@ export class RelatoriosDashboardComponent implements OnInit {
       error: (error) => {
         console.error('Error loading faturamento:', error);
         this.loadingFaturamento = false;
+      }
+    });
+  }
+
+  private loadTrafficAndSales(medicoId?: number, startDate?: string, finishDate?: string): void {
+    this.loadingTrafficAndSales = true;
+    this.relatoriosDashboardService.getTrafficAndSales(medicoId, startDate, finishDate).subscribe({
+      next: (data) => {
+        this.trafficAndSales = data;
+        this.loadingTrafficAndSales = false;
+      },
+      error: (error) => {
+        console.error('Error loading traffic and sales:', error);
+        this.loadingTrafficAndSales = false;
       }
     });
   }

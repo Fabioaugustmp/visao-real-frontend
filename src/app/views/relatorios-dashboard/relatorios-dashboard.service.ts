@@ -28,6 +28,18 @@ export interface DashboardData {
   taxaCartaoChart: ChartData;
 }
 
+export interface WeeklyProgress {
+  dayOfWeek: string;
+  areceberValue: number;
+  apagarValue: number;
+}
+
+export interface TrafficAndSales {
+  totalAReceber: number;
+  totalAPagar: number;
+  weeklyProgress: WeeklyProgress[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -35,8 +47,23 @@ export class RelatoriosDashboardService {
 
   private dashboardApiUrl = `${environment.apiUrl}/dashboard`;
   private faturamentoApiUrl = `${environment.apiUrl}/dashboard/faturamento`;
+  private trafficAndSalesApiUrl = `${environment.apiUrl}/dashboard/traffic-and-sales`;
 
   constructor(private http: HttpClient) { }
+
+  getTrafficAndSales(medicoId?: number, startDate?: string, finishDate?: string): Observable<TrafficAndSales> {
+    let params = new HttpParams();
+    if (medicoId) {
+      params = params.set('medicoId', medicoId.toString());
+    }
+    if (startDate) {
+      params = params.set('startDate', startDate);
+    }
+    if (finishDate) {
+      params = params.set('finishDate', finishDate);
+    }
+    return this.http.get<TrafficAndSales>(this.trafficAndSalesApiUrl, { params });
+  }
 
   getDashboardData(medicoId?: number, startDate?: string, finishDate?: string, year?: number): Observable<DashboardData> {
     let params = new HttpParams();

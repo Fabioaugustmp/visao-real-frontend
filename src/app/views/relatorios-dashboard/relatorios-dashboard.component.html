@@ -284,10 +284,15 @@
   <c-col xs>
     <c-card class="mb-4 chart-card">
       <c-card-header class="chart-card-header border-bottom">
-        <h5 class="mb-0 fw-semibold">Traffic & Sales</h5>
+        <h5 class="mb-0 fw-semibold">Relação Pagamento/Recebimento Semanal Indicante</h5>
       </c-card-header>
       <c-card-body>
-        <c-row>
+        <div *ngIf="loadingTrafficAndSales" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+        <c-row *ngIf="!loadingTrafficAndSales">
           <c-col md="12" xl="12" xs="12">
             <c-row>
               <c-col xs="12">
@@ -295,7 +300,8 @@
                   <div class="text-body-secondary text-truncate small">
                     Total Indicante a Receber
                   </div>
-                  <div class="fs-5 fw-semibold">9,123</div>
+                  <div class="fs-5 fw-semibold">{{ trafficAndSales?.totalAReceber | currency:'BRL':'symbol':'1.2-2' }}
+                  </div>
                 </div>
               </c-col>
               <c-col xs="12">
@@ -303,74 +309,22 @@
                   <div class="text-body-secondary text-truncate small">
                     Total Indicante a Pagar
                   </div>
-                  <div class="fs-5 fw-semibold">22,643</div>
+                  <div class="fs-5 fw-semibold">{{ trafficAndSales?.totalAPagar | currency:'BRL':'symbol':'1.2-2' }}
+                  </div>
                 </div>
               </c-col>
             </c-row>
             <hr class="mt-0" />
-            <div class="progress-group mb-4">
+            <div class="progress-group mb-4" *ngFor="let day of trafficAndSales?.weeklyProgress">
               <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Monday</span>
+                <span class="text-body-secondary small">{{ day.dayOfWeek }}</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info" value="34" aria-label="Monday new clients" />
-                <c-progress thin color="danger" value="78" aria-label="Monday recurring clients" />
+                <c-progress thin color="info" [value]="day.areceberValue" aria-label="A Receber" />
+                <c-progress thin color="danger" [value]="day.apagarValue" aria-label="A Pagar" />
               </div>
             </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Tuesday</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="56" aria-label="Tuesday new clients" />
-                <c-progress thin color="danger" value="94" aria-label="Tuesday recurring clients" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Wednesday</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="12" aria-label="Wednesday new clients" />
-                <c-progress thin color="danger" value="67" aria-label="Wednesday recurring clients" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Thursday</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="43" aria-label="Thursday new clients" />
-                <c-progress thin color="danger" value="91" aria-label="Thursday recurring clients" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Friday</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="22" aria-label="Friday new clients" />
-                <c-progress thin color="danger" value="73" aria-label="Friday recurring clients" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Saturday</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="53" aria-label="Saturday new clients" />
-                <c-progress thin color="danger" value="82" aria-label="Saturday recurring clients" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Sunday</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="9" aria-label="Sunday new clients" />
-                <c-progress thin color="danger" value="69" aria-label="Sunday recurring clients" />
-              </div>
-            </div>
+
             <div class="legend text-center d-none d-md-block" ngPreserveWhitespaces>
               <small>
                 <sup>
