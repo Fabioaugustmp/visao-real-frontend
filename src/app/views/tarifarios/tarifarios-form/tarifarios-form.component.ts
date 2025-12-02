@@ -61,11 +61,18 @@ export class TarifariosFormComponent implements OnInit {
     if (this.tarifarioId) {
       this.isEditMode = true;
       this.tarifarioService.getTarifario(this.tarifarioId).subscribe(data => {
+        // Convert ISO date strings to YYYY-MM-DD format for date inputs
+        const dataInicio = data.dataInicioVigencia ? new Date(data.dataInicioVigencia).toISOString().split('T')[0] : null;
+        const dataFim = data.dataFimVigencia ? new Date(data.dataFimVigencia).toISOString().split('T')[0] : null;
+
         this.form.patchValue({
-          ...data,
+          id: data.id,
           medico: data.medico ? data.medico.id : null,
           bandeira: data.bandeira ? data.bandeira.id : null,
-          titulo: data.titulo
+          titulo: data.titulo,
+          percentualTarifa: data.percentualTarifa,
+          dataInicioVigencia: dataInicio,
+          dataFimVigencia: dataFim
         });
       });
     }
