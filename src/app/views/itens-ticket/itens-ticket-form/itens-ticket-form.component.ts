@@ -86,7 +86,8 @@ export class ItensTicketFormComponent implements OnInit {
         id: formValue.id,
         ticket: selectedTicket!,
         item: selectedItem!,
-        valor: formValue.valor
+        valor: formValue.valor,
+        descricao: formValue.descricao
       };
 
       if (this.isEditMode) {

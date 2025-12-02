@@ -271,8 +271,11 @@ export class TicketsFormComponent implements OnInit {
       );
 
       if (ticket) {
+        const dateTicket = ticket.dataTicket ? new Date(ticket.dataTicket).toISOString().split('T')[0] : '';
+
         this.ticketForm.patchValue({
           ...ticket,
+          dataTicket: dateTicket,
           medicoExec: ticket.medicoExecId,
           medicoSolic: ticket.medicoSolicId,
           formaPagamento: ticket.formaPagamentoId,

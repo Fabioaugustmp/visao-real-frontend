@@ -5,4 +5,5 @@ export interface ItemTicket {
   ticket: any;
   item: Item;
   valor: number;
+  descricao: any;
 }

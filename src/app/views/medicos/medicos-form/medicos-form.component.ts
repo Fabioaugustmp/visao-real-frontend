@@ -53,8 +53,8 @@ export class MedicosFormComponent implements OnInit {
       dataNasc: ['', Validators.required],
       cpf: ['', Validators.required],
       taxaImposto: ['', Validators.required],
-      empresa: [null, Validators.required],
-      usuario: [null, Validators.required]
+      empresa: [null, Validators.required]
+      // usuario: [null, Validators.required]
     });
   }
 
@@ -78,8 +78,8 @@ export class MedicosFormComponent implements OnInit {
         this.medicoService.getMedico(this.medicoId).subscribe(medico => {
           this.medicoForm.patchValue({
             ...medico,
-            empresa: medico.empresa.id,
-            usuario: medico.usuario.id
+            empresa: medico.empresa.id
+            // usuario: medico.usuario.id
           });
         });
       }
