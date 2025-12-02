@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Financeiro } from './financeiro.model';
+import { Financeiro, PageFinanceiro, Pageable } from './financeiro.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -13,8 +13,28 @@ export class FinanceiroService {
 
   constructor(private http: HttpClient) { }
 
-  getFinanceiros(page: number, size: number): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}?page=${page}&size=${size}`);
+  getFinanceiros(pageable?: Pageable, ticketId?: string): Observable<PageFinanceiro> {
+    let params = new HttpParams();
+
+    if (pageable) {
+      if (pageable.page !== undefined && pageable.page !== null) {
+        params = params.append('page', pageable.page.toString());
+      }
+      if (pageable.size !== undefined && pageable.size !== null) {
+        params = params.append('size', pageable.size.toString());
+      }
+      if (pageable.sort && pageable.sort.length > 0) {
+        pageable.sort.forEach(s => {
+          params = params.append('sort', s);
+        });
+      }
+    }
+
+    if (ticketId) {
+      params = params.append('ticketId', ticketId);
+    }
+
+    return this.http.get<PageFinanceiro>(this.API_URL, { params });
   }
 
   getFinanceiro(id: number): Observable<Financeiro> {

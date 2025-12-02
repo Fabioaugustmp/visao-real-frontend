@@ -11,7 +11,7 @@ export const routes: Routes = [
     }
   },
   {
-    path: 'nova',
+    path: 'novo',
     component: IndicacoesFormComponent,
     data: {
       title: 'Nova Indicação'

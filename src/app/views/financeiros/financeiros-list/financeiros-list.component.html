@@ -1,66 +1,216 @@
-<c-row>
-  <c-col>
-    <c-card>
-      <c-card-header>
-        Lista de Financeiros
-      </c-card-header>
-      <c-card-body>
-        <button cButton color="primary" [routerLink]="['/financeiros/novo']">Novo Registro Financeiro</button>
-        <table cTable class="mt-3">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Ticket</th>
-              <th scope="col">Médico</th>
-              <th scope="col">Parcela Referência</th>
-              <th scope="col">Total de Parcelas</th>
-              <th scope="col">Valor Parcela</th>
-              <th scope="col">Valor Total</th>
-              <th scope="col">Recebido</th>
-              <th scope="col">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let financeiro of financeiros">
-              <th scope="row">{{ financeiro.id }}</th>
-              <td>{{ financeiro.ticketId }}</td>
-              <td>{{ financeiro.medicoNome }}</td>
-              <td>{{ financeiro.parcela }}</td>            
-              <td>{{ financeiro.totalParcelas }}</td>
-              <td>{{ financeiro.valorParcela | currency:'BRL' }}</td>
-              <td>{{ financeiro.valor | currency:'BRL' }}</td>
-              <td>
-                <c-badge [color]="financeiro.recebido ? 'success' : 'danger'">
-                  {{ financeiro.recebido ? 'Sim' : 'Não' }}
-                </c-badge>
-              </td>
-              <td>
-                <button cButton color="secondary" size="sm" [routerLink]="['/financeiros/editar', financeiro.id]">Editar</button>
-                <button cButton color="danger" size="sm" class="ms-1" (click)="excluirFinanceiro(financeiro.id)">Excluir</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <c-pagination align="center" aria-label="Page navigation">
-          <c-page-item [disabled]="currentPage === 0" class="mx-1">
-            <a cButton color="secondary" c-page-link (click)="onPageChange(0)">First</a>
-          </c-page-item>
-          <c-page-item [disabled]="currentPage === 0" class="mx-1">
-            <a cButton color="secondary" c-page-link (click)="onPageChange(currentPage - 1)">Prev</a>
-          </c-page-item>
-          <ng-container *ngFor="let pageNumber of [].constructor(totalPages); let i = index">
-            <c-page-item [active]="currentPage === i" class="mx-1">
-              <a cButton color="secondary" c-page-link (click)="onPageChange(i)">{{ i + 1 }}</a>
-            </c-page-item>
-          </ng-container>
-          <c-page-item [disabled]="currentPage === totalPages - 1" class="mx-1">
-            <a cButton color="secondary" c-page-link (click)="onPageChange(currentPage + 1)">Next</a>
-          </c-page-item>
-          <c-page-item [disabled]="currentPage === totalPages - 1" class="mx-1">
-            <a cButton color="secondary" c-page-link (click)="onPageChange(totalPages - 1)">Last</a>
-          </c-page-item>
-        </c-pagination>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4 shadow-sm border-0">
+        <c-card-header class="border-bottom-0 pt-4 pb-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-primary fw-bold">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                class="bi bi-currency-dollar me-2" viewBox="0 0 16 16">
+                <path
+                  d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z" />
+              </svg>
+              Financeiros
+            </h4>
+            <button cButton color="primary" class="d-flex align-items-center shadow-sm"
+              [routerLink]="['/financeiros/novo']">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+              </svg>
+              Novo Financeiro
+            </button>
+          </div>
+        </c-card-header>
+        <c-card-body class="p-4">
+
+          <!-- Filters Section -->
+          <div class="filter-section p-3 rounded-3 mb-4 border">
+            <h6 class="mb-3 text-uppercase small fw-bold opacity-75">Filtros de Pesquisa</h6>
+            <c-row class="g-3">
+              <c-col md="3">
+                <label for="ticketId" class="form-label small fw-semibold opacity-75">Ticket ID</label>
+                <div class="input-group">
+                  <span class="input-group-text border-end-0"><svg xmlns="http://www.w3.org/2000/svg" width="14"
+                      height="14" fill="currentColor" class="bi bi-upc-scan" viewBox="0 0 16 16">
+                      <path
+                        d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5zM3 4.5a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-7zm3 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7z" />
+                    </svg></span>
+                  <input cFormControl id="ticketId" type="text" class="border-start-0 ps-0" placeholder="ID do Ticket"
+                    [(ngModel)]="searchTicketId">
+                </div>
+              </c-col>
+              <c-col md="2" class="d-flex align-items-end">
+                <div class="d-grid gap-2 d-md-flex w-100">
+                  <button cButton color="primary" class="flex-grow-1 shadow-sm" (click)="searchFinanceiros()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-search me-1" viewBox="0 0 16 16">
+                      <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                    </svg>
+                    Buscar
+                  </button>
+                  <button cButton color="secondary" variant="outline" class="shadow-sm" (click)="clearSearch()"
+                    title="Limpar Filtros">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-x-lg" viewBox="0 0 16 16">
+                      <path
+                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
+                    </svg>
+                  </button>
+                </div>
+              </c-col>
+            </c-row>
+          </div>
+
+          <!-- Skeleton Loader -->
+          <div *ngIf="isLoading" class="skeleton-loader">
+            <div class="skeleton-header mb-4"></div>
+            <div class="skeleton-row mb-3" *ngFor="let i of [1,2,3,4,5]"></div>
+          </div>
+
+          <!-- Table Section -->
+          <div class="table-responsive" *ngIf="!isLoading">
+            <table cTable hover class="align-middle mb-0 border-separate"
+              style="border-spacing: 0 10px; border-collapse: separate;">
+              <thead class="bg-light">
+                <tr>
+                  <th class="py-3 ps-3 border-0 rounded-start" (click)="toggleSort('ticket.id')"
+                    style="cursor: pointer;">
+                    Ticket <span *ngIf="currentSortField === 'ticket.id'">{{ isSortAsc ? '↑' : '↓' }}</span>
+                  </th>
+                  <th class="py-3 border-0" (click)="toggleSort('medico.nome')" style="cursor: pointer;">
+                    Médico <span *ngIf="currentSortField === 'medico.nome'">{{ isSortAsc ? '↑' : '↓' }}</span>
+                  </th>
+                  <th class="py-3 border-0" (click)="toggleSort('parcela')" style="cursor: pointer;">
+                    Parc. Ref. <span *ngIf="currentSortField === 'parcela'">{{ isSortAsc ? '↑' : '↓' }}</span>
+                  </th>
+                  <th class="py-3 border-0" (click)="toggleSort('totalParcelas')" style="cursor: pointer;">
+                    Total Parc. <span *ngIf="currentSortField === 'totalParcelas'">{{ isSortAsc ? '↑' : '↓' }}</span>
+                  </th>
+                  <th class="py-3 border-0" (click)="toggleSort('valor')" style="cursor: pointer;">
+                    Valor Parcela <span *ngIf="currentSortField === 'valor'">{{ isSortAsc ? '↑' : '↓' }}</span>
+                  </th>
+                  <th class="py-3 border-0">Valor Total</th>
+                  <th class="py-3 border-0" (click)="toggleSort('recebido')" style="cursor: pointer;">
+                    Recebido <span *ngIf="currentSortField === 'recebido'">{{ isSortAsc ? '↑' : '↓' }}</span>
+                  </th>
+                  <th class="py-3 text-end pe-3 border-0 rounded-end">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let financeiro of financeiros"
+                  class="shadow-sm bg-white rounded-3 position-relative ticket-row">
+                  <td class="ps-3 fw-semibold text-primary py-3 rounded-start border-0">
+                    {{ financeiro.ticketId }}
+                  </td>
+                  <td class="py-3 border-0">
+                    <div class="d-flex align-items-center">
+                      <div
+                        class="avatar avatar-sm bg-primary text-white me-2 rounded-circle d-flex align-items-center justify-content-center"
+                        style="width: 32px; height: 32px;">
+                        {{ financeiro.medicoNome?.charAt(0) }}
+                      </div>
+                      <div>{{ financeiro.medicoNome }}</div>
+                    </div>
+                  </td>
+                  <td class="py-3 border-0">
+                    <div>{{ financeiro.parcela }}</div>
+                  </td>
+                  <td class="py-3 border-0">
+                    <div>{{ financeiro.totalParcelas }}</div>
+                  </td>
+                  <td class="py-3 border-0">
+                    <div class="fw-semibold">{{ financeiro.valor | currency:'BRL' }}</div>
+                  </td>
+                  <td class="py-3 border-0">
+                    <div class="fw-semibold">{{ (financeiro.valor * financeiro.totalParcelas) | currency:'BRL' }}</div>
+                  </td>
+                  <td class="py-3 border-0">
+                    <span class="badge" [ngClass]="financeiro.recebido ? 'bg-success' : 'bg-warning'">
+                      {{ financeiro.recebido ? 'Sim' : 'Não' }}
+                    </span>
+                  </td>
+                  <td class="text-end pe-3 py-3 rounded-end border-0">
+                    <div class="btn-group" role="group">
+                      <button cButton color="light" size="sm"
+                        class="border text-primary shadow-sm me-2 rounded-2 action-btn"
+                        [routerLink]="['/financeiros/editar', financeiro.id]" title="Editar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-pencil-square" viewBox="0 0 16 16">
+                          <path
+                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                          <path fill-rule="evenodd"
+                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                        </svg>
+                      </button>
+                      <button cButton color="light" size="sm" class="border text-danger shadow-sm rounded-2 action-btn"
+                        (click)="deleteFinanceiro(financeiro.id)" title="Excluir">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-trash" viewBox="0 0 16 16">
+                          <path
+                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                          <path
+                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="financeiros.length === 0">
+                  <td colspan="8" class="text-center py-5 text-muted">
+                    <div class="mb-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                        class="bi bi-inbox opacity-25" viewBox="0 0 16 16">
+                        <path
+                          d="M4.98 4a.5.5 0 0 0-.39.188L1.54 8H6a.5.5 0 0 1 .5.5 1.5 1.5 0 1 0 3 0A.5.5 0 0 1 10 8h4.46l-3.05-3.812A.5.5 0 0 0 11.02 4H4.98zm9.954 5H10.45a2.5 2.5 0 0 1-4.9 0H1.066l.32 2.562a.5.5 0 0 0 .497.438h12.234a.5.5 0 0 0 .496-.438L14.933 9zM3.809 3.563A1.5 1.5 0 0 1 4.981 3h6.038a1.5 1.5 0 0 1 1.172.563l3.7 4.625a.5.5 0 0 1 .105.374l-.19 1.518a1.5 1.5 0 0 1-1.489 1.312H1.883a1.5 1.5 0 0 1-1.489-1.312l-.19-1.518a.5.5 0 0 1 .106-.374l3.7-4.625z" />
+                      </svg>
+                    </div>
+                    Nenhum registro financeiro encontrado
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Controls -->
+          <div class="d-flex justify-content-center mt-4">
+            <c-pagination align="center" aria-label="Page navigation">
+              <c-page-item [disabled]="currentPage === 0" class="mx-1">
+                <a cButton color="white" class="border" c-page-link (click)="onPageChange(0)">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </c-page-item>
+              <c-page-item [disabled]="currentPage === 0" class="mx-1">
+                <a cButton color="white" class="border" c-page-link (click)="onPageChange(currentPage - 1)">
+                  <span aria-hidden="true">&lsaquo;</span>
+                </a>
+              </c-page-item>
+
+              <ng-container *ngFor="let pageNumber of [].constructor(totalPages); let i = index">
+                <c-page-item [active]="currentPage === i" class="mx-1"
+                  *ngIf="i >= currentPage - 2 && i <= currentPage + 2">
+                  <a cButton [color]="currentPage === i ? 'primary' : 'white'" [class.border]="currentPage !== i"
+                    c-page-link (click)="onPageChange(i)">{{ i + 1 }}</a>
+                </c-page-item>
+              </ng-container>
+
+              <c-page-item [disabled]="currentPage === totalPages - 1" class="mx-1">
+                <a cButton color="white" class="border" c-page-link (click)="onPageChange(currentPage + 1)">
+                  <span aria-hidden="true">&rsaquo;</span>
+                </a>
+              </c-page-item>
+              <c-page-item [disabled]="currentPage === totalPages - 1" class="mx-1">
+                <a cButton color="white" class="border" c-page-link (click)="onPageChange(totalPages - 1)">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </c-page-item>
+            </c-pagination>
+          </div>
+
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>
