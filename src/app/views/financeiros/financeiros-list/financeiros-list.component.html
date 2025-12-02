@@ -76,7 +76,8 @@
               style="border-spacing: 0 10px; border-collapse: separate;">
               <thead class="bg-light">
                 <tr>
-                  <th class="py-3 ps-3 border-0 rounded-start" (click)="toggleSort('ticket.id')" style="cursor: pointer;">
+                  <th class="py-3 ps-3 border-0 rounded-start" (click)="toggleSort('ticket.id')"
+                    style="cursor: pointer;">
                     Ticket <span *ngIf="currentSortField === 'ticket.id'">{{ isSortAsc ? '↑' : '↓' }}</span>
                   </th>
                   <th class="py-3 border-0" (click)="toggleSort('medico.nome')" style="cursor: pointer;">
@@ -99,18 +100,19 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let financeiro of financeiros" class="shadow-sm bg-white rounded-3 position-relative ticket-row">
+                <tr *ngFor="let financeiro of financeiros"
+                  class="shadow-sm bg-white rounded-3 position-relative ticket-row">
                   <td class="ps-3 fw-semibold text-primary py-3 rounded-start border-0">
-                    {{ financeiro.ticket?.id }}
+                    {{ financeiro.ticketId }}
                   </td>
                   <td class="py-3 border-0">
                     <div class="d-flex align-items-center">
                       <div
                         class="avatar avatar-sm bg-primary text-white me-2 rounded-circle d-flex align-items-center justify-content-center"
                         style="width: 32px; height: 32px;">
-                        {{ financeiro.medico?.nome?.charAt(0) }}
+                        {{ financeiro.medicoNome?.charAt(0) }}
                       </div>
-                      <div>{{ financeiro.medico?.nome }}</div>
+                      <div>{{ financeiro.medicoNome }}</div>
                     </div>
                   </td>
                   <td class="py-3 border-0">
