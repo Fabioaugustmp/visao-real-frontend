@@ -2,272 +2,425 @@
   <c-row>
     <c-col xs="12">
       <c-card class="mb-4">
-        <c-card-header>
+        <c-card-header class="d-flex justify-content-between align-items-center">
           <strong>{{ isEditMode ? 'Editar Ticket' : 'Novo Ticket' }}</strong>
+          <span *ngIf="isEditMode" class="badge bg-info-subtle text-info-emphasis">
+            <c-icon name="cilPencil" size="sm" class="me-1"></c-icon>
+            Modo Edição
+          </span>
         </c-card-header>
         <c-card-body>
           <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
-            <c-alert color="danger" *ngIf="getFormErrors().length > 0">
-              <strong>Erros de Validação:</strong>
-              <ul>
-                <li *ngFor="let error of getFormErrors()">{{ error }}</li>
-              </ul>
+
+            <!-- Validation Alert -->
+            <c-alert color="danger" *ngIf="getFormErrors().length > 0" [dismissible]="true" class="mb-4">
+              <div class="d-flex align-items-start">
+                <c-icon name="cilWarning" size="lg" class="me-2 flex-shrink-0"></c-icon>
+                <div>
+                  <strong>Erros de Validação</strong>
+                  <ul class="mb-0 mt-2">
+                    <li *ngFor="let error of getFormErrors()">{{ error }}</li>
+                  </ul>
+                </div>
+              </div>
             </c-alert>
-            <c-row class="mb-3">
-              <c-col md="6">
-                <label cLabel for="dataTicket">Data</label>
-                <input cFormControl id="dataTicket" formControlName="dataTicket" type="date"
-                  [ngClass]="{'is-invalid': ticketForm.get('dataTicket')?.invalid && (ticketForm.get('dataTicket')?.dirty || ticketForm.get('dataTicket')?.touched)}">
-                <div
-                  *ngIf="ticketForm.get('dataTicket')?.invalid && (ticketForm.get('dataTicket')?.dirty || ticketForm.get('dataTicket')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('dataTicket')?.errors?.['required']">Data é obrigatória.</div>
-                </div>
-              </c-col>
-              <c-col md="6">
-                <label cLabel for="numAtend">Nº Atendimento</label>
-                <input cFormControl id="numAtend" formControlName="numAtend"
-                  [ngClass]="{'is-invalid': ticketForm.get('numAtend')?.invalid && (ticketForm.get('numAtend')?.dirty || ticketForm.get('numAtend')?.touched)}">
-                <div
-                  *ngIf="ticketForm.get('numAtend')?.invalid && (ticketForm.get('numAtend')?.dirty || ticketForm.get('numAtend')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('numAtend')?.errors?.['required']">Número de Atendimento é obrigatório.
-                  </div>
-                  <div *ngIf="ticketForm.get('numAtend')?.errors?.['maxlength']">Máximo de {{
-                    ticketForm.get('numAtend')?.errors?.['maxlength']?.requiredLength }} caracteres.</div>
-                </div>
-              </c-col>
-            </c-row>
 
-            <div class="mb-3">
-              <label cLabel for="nomePaciente">Paciente</label>
-              <input cFormControl id="nomePaciente" formControlName="nomePaciente"
-                [ngClass]="{'is-invalid': ticketForm.get('nomePaciente')?.invalid && (ticketForm.get('nomePaciente')?.dirty || ticketForm.get('nomePaciente')?.touched)}">
-              <div
-                *ngIf="ticketForm.get('nomePaciente')?.invalid && (ticketForm.get('nomePaciente')?.dirty || ticketForm.get('nomePaciente')?.touched)"
-                class="invalid-feedback">
-                <div *ngIf="ticketForm.get('nomePaciente')?.errors?.['required']">Nome do Paciente é obrigatório.</div>
-                <div *ngIf="ticketForm.get('nomePaciente')?.errors?.['maxlength']">Máximo de {{
-                  ticketForm.get('nomePaciente')?.errors?.['maxlength']?.requiredLength }} caracteres.</div>
-              </div>
-            </div>
+            <!-- Dados Básicos -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilCalendar" class="me-2"></c-icon>
+                <strong>Dados Básicos</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="6">
+                    <label cLabel for="dataTicket" class="form-label">
+                      Data <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="dataTicket" formControlName="dataTicket" type="date"
+                      placeholder="Selecione a data"
+                      [ngClass]="{'is-invalid': ticketForm.get('dataTicket')?.invalid && (ticketForm.get('dataTicket')?.dirty || ticketForm.get('dataTicket')?.touched)}">
+                    <div
+                      *ngIf="ticketForm.get('dataTicket')?.invalid && (ticketForm.get('dataTicket')?.dirty || ticketForm.get('dataTicket')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('dataTicket')?.errors?.['required']">Data é obrigatória</span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="numAtend" class="form-label">
+                      Nº Atendimento <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="numAtend" formControlName="numAtend"
+                      placeholder="Digite o número do atendimento"
+                      [ngClass]="{'is-invalid': ticketForm.get('numAtend')?.invalid && (ticketForm.get('numAtend')?.dirty || ticketForm.get('numAtend')?.touched)}">
+                    <div
+                      *ngIf="ticketForm.get('numAtend')?.invalid && (ticketForm.get('numAtend')?.dirty || ticketForm.get('numAtend')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('numAtend')?.errors?.['required']">Número de Atendimento é
+                        obrigatório</span>
+                      <span *ngIf="ticketForm.get('numAtend')?.errors?.['maxlength']">
+                        Máximo de {{ ticketForm.get('numAtend')?.errors?.['maxlength']?.requiredLength }} caracteres
+                      </span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
 
-            <c-row class="mb-3">
-              <c-col md="6">
-                <label cLabel for="nomePagador">Pagador</label>
-                <input cFormControl id="nomePagador" formControlName="nomePagador"
-                  [ngClass]="{'is-invalid': ticketForm.get('nomePagador')?.invalid && (ticketForm.get('nomePagador')?.dirty || ticketForm.get('nomePagador')?.touched)}">
-                <div
-                  *ngIf="ticketForm.get('nomePagador')?.invalid && (ticketForm.get('nomePagador')?.dirty || ticketForm.get('nomePagador')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('nomePagador')?.errors?.['required']">Nome do Pagador é obrigatório.</div>
-                  <div *ngIf="ticketForm.get('nomePagador')?.errors?.['maxlength']">Máximo de {{
-                    ticketForm.get('nomePagador')?.errors?.['maxlength']?.requiredLength }} caracteres.</div>
-                </div>
-              </c-col>
-              <c-col md="6">
-                <label cLabel for="cpfPagador">CPF Pagador</label>
-                <input cFormControl id="cpfPagador" formControlName="cpfPagador"
-                  [ngClass]="{'is-invalid': ticketForm.get('cpfPagador')?.invalid && (ticketForm.get('cpfPagador')?.dirty || ticketForm.get('cpfPagador')?.touched)}">
-                <div
-                  *ngIf="ticketForm.get('cpfPagador')?.invalid && (ticketForm.get('cpfPagador')?.dirty || ticketForm.get('cpfPagador')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('cpfPagador')?.errors?.['required']">CPF é obrigatório.</div>
-                  <div *ngIf="ticketForm.get('cpfPagador')?.errors?.['cpfInvalid']">CPF inválido.</div>
-                </div>
-              </c-col>
-            </c-row>
+            <!-- Paciente & Pagador -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilUser" class="me-2"></c-icon>
+                <strong>Paciente & Pagador</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="12">
+                    <label cLabel for="nomePaciente" class="form-label">
+                      Nome do Paciente <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="nomePaciente" formControlName="nomePaciente"
+                      placeholder="Digite o nome completo do paciente"
+                      [ngClass]="{'is-invalid': ticketForm.get('nomePaciente')?.invalid && (ticketForm.get('nomePaciente')?.dirty || ticketForm.get('nomePaciente')?.touched)}">
+                    <div
+                      *ngIf="ticketForm.get('nomePaciente')?.invalid && (ticketForm.get('nomePaciente')?.dirty || ticketForm.get('nomePaciente')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('nomePaciente')?.errors?.['required']">Nome do Paciente é
+                        obrigatório</span>
+                      <span *ngIf="ticketForm.get('nomePaciente')?.errors?.['maxlength']">
+                        Máximo de {{ ticketForm.get('nomePaciente')?.errors?.['maxlength']?.requiredLength }} caracteres
+                      </span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="nomePagador" class="form-label">
+                      Nome do Pagador <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="nomePagador" formControlName="nomePagador"
+                      placeholder="Digite o nome do pagador"
+                      [ngClass]="{'is-invalid': ticketForm.get('nomePagador')?.invalid && (ticketForm.get('nomePagador')?.dirty || ticketForm.get('nomePagador')?.touched)}">
+                    <div
+                      *ngIf="ticketForm.get('nomePagador')?.invalid && (ticketForm.get('nomePagador')?.dirty || ticketForm.get('nomePagador')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('nomePagador')?.errors?.['required']">Nome do Pagador é
+                        obrigatório</span>
+                      <span *ngIf="ticketForm.get('nomePagador')?.errors?.['maxlength']">
+                        Máximo de {{ ticketForm.get('nomePagador')?.errors?.['maxlength']?.requiredLength }} caracteres
+                      </span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="cpfPagador" class="form-label">
+                      CPF do Pagador <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="cpfPagador" formControlName="cpfPagador" placeholder="000.000.000-00"
+                      [ngClass]="{'is-invalid': ticketForm.get('cpfPagador')?.invalid && (ticketForm.get('cpfPagador')?.dirty || ticketForm.get('cpfPagador')?.touched)}">
+                    <div
+                      *ngIf="ticketForm.get('cpfPagador')?.invalid && (ticketForm.get('cpfPagador')?.dirty || ticketForm.get('cpfPagador')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('cpfPagador')?.errors?.['required']">CPF é obrigatório</span>
+                      <span *ngIf="ticketForm.get('cpfPagador')?.errors?.['cpfInvalid']">CPF inválido</span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
 
-            <c-row class="mb-3">
-              <c-col md="6">
-                <label cLabel for="medicoExec">Médico Executante</label>
-                <select cSelect id="medicoExec" formControlName="medicoExec"
-                  [ngClass]="{'is-invalid': ticketForm.get('medicoExec')?.invalid && (ticketForm.get('medicoExec')?.dirty || ticketForm.get('medicoExec')?.touched)}">
-                  <option *ngFor="let medico of medicos$ | async" [value]="medico.id">{{ medico.nome }}</option>
-                </select>
-                <div
-                  *ngIf="ticketForm.get('medicoExec')?.invalid && (ticketForm.get('medicoExec')?.dirty || ticketForm.get('medicoExec')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('medicoExec')?.errors?.['required']">Médico Executante é obrigatório.</div>
-                </div>
-              </c-col>
-              <c-col md="6">
-                <label cLabel for="medicoSolic">Médico Solicitante</label>
-                <select cSelect id="medicoSolic" formControlName="medicoSolic"
-                  [ngClass]="{'is-invalid': ticketForm.get('medicoSolic')?.invalid && (ticketForm.get('medicoSolic')?.dirty || ticketForm.get('medicoSolic')?.touched)}">
-                  <option *ngFor="let medico of medicos$ | async" [value]="medico.id">{{ medico.nome }}</option>
-                </select>
-                <div
-                  *ngIf="ticketForm.get('medicoSolic')?.invalid && (ticketForm.get('medicoSolic')?.dirty || ticketForm.get('medicoSolic')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('medicoSolic')?.errors?.['required']">Médico Solicitante é obrigatório.
-                  </div>
-                </div>
-              </c-col>
-            </c-row>
+            <!-- Equipe Médica -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilMedicalCross" class="me-2"></c-icon>
+                <strong>Equipe Médica</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="6">
+                    <label cLabel for="medicoExec" class="form-label">
+                      Médico Executante <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="medicoExec" formControlName="medicoExec"
+                      [ngClass]="{'is-invalid': ticketForm.get('medicoExec')?.invalid && (ticketForm.get('medicoExec')?.dirty || ticketForm.get('medicoExec')?.touched)}">
+                      <option value="">Selecione o médico executante</option>
+                      <option *ngFor="let medico of medicos$ | async" [value]="medico.id">{{ medico.nome }}</option>
+                    </select>
+                    <div
+                      *ngIf="ticketForm.get('medicoExec')?.invalid && (ticketForm.get('medicoExec')?.dirty || ticketForm.get('medicoExec')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('medicoExec')?.errors?.['required']">Médico Executante é
+                        obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="medicoSolic" class="form-label">
+                      Médico Solicitante <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="medicoSolic" formControlName="medicoSolic"
+                      [ngClass]="{'is-invalid': ticketForm.get('medicoSolic')?.invalid && (ticketForm.get('medicoSolic')?.dirty || ticketForm.get('medicoSolic')?.touched)}">
+                      <option value="">Selecione o médico solicitante</option>
+                      <option *ngFor="let medico of medicos$ | async" [value]="medico.id">{{ medico.nome }}</option>
+                    </select>
+                    <div
+                      *ngIf="ticketForm.get('medicoSolic')?.invalid && (ticketForm.get('medicoSolic')?.dirty || ticketForm.get('medicoSolic')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('medicoSolic')?.errors?.['required']">Médico Solicitante é
+                        obrigatório</span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
 
-            <c-row class="mb-3">
-              <c-col md="6">
-                <label cLabel for="nfSerie">Série NF</label>
-                <input cFormControl id="nfSerie" formControlName="nfSerie"
-                  [ngClass]="{'is-invalid': ticketForm.get('nfSerie')?.invalid && (ticketForm.get('nfSerie')?.dirty || ticketForm.get('nfSerie')?.touched)}">
-                <div
-                  *ngIf="ticketForm.get('nfSerie')?.invalid && (ticketForm.get('nfSerie')?.dirty || ticketForm.get('nfSerie')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('nfSerie')?.errors?.['required']">Série NF é obrigatória.</div>
-                  <div *ngIf="ticketForm.get('nfSerie')?.errors?.['maxlength']">Máximo de {{
-                    ticketForm.get('nfSerie')?.errors?.['maxlength']?.requiredLength }} caracteres.</div>
-                </div>
-              </c-col>
-              <c-col md="6">
-                <label cLabel for="nfNumero">Nº NF</label>
-                <input cFormControl id="nfNumero" formControlName="nfNumero"
-                  [ngClass]="{'is-invalid': ticketForm.get('nfNumero')?.invalid && (ticketForm.get('nfNumero')?.dirty || ticketForm.get('nfNumero')?.touched)}">
-                <div
-                  *ngIf="ticketForm.get('nfNumero')?.invalid && (ticketForm.get('nfNumero')?.dirty || ticketForm.get('nfNumero')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('nfNumero')?.errors?.['required']">Número NF é obrigatório.</div>
-                  <div *ngIf="ticketForm.get('nfNumero')?.errors?.['maxlength']">Máximo de {{
-                    ticketForm.get('nfNumero')?.errors?.['maxlength']?.requiredLength }} caracteres.</div>
-                </div>
-              </c-col>
-            </c-row>
+            <!-- Nota Fiscal -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilDescription" class="me-2"></c-icon>
+                <strong>Nota Fiscal</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="6">
+                    <label cLabel for="nfSerie" class="form-label">
+                      Série NF <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="nfSerie" formControlName="nfSerie"
+                      placeholder="Digite a série da nota fiscal"
+                      [ngClass]="{'is-invalid': ticketForm.get('nfSerie')?.invalid && (ticketForm.get('nfSerie')?.dirty || ticketForm.get('nfSerie')?.touched)}">
+                    <div
+                      *ngIf="ticketForm.get('nfSerie')?.invalid && (ticketForm.get('nfSerie')?.dirty || ticketForm.get('nfSerie')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('nfSerie')?.errors?.['required']">Série NF é obrigatória</span>
+                      <span *ngIf="ticketForm.get('nfSerie')?.errors?.['maxlength']">
+                        Máximo de {{ ticketForm.get('nfSerie')?.errors?.['maxlength']?.requiredLength }} caracteres
+                      </span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="nfNumero" class="form-label">
+                      Número NF <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="nfNumero" formControlName="nfNumero"
+                      placeholder="Digite o número da nota fiscal"
+                      [ngClass]="{'is-invalid': ticketForm.get('nfNumero')?.invalid && (ticketForm.get('nfNumero')?.dirty || ticketForm.get('nfNumero')?.touched)}">
+                    <div
+                      *ngIf="ticketForm.get('nfNumero')?.invalid && (ticketForm.get('nfNumero')?.dirty || ticketForm.get('nfNumero')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('nfNumero')?.errors?.['required']">Número NF é obrigatório</span>
+                      <span *ngIf="ticketForm.get('nfNumero')?.errors?.['maxlength']">
+                        Máximo de {{ ticketForm.get('nfNumero')?.errors?.['maxlength']?.requiredLength }} caracteres
+                      </span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
 
-            <c-row class="mb-3">
-              <c-col md="6">
-                <label cLabel for="formaPagamento">Forma de Pagamento</label>
-                <select cSelect id="formaPagamento" formControlName="formaPagamento"
-                  [ngClass]="{'is-invalid': ticketForm.get('formaPagamento')?.invalid && (ticketForm.get('formaPagamento')?.dirty || ticketForm.get('formaPagamento')?.touched)}">
-                  <option *ngFor="let formaPagamento of formasPagamento$ | async" [value]="formaPagamento.id">{{
-                    formaPagamento.descricao }}</option>
-                </select>
-                <div
-                  *ngIf="ticketForm.get('formaPagamento')?.invalid && (ticketForm.get('formaPagamento')?.dirty || ticketForm.get('formaPagamento')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('formaPagamento')?.errors?.['required']">Forma de Pagamento é obrigatória.
-                  </div>
-                </div>
-              </c-col>
-              <c-col md="6">
-                <label cLabel for="bandeira">Bandeira</label>
-                <select cSelect id="bandeira" formControlName="bandeira"
-                  [ngClass]="{'is-invalid': ticketForm.get('bandeira')?.invalid && (ticketForm.get('bandeira')?.dirty || ticketForm.get('bandeira')?.touched)}">
-                  <option *ngFor="let bandeira of bandeiras$ | async" [value]="bandeira.id">{{ bandeira.bandeira }}
-                  </option>
-                </select>
-                <div
-                  *ngIf="ticketForm.get('bandeira')?.invalid && (ticketForm.get('bandeira')?.dirty || ticketForm.get('bandeira')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('bandeira')?.errors?.['required']">Bandeira é obrigatória.</div>
-                </div>
-              </c-col>
-            </c-row>
+            <!-- Pagamento -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilCreditCard" class="me-2"></c-icon>
+                <strong>Informações de Pagamento</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="6">
+                    <label cLabel for="formaPagamento" class="form-label">
+                      Forma de Pagamento <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="formaPagamento" formControlName="formaPagamento"
+                      [ngClass]="{'is-invalid': ticketForm.get('formaPagamento')?.invalid && (ticketForm.get('formaPagamento')?.dirty || ticketForm.get('formaPagamento')?.touched)}">
+                      <option value="">Selecione a forma de pagamento</option>
+                      <option *ngFor="let formaPagamento of formasPagamento$ | async" [value]="formaPagamento.id">
+                        {{ formaPagamento.descricao }}
+                      </option>
+                    </select>
+                    <div
+                      *ngIf="ticketForm.get('formaPagamento')?.invalid && (ticketForm.get('formaPagamento')?.dirty || ticketForm.get('formaPagamento')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('formaPagamento')?.errors?.['required']">Forma de Pagamento é
+                        obrigatória</span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="bandeira" class="form-label">
+                      Bandeira <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="bandeira" formControlName="bandeira"
+                      [ngClass]="{'is-invalid': ticketForm.get('bandeira')?.invalid && (ticketForm.get('bandeira')?.dirty || ticketForm.get('bandeira')?.touched)}">
+                      <option value="">Selecione a bandeira</option>
+                      <option *ngFor="let bandeira of bandeiras$ | async" [value]="bandeira.id">
+                        {{ bandeira.bandeira }}
+                      </option>
+                    </select>
+                    <div
+                      *ngIf="ticketForm.get('bandeira')?.invalid && (ticketForm.get('bandeira')?.dirty || ticketForm.get('bandeira')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('bandeira')?.errors?.['required']">Bandeira é obrigatória</span>
+                    </div>
+                  </c-col>
+                  <c-col md="12">
+                    <label cLabel for="cartaoIdent" class="form-label">
+                      Identificação do Cartão <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="cartaoIdent" formControlName="cartaoIdent"
+                      placeholder="Últimos 4 dígitos do cartão"
+                      [ngClass]="{'is-invalid': ticketForm.get('cartaoIdent')?.invalid && (ticketForm.get('cartaoIdent')?.dirty || ticketForm.get('cartaoIdent')?.touched)}">
+                    <div
+                      *ngIf="ticketForm.get('cartaoIdent')?.invalid && (ticketForm.get('cartaoIdent')?.dirty || ticketForm.get('cartaoIdent')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('cartaoIdent')?.errors?.['required']">Identificação do Cartão é
+                        obrigatória</span>
+                      <span *ngIf="ticketForm.get('cartaoIdent')?.errors?.['maxlength']">
+                        Máximo de {{ ticketForm.get('cartaoIdent')?.errors?.['maxlength']?.requiredLength }} caracteres
+                      </span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="cartaoAutorizacao" class="form-label">
+                      Código de Autorização <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="cartaoAutorizacao" formControlName="cartaoAutorizacao"
+                      placeholder="Código de autorização da transação"
+                      [ngClass]="{'is-invalid': ticketForm.get('cartaoAutorizacao')?.invalid && (ticketForm.get('cartaoAutorizacao')?.dirty || ticketForm.get('cartaoAutorizacao')?.touched)}">
+                    <div
+                      *ngIf="ticketForm.get('cartaoAutorizacao')?.invalid && (ticketForm.get('cartaoAutorizacao')?.dirty || ticketForm.get('cartaoAutorizacao')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('cartaoAutorizacao')?.errors?.['required']">Autorização é
+                        obrigatória</span>
+                      <span *ngIf="ticketForm.get('cartaoAutorizacao')?.errors?.['maxlength']">
+                        Máximo de {{ ticketForm.get('cartaoAutorizacao')?.errors?.['maxlength']?.requiredLength }}
+                        caracteres
+                      </span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="cartaoNsu" class="form-label">
+                      NSU <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="cartaoNsu" formControlName="cartaoNsu" placeholder="Número Sequencial Único"
+                      [ngClass]="{'is-invalid': ticketForm.get('cartaoNsu')?.invalid && (ticketForm.get('cartaoNsu')?.dirty || ticketForm.get('cartaoNsu')?.touched)}">
+                    <div
+                      *ngIf="ticketForm.get('cartaoNsu')?.invalid && (ticketForm.get('cartaoNsu')?.dirty || ticketForm.get('cartaoNsu')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('cartaoNsu')?.errors?.['required']">NSU é obrigatório</span>
+                      <span *ngIf="ticketForm.get('cartaoNsu')?.errors?.['maxlength']">
+                        Máximo de {{ ticketForm.get('cartaoNsu')?.errors?.['maxlength']?.requiredLength }} caracteres
+                      </span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
 
-            <div class="mb-3">
-              <label cLabel for="cartaoIdent">Identificação do Cartão</label>
-              <input cFormControl id="cartaoIdent" formControlName="cartaoIdent"
-                [ngClass]="{'is-invalid': ticketForm.get('cartaoIdent')?.invalid && (ticketForm.get('cartaoIdent')?.dirty || ticketForm.get('cartaoIdent')?.touched)}">
-              <div
-                *ngIf="ticketForm.get('cartaoIdent')?.invalid && (ticketForm.get('cartaoIdent')?.dirty || ticketForm.get('cartaoIdent')?.touched)"
-                class="invalid-feedback">
-                <div *ngIf="ticketForm.get('cartaoIdent')?.errors?.['required']">Identificação do Cartão é obrigatória.
-                </div>
-                <div *ngIf="ticketForm.get('cartaoIdent')?.errors?.['maxlength']">Máximo de {{
-                  ticketForm.get('cartaoIdent')?.errors?.['maxlength']?.requiredLength }} caracteres.</div>
-              </div>
-            </div>
+            <!-- Parcelamento & Tarifário -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilCalculator" class="me-2"></c-icon>
+                <strong>Parcelamento & Tarifário</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="4">
+                    <label cLabel for="parcelamento" class="form-label">
+                      Parcelamento <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="parcelamento" formControlName="parcelamento"
+                      [ngClass]="{'is-invalid': ticketForm.get('parcelamento')?.invalid && (ticketForm.get('parcelamento')?.dirty || ticketForm.get('parcelamento')?.touched)}">
+                      <option value="">Nº de parcelas</option>
+                      <option *ngFor="let parcelamento of parcelamentos$ | async"
+                        [value]="parcelamento.numeroDeParcelas">
+                        {{ parcelamento.numeroDeParcelas }}x
+                      </option>
+                    </select>
+                    <div
+                      *ngIf="ticketForm.get('parcelamento')?.invalid && (ticketForm.get('parcelamento')?.dirty || ticketForm.get('parcelamento')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('parcelamento')?.errors?.['required']">Parcelamento é
+                        obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="4">
+                    <label cLabel for="tarifario" class="form-label">
+                      Tarifário <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="tarifario" formControlName="tarifario"
+                      [ngClass]="{'is-invalid': ticketForm.get('tarifario')?.invalid && (ticketForm.get('tarifario')?.dirty || ticketForm.get('tarifario')?.touched)}">
+                      <option value="">Selecione o tarifário</option>
+                      <option *ngFor="let tarifario of tarifarios$ | async" [value]="tarifario.id">
+                        {{ tarifario.titulo }} - {{ tarifario.bandeira.bandeira }} - {{ tarifario.percentualTarifa }}%
+                      </option>
+                    </select>
+                    <div
+                      *ngIf="ticketForm.get('tarifario')?.invalid && (ticketForm.get('tarifario')?.dirty || ticketForm.get('tarifario')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('tarifario')?.errors?.['required']">Tarifário é obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="4">
+                    <label cLabel for="posNum" class="form-label">
+                      Número POS <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="posNum" formControlName="posNum" placeholder="Número do terminal POS"
+                      [ngClass]="{'is-invalid': ticketForm.get('posNum')?.invalid && (ticketForm.get('posNum')?.dirty || ticketForm.get('posNum')?.touched)}">
+                    <div
+                      *ngIf="ticketForm.get('posNum')?.invalid && (ticketForm.get('posNum')?.dirty || ticketForm.get('posNum')?.touched)"
+                      class="invalid-feedback">
+                      <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                      <span *ngIf="ticketForm.get('posNum')?.errors?.['required']">Número POS é obrigatório</span>
+                      <span *ngIf="ticketForm.get('posNum')?.errors?.['maxlength']">
+                        Máximo de {{ ticketForm.get('posNum')?.errors?.['maxlength']?.requiredLength }} caracteres
+                      </span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
 
-            <c-row class="mb-3">
-              <c-col md="6">
-                <label cLabel for="cartaoAutorizacao">Autorização</label>
-                <input cFormControl id="cartaoAutorizacao" formControlName="cartaoAutorizacao"
-                  [ngClass]="{'is-invalid': ticketForm.get('cartaoAutorizacao')?.invalid && (ticketForm.get('cartaoAutorizacao')?.dirty || ticketForm.get('cartaoAutorizacao')?.touched)}">
-                <div
-                  *ngIf="ticketForm.get('cartaoAutorizacao')?.invalid && (ticketForm.get('cartaoAutorizacao')?.dirty || ticketForm.get('cartaoAutorizacao')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('cartaoAutorizacao')?.errors?.['required']">Autorização é obrigatória.
-                  </div>
-                  <div *ngIf="ticketForm.get('cartaoAutorizacao')?.errors?.['maxlength']">Máximo de {{
-                    ticketForm.get('cartaoAutorizacao')?.errors?.['maxlength']?.requiredLength }} caracteres.</div>
-                </div>
-              </c-col>
-              <c-col md="6">
-                <label cLabel for="cartaoNsu">NSU</label>
-                <input cFormControl id="cartaoNsu" formControlName="cartaoNsu"
-                  [ngClass]="{'is-invalid': ticketForm.get('cartaoNsu')?.invalid && (ticketForm.get('cartaoNsu')?.dirty || ticketForm.get('cartaoNsu')?.touched)}">
-                <div
-                  *ngIf="ticketForm.get('cartaoNsu')?.invalid && (ticketForm.get('cartaoNsu')?.dirty || ticketForm.get('cartaoNsu')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('cartaoNsu')?.errors?.['required']">NSU é obrigatório.</div>
-                  <div *ngIf="ticketForm.get('cartaoNsu')?.errors?.['maxlength']">Máximo de {{
-                    ticketForm.get('cartaoNsu')?.errors?.['maxlength']?.requiredLength }} caracteres.</div>
-                </div>
-              </c-col>
-            </c-row>
-
-            <c-row class="mb-3">
-              <c-col md="4">
-                <label cLabel for="parcelamento">Parcelamento</label>
-                <select cSelect id="parcelamento" formControlName="parcelamento"
-                  [ngClass]="{'is-invalid': ticketForm.get('parcelamento')?.invalid && (ticketForm.get('parcelamento')?.dirty || ticketForm.get('parcelamento')?.touched)}">
-                  <option *ngFor="let parcelamento of parcelamentos$ | async" [value]="parcelamento.numeroDeParcelas">{{
-                    parcelamento.numeroDeParcelas }}</option>
-                </select>
-                <div
-                  *ngIf="ticketForm.get('parcelamento')?.invalid && (ticketForm.get('parcelamento')?.dirty || ticketForm.get('parcelamento')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('parcelamento')?.errors?.['required']">Parcelamento é obrigatório.</div>
-                </div>
-              </c-col>
-              <c-col md="4">
-                <label cLabel for="tarifario">Tarifário</label>
-                <select cSelect id="tarifario" formControlName="tarifario"
-                  [ngClass]="{'is-invalid': ticketForm.get('tarifario')?.invalid && (ticketForm.get('tarifario')?.dirty || ticketForm.get('tarifario')?.touched)}">
-                  <option *ngFor="let tarifario of tarifarios$ | async" [value]="tarifario.id">{{ tarifario.titulo }} -
-                    {{tarifario.bandeira.bandeira }} - {{ tarifario.percentualTarifa }}%</option>
-                </select>
-                <div
-                  *ngIf="ticketForm.get('tarifario')?.invalid && (ticketForm.get('tarifario')?.dirty || ticketForm.get('tarifario')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('tarifario')?.errors?.['required']">Tarifário é obrigatório.</div>
-                </div>
-              </c-col>
-              <c-col md="4">
-                <label cLabel for="posNum">Número POS</label>
-                <input cFormControl id="posNum" formControlName="posNum"
-                  [ngClass]="{'is-invalid': ticketForm.get('posNum')?.invalid && (ticketForm.get('posNum')?.dirty || ticketForm.get('posNum')?.touched)}">
-                <div
-                  *ngIf="ticketForm.get('posNum')?.invalid && (ticketForm.get('posNum')?.dirty || ticketForm.get('posNum')?.touched)"
-                  class="invalid-feedback">
-                  <div *ngIf="ticketForm.get('posNum')?.errors?.['required']">Número POS é obrigatório.</div>
-                  <div *ngIf="ticketForm.get('posNum')?.errors?.['maxlength']">Máximo de {{
-                    ticketForm.get('posNum')?.errors?.['maxlength']?.requiredLength }} caracteres.</div>
-                </div>
-              </c-col>
-            </c-row>
-
-            <div class="mb-3" formArrayName="itens">
-              <!-- Existing Items Table (only visible in edit mode) -->
-              <div *ngIf="isEditMode && existingItemTickets.length > 0" class="mb-4">
-                <h4>Itens Existentes</h4>
+            <!-- Itens Existentes (Edit Mode Only) -->
+            <c-card class="mb-4 shadow-sm" *ngIf="isEditMode && existingItemTickets.length > 0">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilList" class="me-2"></c-icon>
+                <strong>Itens Cadastrados</strong>
+              </c-card-header>
+              <c-card-body>
                 <div class="table-responsive">
-                  <table class="table table-hover table-striped">
+                  <table class="table table-hover table-sm align-middle mb-0">
                     <thead class="table-light">
                       <tr>
-                        <th>Descrição</th>
-                        <th class="text-end">Valor</th>
+                        <th scope="col">Descrição</th>
+                        <th scope="col" class="text-end">Valor</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr *ngFor="let itemTicket of existingItemTickets">
                         <td>{{ itemTicket.descricao }}</td>
-                        <td class="text-end">{{ itemTicket.valor | currency:'BRL':'symbol':'1.2-2':'pt' }}</td>
+                        <td class="text-end fw-semibold">
+                          {{ itemTicket.valor | currency:'BRL':'symbol':'1.2-2':'pt' }}
+                        </td>
                       </tr>
                     </tbody>
                     <tfoot class="table-light">
                       <tr>
-                        <th>Total ({{ totalExistingItems }} itens)</th>
-                        <th class="text-end">
+                        <th scope="row">
+                          <c-icon name="cilCheckCircle" class="me-1 text-success"></c-icon>
+                          Total ({{ totalExistingItems }} {{ totalExistingItems === 1 ? 'item' : 'itens' }})
+                        </th>
+                        <th class="text-end text-success fw-bold">
                           {{ getTotalExistingItemsValue() | currency:'BRL':'symbol':'1.2-2':'pt' }}
                         </th>
                       </tr>
@@ -276,97 +429,123 @@
                 </div>
 
                 <!-- Pagination -->
-                <nav *ngIf="totalExistingItems > pageSize" aria-label="Page navigation">
-                  <ul class="pagination justify-content-center">
+                <nav *ngIf="totalExistingItems > pageSize" aria-label="Navegação de páginas" class="mt-3">
+                  <ul class="pagination pagination-sm justify-content-center mb-0">
                     <li class="page-item" [class.disabled]="currentPage === 0">
-                      <a class="page-link" (click)="onPageChange(currentPage - 1)"
-                        href="javascript:void(0)">Anterior</a>
+                      <a class="page-link" (click)="currentPage > 0 && onPageChange(currentPage - 1)"
+                        href="javascript:void(0)" [attr.aria-disabled]="currentPage === 0">
+                        <c-icon name="cilChevronLeft" size="sm"></c-icon>
+                        Anterior
+                      </a>
                     </li>
                     <li class="page-item"
                       *ngFor="let page of [].constructor(Math.ceil(totalExistingItems / pageSize)); let i = index"
                       [class.active]="i === currentPage">
-                      <a class="page-link" (click)="onPageChange(i)" href="javascript:void(0)">{{ i + 1 }}</a>
+                      <a class="page-link" (click)="onPageChange(i)" href="javascript:void(0)"
+                        [attr.aria-current]="i === currentPage ? 'page' : null">
+                        {{ i + 1 }}
+                      </a>
                     </li>
                     <li class="page-item"
                       [class.disabled]="currentPage === Math.ceil(totalExistingItems / pageSize) - 1">
-                      <a class="page-link" (click)="onPageChange(currentPage + 1)" href="javascript:void(0)">Próxima</a>
+                      <a class="page-link"
+                        (click)="currentPage < Math.ceil(totalExistingItems / pageSize) - 1 && onPageChange(currentPage + 1)"
+                        href="javascript:void(0)"
+                        [attr.aria-disabled]="currentPage === Math.ceil(totalExistingItems / pageSize) - 1">
+                        Próxima
+                        <c-icon name="cilChevronRight" size="sm"></c-icon>
+                      </a>
                     </li>
                   </ul>
                 </nav>
-              </div>
+              </c-card-body>
+            </c-card>
 
-              <h4>Itens</h4>
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <button cButton color="success" variant="outline" type="button" (click)="addItem()">Adicionar
-                  Item</button>
-                <h5>Total: {{ totalItensValue | currency:'BRL':'symbol':'1.2-2':'pt' }}</h5>
-              </div>
-              <div *ngIf="itens.invalid && (itens.dirty || itens.touched)" class="text-danger">
-                <div *ngIf="itens.errors?.['minLengthArray']">É necessário adicionar pelo menos um item.</div>
-              </div>
-              <div *ngFor="let item of itens.controls; let i=index" [formGroupName]="i" class="border rounded p-3 mb-3">
-                <c-row>
-                  <c-col md="6">
-                    <label cLabel for="item-{{ i }}">Item</label>
-                    <select cSelect id="item-{{ i }}" formControlName="item" (change)="onItemChange($event, i)"
-                      [ngClass]="{'is-invalid': item.get('item')?.invalid && (item.get('item')?.dirty || item.get('item')?.touched)}">
-                      <option *ngFor="let item of itensList" [value]="item.id">{{ item.descricao }}</option>
-                    </select>
-                    <div *ngIf="item.get('item')?.invalid && (item.get('item')?.dirty || item.get('item')?.touched)"
-                      class="invalid-feedback">
-                      <div *ngIf="item.get('item')?.errors?.['required']">Item é obrigatório.</div>
+            <!-- Itens do Ticket (Novos) -->
+            <c-card class="mb-4 shadow-sm" formArrayName="itens">
+              <c-card-header class="bg-light-subtle d-flex justify-content-between align-items-center">
+                <div>
+                  <c-icon name="cilPlaylistAdd" class="me-2"></c-icon>
+                  <strong>Itens do Ticket</strong>
+                </div>
+                <span class="badge bg-primary-subtle text-primary-emphasis">
+                  Total: {{ totalItensValue | currency:'BRL':'symbol':'1.2-2':'pt' }}
+                </span>
+              </c-card-header>
+              <c-card-body>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <button cButton color="success" variant="outline" size="sm" type="button" (click)="addItem()">
+                    <c-icon name="cilPlus" size="sm" class="me-1"></c-icon>
+                    Adicionar Item
+                  </button>
+                  <small class="text-muted" *ngIf="itens.length === 0">
+                    Nenhum item adicionado
+                  </small>
+                </div>
+
+                <c-alert color="warning" *ngIf="itens.invalid && (itens.dirty || itens.touched)" class="mb-3">
+                  <c-icon name="cilWarning" size="sm" class="me-1"></c-icon>
+                  <span *ngIf="itens.errors?.['minLengthArray']">É necessário adicionar pelo menos um item</span>
+                </c-alert>
+
+                <div *ngFor="let item of itens.controls; let i=index" [formGroupName]="i" class="card mb-3 border">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h6 class="mb-0 text-muted">Item #{{ i + 1 }}</h6>
+                      <button cButton color="danger" variant="ghost" size="sm" type="button" (click)="removeItem(i)"
+                        [attr.aria-label]="'Remover item ' + (i + 1)">
+                        <c-icon name="cilTrash" size="sm"></c-icon>
+                      </button>
                     </div>
-                  </c-col>
-                  <c-col md="4">
-                    <label cLabel for="valor-{{ i }}">Valor</label>
-                    <input cFormControl id="valor-{{ i }}" formControlName="valor" type="text" currencyMask
-                      [options]="customCurrencyMaskConfig"
-                      [ngClass]="{'is-invalid': item.get('valor')?.invalid && (item.get('valor')?.dirty || item.get('valor')?.touched)}">
-                    <div *ngIf="item.get('valor')?.invalid && (item.get('valor')?.dirty || item.get('valor')?.touched)"
-                      class="invalid-feedback">
-                      <div *ngIf="item.get('valor')?.errors?.['required']">Valor é obrigatório.</div>
-                      <div *ngIf="item.get('valor')?.errors?.['min']">Valor deve ser maior que 0.</div>
-                    </div>
-                  </c-col>
-                  <c-col md="2" class="d-flex align-items-end">
-                    <button cButton color="danger" variant="outline" type="button" (click)="removeItem(i)"
-                      class="w-100">
-                      <c-icon name="cil-trash" class="me-1"></c-icon> Remover
-                    </button>
-                  </c-col>
-                </c-row>
-              </div>
+                    <c-row class="g-3">
+                      <c-col md="8">
+                        <label cLabel [for]="'item-' + i" class="form-label">
+                          Descrição <span class="text-danger">*</span>
+                        </label>
+                        <select cSelect [id]="'item-' + i" formControlName="item" (change)="onItemChange($event, i)"
+                          [ngClass]="{'is-invalid': item.get('item')?.invalid && (item.get('item')?.dirty || item.get('item')?.touched)}">
+                          <option value="">Selecione um item</option>
+                          <option *ngFor="let opt of itensList" [value]="opt.id">{{ opt.descricao }}</option>
+                        </select>
+                        <div *ngIf="item.get('item')?.invalid && (item.get('item')?.dirty || item.get('item')?.touched)"
+                          class="invalid-feedback">
+                          <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                          <span *ngIf="item.get('item')?.errors?.['required']">Item é obrigatório</span>
+                        </div>
+                      </c-col>
+                      <c-col md="4">
+                        <label cLabel [for]="'valor-' + i" class="form-label">
+                          Valor <span class="text-danger">*</span>
+                        </label>
+                        <input cFormControl [id]="'valor-' + i" formControlName="valor" type="text" currencyMask
+                          [options]="customCurrencyMaskConfig" placeholder="R$ 0,00"
+                          [ngClass]="{'is-invalid': item.get('valor')?.invalid && (item.get('valor')?.dirty || item.get('valor')?.touched)}">
+                        <div
+                          *ngIf="item.get('valor')?.invalid && (item.get('valor')?.dirty || item.get('valor')?.touched)"
+                          class="invalid-feedback">
+                          <c-icon name="cilXCircle" size="sm" class="me-1"></c-icon>
+                          <span *ngIf="item.get('valor')?.errors?.['required']">Valor é obrigatório</span>
+                          <span *ngIf="item.get('valor')?.errors?.['min']">Valor deve ser maior que 0</span>
+                        </div>
+                      </c-col>
+                    </c-row>
+                  </div>
+                </div>
+              </c-card-body>
+            </c-card>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+              <button cButton color="secondary" variant="outline" [routerLink]="['/tickets']" type="button">
+                <c-icon name="cilX" class="me-1"></c-icon>
+                Cancelar
+              </button>
+              <button cButton color="primary" type="submit" [disabled]="ticketForm.invalid">
+                <c-icon name="cilCheckCircle" class="me-1"></c-icon>
+                {{ isEditMode ? 'Atualizar Ticket' : 'Criar Ticket' }}
+              </button>
             </div>
-            <!-- 
-            <div class="mb-3" formArrayName="indicados">
-              <h4>Indicante</h4>
-              <button cButton color="success" variant="outline" type="button" (click)="addIndicado()" class="mb-2">Adicionar Indicante</button>
-              <div *ngFor="let indicado of indicados.controls; let i=index" [formGroupName]="i" class="border rounded p-3 mb-3">
-                <c-row>
-                  <c-col md="10">
-                    <label cLabel for="indicado-{{ i }}">Indicante</label>
-                    <select cSelect id="indicado-{{ i }}" formControlName="indicado" [ngClass]="{'is-invalid': indicado.get('indicado')?.invalid && (indicado.get('indicado')?.dirty || indicado.get('indicado')?.touched)}">
-                      <option *ngFor="let ind of indicados$ | async" [value]="ind.id">{{ ind.indicacao.medico ? ind.indicacao.medico.nome : '' }}</option>
-                    </select>
-                    <div *ngIf="indicado.get('indicado')?.invalid && (indicado.get('indicado')?.dirty || indicado.get('indicado')?.touched)" class="invalid-feedback">
-                      <div *ngIf="indicado.get('indicado')?.errors?.['required']">Indicado é obrigatório.</div>
-                    </div>
-                  </c-col>
-                  <c-col md="2" class="d-flex align-items-end">
-                    <button cButton color="danger" variant="outline" type="button" (click)="removeIndicado(i)" class="w-100">
-                      <c-icon name="cil-trash" class="me-1"></c-icon> Remover
-                    </button>
-                  </c-col>
-                </c-row>
-              </div>
-            </div> -->
 
-            <button cButton color="primary" variant="outline" type="submit" [disabled]="ticketForm.invalid">
-              <c-icon name="cil-save" class="me-1"></c-icon> Salvar
-            </button>
-            <button cButton color="secondary" variant="outline" [routerLink]="['/tickets']" class="ms-2">
-              <c-icon name="cil-x-circle" class="me-1"></c-icon> Cancelar
-            </button>
           </form>
         </c-card-body>
       </c-card>
