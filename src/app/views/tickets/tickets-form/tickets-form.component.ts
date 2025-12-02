@@ -26,6 +26,8 @@ import { Financeiro } from '../../financeiros/financeiro.model';
 import { CardModule, GridModule, FormModule, ButtonModule, AlertModule } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
 import { NgxCurrencyDirective, NgxCurrencyInputMode } from 'ngx-currency';
+import { ItemTicketService, PageableItemTicket } from '../../itens-ticket/item-ticket.service';
+import { ItemTicket } from '../../itens-ticket/item-ticket.model';
 
 function minLengthArray(min: number) {
   return (c: AbstractControl): ValidationErrors | null => {
@@ -111,6 +113,10 @@ export class TicketsFormComponent implements OnInit {
   indicacoes$!: Observable<Indicacao[]>;
   tarifarios$!: Observable<Tarifario[]>;
   totalItensValue: number = 0;
+  existingItemTickets: ItemTicket[] = [];
+  totalExistingItems: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 10;
 
   public customCurrencyMaskConfig = {
     align: "right",
@@ -139,7 +145,8 @@ export class TicketsFormComponent implements OnInit {
     private indicacaoService: IndicacaoService,
     private tarifarioService: TarifarioService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private itemTicketService: ItemTicketService,
   ) { }
 
   ngOnInit(): void {
@@ -310,6 +317,23 @@ export class TicketsFormComponent implements OnInit {
         });
       }
     });
+
+    this.loadExistingItemTickets(0);
+  }
+
+  loadExistingItemTickets(page: number = 0): void {
+    if (this.ticketId) {
+      this.itemTicketService.getItemTicketsByTicketId(this.ticketId, page, this.pageSize).subscribe(
+        (response: PageableItemTicket) => {
+          this.existingItemTickets = response.content;
+          this.totalExistingItems = response.totalElements;
+          this.currentPage = response.number;
+        }
+      );
+    }
+  }
+  onPageChange(page: number): void {
+    this.loadExistingItemTickets(page);
   }
 
   getFormErrors(): string[] {

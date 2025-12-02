@@ -32,4 +32,16 @@ export class ItemTicketService {
   deleteItemTicket(id: number): Observable<any> {
     return this.http.delete(`${this.API_URL}/${id}`);
   }
+
+  getItemTicketsByTicketId(ticketId: string, page: number = 0, size: number = 10): Observable<PageableItemTicket> {
+    return this.http.get<PageableItemTicket>(`${this.API_URL}?ticketId=${ticketId}&page=${page}&size=${size}`);
+  }
+}
+
+export interface PageableItemTicket {
+  content: ItemTicket[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
 }
