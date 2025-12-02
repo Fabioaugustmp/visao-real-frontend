@@ -8,31 +8,40 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <label cLabel for="titulo">Título</label>
-            <input cFormControl id="titulo" formControlName="titulo" [ngClass]="{'is-invalid': form.get('titulo')?.invalid && (form.get('titulo')?.dirty || form.get('titulo')?.touched)}" />
+            <input cFormControl id="titulo" formControlName="titulo"
+              [ngClass]="{'is-invalid': form.get('titulo')?.invalid && (form.get('titulo')?.dirty || form.get('titulo')?.touched)}" />
             <app-validation-feedback [control]="form.get('titulo')"></app-validation-feedback>
           </div>
           <div class="mb-3">
             <label cLabel for="medico">Médico</label>
-            <select cSelect id="medico" formControlName="medico" [ngClass]="{'is-invalid': form.get('medico')?.invalid && (form.get('medico')?.dirty || form.get('medico')?.touched)}">
-              <option *ngFor="let medico of medicos" [value]="medico.id">{{ medico.nome }}</option>
+            <!-- Show medico name as read-only text in edit mode -->
+            <input *ngIf="isEditMode" cFormControl type="text" [value]="medicoNome" disabled class="form-control">
+            <!-- Show dropdown in create mode -->
+            <select *ngIf="!isEditMode" cSelect id="medico" formControlName="medico"
+              [ngClass]="{'is-invalid': form.get('medico')?.invalid && (form.get('medico')?.dirty || form.get('medico')?.touched)}">
+              <option [ngValue]="null" disabled selected>Selecione um médico</option>
+              <option *ngFor="let medico of medicos" [ngValue]="medico.id">{{ medico.nome }} - {{ medico.crm }}</option>
             </select>
             <app-validation-feedback [control]="form.get('medico')"></app-validation-feedback>
           </div>
           <div class="mb-3">
             <label cLabel for="bandeira">Bandeira</label>
-            <select cSelect id="bandeira" formControlName="bandeira" [ngClass]="{'is-invalid': form.get('bandeira')?.invalid && (form.get('bandeira')?.dirty || form.get('bandeira')?.touched)}">
+            <select cSelect id="bandeira" formControlName="bandeira"
+              [ngClass]="{'is-invalid': form.get('bandeira')?.invalid && (form.get('bandeira')?.dirty || form.get('bandeira')?.touched)}">
               <option *ngFor="let bandeira of bandeiras" [value]="bandeira.id">{{ bandeira.bandeira }}</option>
             </select>
             <app-validation-feedback [control]="form.get('bandeira')"></app-validation-feedback>
-          </div>          
+          </div>
           <div class="mb-3">
             <label cLabel for="percentualTarifa">Percentual Tarifa</label>
-            <input cFormControl id="percentualTarifa" formControlName="percentualTarifa" type="number" [ngClass]="{'is-invalid': form.get('percentualTarifa')?.invalid && (form.get('percentualTarifa')?.dirty || form.get('percentualTarifa')?.touched)}" />
+            <input cFormControl id="percentualTarifa" formControlName="percentualTarifa" type="number"
+              [ngClass]="{'is-invalid': form.get('percentualTarifa')?.invalid && (form.get('percentualTarifa')?.dirty || form.get('percentualTarifa')?.touched)}" />
             <app-validation-feedback [control]="form.get('percentualTarifa')"></app-validation-feedback>
           </div>
           <div class="mb-3">
             <label cLabel for="dataInicioVigencia">Início Vigência</label>
-            <input cFormControl id="dataInicioVigencia" formControlName="dataInicioVigencia" type="date" [ngClass]="{'is-invalid': form.get('dataInicioVigencia')?.invalid && (form.get('dataInicioVigencia')?.dirty || form.get('dataInicioVigencia')?.touched)}" />
+            <input cFormControl id="dataInicioVigencia" formControlName="dataInicioVigencia" type="date"
+              [ngClass]="{'is-invalid': form.get('dataInicioVigencia')?.invalid && (form.get('dataInicioVigencia')?.dirty || form.get('dataInicioVigencia')?.touched)}" />
             <app-validation-feedback [control]="form.get('dataInicioVigencia')"></app-validation-feedback>
           </div>
           <div class="mb-3">

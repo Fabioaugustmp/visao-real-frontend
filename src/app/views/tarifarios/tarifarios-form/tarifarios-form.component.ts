@@ -34,6 +34,7 @@ export class TarifariosFormComponent implements OnInit {
   tarifarioId: number | null = null;
   medicos: Medico[] = [];
   bandeiras: Bandeira[] = [];
+  medicoNome: string = ''; // Store medico name for display in edit mode
 
   constructor(
     private fb: FormBuilder,
@@ -55,25 +56,32 @@ export class TarifariosFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.tarifarioId = this.route.snapshot.params['id'];
+    // Load medicos for the dropdown (only used in create mode)
     this.loadMedicos();
     this.loadBandeiras();
-    this.tarifarioId = this.route.snapshot.params['id'];
+    // If in edit mode, load tarifario data
     if (this.tarifarioId) {
       this.isEditMode = true;
       this.tarifarioService.getTarifario(this.tarifarioId).subscribe(data => {
         // Convert ISO date strings to YYYY-MM-DD format for date inputs
         const dataInicio = data.dataInicioVigencia ? new Date(data.dataInicioVigencia).toISOString().split('T')[0] : null;
         const dataFim = data.dataFimVigencia ? new Date(data.dataFimVigencia).toISOString().split('T')[0] : null;
+        // Store medico name for display (medico cannot be changed in edit mode)
+        this.medicoNome = data.medico ? `${data.medico.nome} - ${data.medico.crm}` : '';
 
         this.form.patchValue({
           id: data.id,
-          medico: data.medico ? data.medico.id : null,
+          medico: null, // Don't set medico value, it's read-only in edit mode
           bandeira: data.bandeira ? data.bandeira.id : null,
           titulo: data.titulo,
           percentualTarifa: data.percentualTarifa,
           dataInicioVigencia: dataInicio,
           dataFimVigencia: dataFim
         });
+
+        // Disable medico field in edit mode since it cannot be changed
+        this.form.get('medico')?.disable();
       });
     }
   }
