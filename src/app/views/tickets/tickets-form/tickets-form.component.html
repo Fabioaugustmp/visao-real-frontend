@@ -247,11 +247,9 @@
             </c-row>
 
             <div class="mb-3" formArrayName="itens">
-              <h4>Itens</h4>
-
               <!-- Existing Items Table (only visible in edit mode) -->
               <div *ngIf="isEditMode && existingItemTickets.length > 0" class="mb-4">
-                <h5>Itens Existentes</h5>
+                <h4>Itens Existentes</h4>
                 <div class="table-responsive">
                   <table class="table table-hover table-striped">
                     <thead class="table-light">
@@ -262,7 +260,7 @@
                     </thead>
                     <tbody>
                       <tr *ngFor="let itemTicket of existingItemTickets">
-                        <td>{{ itemTicket.item.descricao }}</td>
+                        <td>{{ itemTicket.descricao }}</td>
                         <td class="text-end">{{ itemTicket.valor | currency:'BRL':'symbol':'1.2-2':'pt' }}</td>
                       </tr>
                     </tbody>
@@ -270,8 +268,7 @@
                       <tr>
                         <th>Total ({{ totalExistingItems }} itens)</th>
                         <th class="text-end">
-                          {{ existingItemTickets.reduce((sum, item) => sum + item.valor, 0) |
-                          currency:'BRL':'symbol':'1.2-2':'pt' }}
+                          {{ getTotalExistingItemsValue() | currency:'BRL':'symbol':'1.2-2':'pt' }}
                         </th>
                       </tr>
                     </tfoot>
@@ -297,6 +294,8 @@
                   </ul>
                 </nav>
               </div>
+
+              <h4>Itens</h4>
               <div class="d-flex justify-content-between align-items-center mb-2">
                 <button cButton color="success" variant="outline" type="button" (click)="addItem()">Adicionar
                   Item</button>

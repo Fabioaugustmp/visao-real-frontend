@@ -117,6 +117,7 @@ export class TicketsFormComponent implements OnInit {
   totalExistingItems: number = 0;
   currentPage: number = 0;
   pageSize: number = 10;
+  Math = Math; // Expose Math to template for pagination
 
   public customCurrencyMaskConfig = {
     align: "right",
@@ -292,29 +293,29 @@ export class TicketsFormComponent implements OnInit {
           tarifario: undefined
         });
 
-        const ticketWithItensIds = ticket as any;
-        if (ticketWithItensIds.itensIds && ticketWithItensIds.itensIds.length > 0) {
-          ticketWithItensIds.itensIds.forEach((itemId: number) => {
-            this.itemService.getItem(itemId).subscribe(item => {
-              this.itens.push(this.fb.group({
-                item: item.id,
-                valor: item.valor
-              }));
-            });
-          });
-        } else if (ticket.itens && ticket.itens.length > 0) {
-          // Fallback to original behavior if itensIds is not present
-          ticket.itens.forEach(item => {
-            this.itens.push(this.fb.group({
-              item: item.item.id,
-              valor: item.valor
-            }));
-          });
-        }
+        // const ticketWithItensIds = ticket as any;
+        // if (ticketWithItensIds.itensIds && ticketWithItensIds.itensIds.length > 0) {
+        //   ticketWithItensIds.itensIds.forEach((itemId: number) => {
+        //     this.itemService.getItem(itemId).subscribe(item => {
+        //       this.itens.push(this.fb.group({
+        //         item: item.id,
+        //         valor: item.valor
+        //       }));
+        //     });
+        //   });
+        // } else if (ticket.itens && ticket.itens.length > 0) {
+        //   // Fallback to original behavior if itensIds is not present
+        //   ticket.itens.forEach(item => {
+        //     this.itens.push(this.fb.group({
+        //       item: item.item.id,
+        //       valor: item.valor
+        //     }));
+        //   });
+        // }
 
-        ticket.indicados.forEach(indicado => {
-          this.indicados.push(this.fb.group(indicado));
-        });
+        // ticket.indicados.forEach(indicado => {
+        //   this.indicados.push(this.fb.group(indicado));
+        // });
       }
     });
 
@@ -334,6 +335,10 @@ export class TicketsFormComponent implements OnInit {
   }
   onPageChange(page: number): void {
     this.loadExistingItemTickets(page);
+  }
+
+  getTotalExistingItemsValue(): number {
+    return this.existingItemTickets.reduce((sum, item) => sum + item.valor, 0);
   }
 
   getFormErrors(): string[] {
