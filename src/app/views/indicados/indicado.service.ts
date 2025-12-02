@@ -14,7 +14,13 @@ export class IndicadoService {
 
   constructor(private http: HttpClient) { }
 
-  getIndicados(pageable?: Pageable): Observable<PageIndicado> {
+  getIndicados(
+    pageable?: Pageable,
+    pago?: boolean,
+    recebido?: boolean,
+    dataInicio?: string,
+    dataFim?: string
+  ): Observable<PageIndicado> {
     let params = new HttpParams();
 
     if (pageable) {
@@ -29,6 +35,19 @@ export class IndicadoService {
           params = params.append('sort', s);
         });
       }
+    }
+
+    if (pago !== undefined && pago !== null) {
+      params = params.append('pago', pago.toString());
+    }
+    if (recebido !== undefined && recebido !== null) {
+      params = params.append('recebido', recebido.toString());
+    }
+    if (dataInicio) {
+      params = params.append('venctoIndicacaoInicio', dataInicio);
+    }
+    if (dataFim) {
+      params = params.append('venctoIndicacaoFim', dataFim);
     }
 
     return this.http.get<PageIndicado>(this.API_URL, { params });

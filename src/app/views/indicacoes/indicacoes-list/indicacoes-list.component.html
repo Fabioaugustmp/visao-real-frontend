@@ -6,14 +6,14 @@
           <div class="d-flex justify-content-between align-items-center">
             <h4 class="mb-0 text-primary fw-bold">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                class="bi bi-people-fill me-2" viewBox="0 0 16 16">
+                class="bi bi-people me-2" viewBox="0 0 16 16">
                 <path
-                  d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+                  d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8Zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022ZM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816ZM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z" />
               </svg>
-              Gestão de Indicações
+              Indicações
             </h4>
             <button cButton color="primary" class="d-flex align-items-center shadow-sm"
-              [routerLink]="['/indicacoes/nova']">
+              [routerLink]="['/indicacoes/novo']">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -25,49 +25,103 @@
         </c-card-header>
         <c-card-body class="p-4">
 
+          <!-- Filters Section -->
+          <div class="filter-section p-3 rounded-3 mb-4 border">
+            <h6 class="mb-3 text-uppercase small fw-bold opacity-75">Filtros de Pesquisa</h6>
+            <c-row class="g-3">
+              <c-col md="3">
+                <label for="status" class="form-label small fw-semibold opacity-75">Status (Tipo)</label>
+                <div class="input-group">
+                  <span class="input-group-text border-end-0"><svg xmlns="http://www.w3.org/2000/svg" width="14"
+                      height="14" fill="currentColor" class="bi bi-tag" viewBox="0 0 16 16">
+                      <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z"/>
+                      <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z"/>
+                    </svg></span>
+                  <input cFormControl id="status" type="text" class="border-start-0 ps-0" placeholder="Filtrar por tipo"
+                    [(ngModel)]="searchStatus">
+                </div>
+              </c-col>
+              <c-col md="2" class="d-flex align-items-end">
+                <div class="d-grid gap-2 d-md-flex w-100">
+                  <button cButton color="primary" class="flex-grow-1 shadow-sm" (click)="searchIndicacoes()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-search me-1" viewBox="0 0 16 16">
+                      <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                    </svg>
+                    Buscar
+                  </button>
+                  <button cButton color="secondary" variant="outline" class="shadow-sm" (click)="clearSearch()"
+                    title="Limpar Filtros">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-x-lg" viewBox="0 0 16 16">
+                      <path
+                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
+                    </svg>
+                  </button>
+                </div>
+              </c-col>
+            </c-row>
+          </div>
+
+          <!-- Skeleton Loader -->
+          <div *ngIf="isLoading" class="skeleton-loader">
+            <div class="skeleton-header mb-4"></div>
+            <div class="skeleton-row mb-3" *ngFor="let i of [1,2,3,4,5]"></div>
+          </div>
+
           <!-- Table Section -->
-          <div class="table-responsive">
-            <table cTable hover striped class="align-middle mb-0 border">
-              <thead>
+          <div class="table-responsive" *ngIf="!isLoading">
+            <table cTable hover class="align-middle mb-0 border-separate"
+              style="border-spacing: 0 10px; border-collapse: separate;">
+              <thead class="bg-light">
                 <tr>
-                  <th class="py-3 ps-3">ID</th>
-                  <th class="py-3">Médico</th>
-                  <th class="py-3">CRM</th>
-                  <th class="py-3">Tipo</th>
-                  <th class="py-3">Valor</th>
-                  <th class="py-3 text-end pe-3">Ações</th>
+                  <th class="py-3 ps-3 border-0 rounded-start" (click)="toggleSort('id')" style="cursor: pointer;">
+                    ID <span *ngIf="currentSortField === 'id'">{{ isSortAsc ? '↑' : '↓' }}</span>
+                  </th>
+                  <th class="py-3 border-0" (click)="toggleSort('medico.nome')" style="cursor: pointer;">
+                    Médico <span *ngIf="currentSortField === 'medico.nome'">{{ isSortAsc ? '↑' : '↓' }}</span>
+                  </th>
+                  <th class="py-3 border-0" (click)="toggleSort('medico.crm')" style="cursor: pointer;">
+                    CRM <span *ngIf="currentSortField === 'medico.crm'">{{ isSortAsc ? '↑' : '↓' }}</span>
+                  </th>
+                  <th class="py-3 border-0" (click)="toggleSort('tipo')" style="cursor: pointer;">
+                    Tipo <span *ngIf="currentSortField === 'tipo'">{{ isSortAsc ? '↑' : '↓' }}</span>
+                  </th>
+                  <th class="py-3 border-0" (click)="toggleSort('valorIndicacao')" style="cursor: pointer;">
+                    Valor <span *ngIf="currentSortField === 'valorIndicacao'">{{ isSortAsc ? '↑' : '↓' }}</span>
+                  </th>
+                  <th class="py-3 text-end pe-3 border-0 rounded-end">Ações</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let indicacao of indicacoes">
-                  <td class="ps-3 fw-semibold text-primary">
+                <tr *ngFor="let indicacao of indicacoes" class="shadow-sm bg-white rounded-3 position-relative ticket-row">
+                  <td class="ps-3 fw-semibold text-primary py-3 rounded-start border-0">
                     #{{ indicacao.id }}
                   </td>
-                  <td>
+                  <td class="py-3 border-0">
                     <div class="d-flex align-items-center">
                       <div
                         class="avatar avatar-sm bg-primary text-white me-2 rounded-circle d-flex align-items-center justify-content-center"
                         style="width: 32px; height: 32px;">
-                        {{ indicacao.medico.nome?.charAt(0) }}
+                        {{ indicacao.medico?.nome?.charAt(0) }}
                       </div>
-                      <div class="fw-semibold">{{ indicacao.medico.nome }}</div>
+                      <div>{{ indicacao.medico?.nome }}</div>
                     </div>
                   </td>
-                  <td>
-                    <span class="badge bg-secondary">{{ indicacao.medico.crm }}</span>
+                  <td class="py-3 border-0">
+                    <div class="fw-semibold">{{ indicacao.medico?.crm }}</div>
                   </td>
-                  <td>
-                    <span class="badge" [ngClass]="indicacao.tipo === 'Online' ? 'bg-info' : 'bg-success'">
-                      {{ indicacao.tipo }}
-                    </span>
+                  <td class="py-3 border-0">
+                    <div class="fw-semibold">{{ indicacao.tipo }}</div>
                   </td>
-                  <td>
-                    <div class="fw-semibold text-success">{{ indicacao.valorIndicacao | currency:'BRL':'symbol':'1.2-2'
-                      }}</div>
+                  <td class="py-3 border-0">
+                    <div class="fw-semibold">{{ indicacao.valorIndicacao | currency:'BRL' }}</div>
                   </td>
-                  <td class="text-end pe-3">
+                  <td class="text-end pe-3 py-3 rounded-end border-0">
                     <div class="btn-group" role="group">
-                      <button cButton color="light" size="sm" class="border text-primary"
+                      <button cButton color="light" size="sm"
+                        class="border text-primary shadow-sm me-2 rounded-2 action-btn"
                         [routerLink]="['/indicacoes/editar', indicacao.id]" title="Editar">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                           class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -77,8 +131,8 @@
                             d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                         </svg>
                       </button>
-                      <button cButton color="light" size="sm" class="border text-danger ms-1"
-                        (click)="excluirIndicacao(indicacao.id)" title="Excluir">
+                      <button cButton color="light" size="sm" class="border text-danger shadow-sm rounded-2 action-btn"
+                        (click)="deleteIndicacao(indicacao.id)" title="Excluir">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                           class="bi bi-trash" viewBox="0 0 16 16">
                           <path
@@ -107,10 +161,7 @@
           </div>
 
           <!-- Pagination Controls -->
-          <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-muted small">
-              Mostrando {{ indicacoes.length }} de {{ totalElements }} indicações
-            </div>
+          <div class="d-flex justify-content-center mt-4">
             <c-pagination align="center" aria-label="Page navigation">
               <c-page-item [disabled]="currentPage === 0" class="mx-1">
                 <a cButton color="white" class="border" c-page-link (click)="onPageChange(0)">

@@ -14,7 +14,7 @@ export class IndicacaoService {
 
   constructor(private http: HttpClient) { }
 
-  getIndicacoes(pageable?: Pageable): Observable<PageIndicacao> {
+  getIndicacoes(pageable?: Pageable, status?: string): Observable<PageIndicacao> {
     let params = new HttpParams();
 
     if (pageable) {
@@ -29,6 +29,10 @@ export class IndicacaoService {
           params = params.append('sort', s);
         });
       }
+    }
+
+    if (status) {
+      params = params.append('tipo', status);
     }
 
     return this.http.get<PageIndicacao>(this.API_URL, { params });
