@@ -118,6 +118,7 @@
                       CPF do Pagador <span class="text-danger">*</span>
                     </label>
                     <input cFormControl id="cpfPagador" formControlName="cpfPagador" placeholder="000.000.000-00"
+                      mask="000.000.000-00"
                       [ngClass]="{'is-invalid': ticketForm.get('cpfPagador')?.invalid && (ticketForm.get('cpfPagador')?.dirty || ticketForm.get('cpfPagador')?.touched)}">
                     <div
                       *ngIf="ticketForm.get('cpfPagador')?.invalid && (ticketForm.get('cpfPagador')?.dirty || ticketForm.get('cpfPagador')?.touched)"

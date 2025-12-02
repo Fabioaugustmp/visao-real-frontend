@@ -26,6 +26,7 @@ import { Financeiro } from '../../financeiros/financeiro.model';
 import { CardModule, GridModule, FormModule, ButtonModule, AlertModule } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
 import { NgxCurrencyDirective, NgxCurrencyInputMode } from 'ngx-currency';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { ItemTicketService, PageableItemTicket } from '../../itens-ticket/item-ticket.service';
 import { ItemTicket } from '../../itens-ticket/item-ticket.model';
 
@@ -96,8 +97,10 @@ function cpfValidator(control: AbstractControl): ValidationErrors | null {
     ButtonModule,
     IconModule,
     AlertModule,
-    NgxCurrencyDirective
-  ]
+    NgxCurrencyDirective,
+    NgxMaskDirective
+  ],
+  providers: [provideNgxMask()]
 })
 export class TicketsFormComponent implements OnInit {
 
@@ -461,13 +464,16 @@ export class TicketsFormComponent implements OnInit {
         valor: item.valor
       }));
 
+      // Clean CPF to send only raw digits to backend
+      const cleanCpf = formValue.cpfPagador ? formValue.cpfPagador.replace(/[^\d]+/g, '') : '';
+
       const ticketData: Ticket = {
         id: this.ticketId,
         dataTicket: formValue.dataTicket,
         numAtend: formValue.numAtend,
         nomePaciente: formValue.nomePaciente,
         nomePagador: formValue.nomePagador,
-        cpfPagador: formValue.cpfPagador,
+        cpfPagador: cleanCpf,
         medicoExec: selectedMedicoExec!,
         medicoSolic: selectedMedicoSolic!,
         nfSerie: formValue.nfSerie,
