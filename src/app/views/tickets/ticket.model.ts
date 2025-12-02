@@ -15,6 +15,7 @@ export interface Ticket {
   cpfPagador: string;
   medicoExec: Medico;
   medicoSolic: Medico;
+  percentualIndicacao?: number;
   nfSerie: string;
   nfNumero: string;
   formaPagamento: FormaPagamento;

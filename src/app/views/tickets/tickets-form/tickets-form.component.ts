@@ -185,6 +185,7 @@ export class TicketsFormComponent implements OnInit {
       nomePagador: ['', [Validators.required, Validators.maxLength(100)]], // Assuming max length for payer name
       cpfPagador: ['', [Validators.required, cpfValidator]], // Using the custom CPF validator
       medicoExec: ['', Validators.required],
+      percentualIndicacao: ['', [Validators.min(0), Validators.max(100)]],
       medicoSolic: ['', Validators.required],
       nfSerie: ['', [Validators.required, Validators.maxLength(10)]], // Assuming max length for NF series
       nfNumero: ['', [Validators.required, Validators.maxLength(20)]], // Assuming max length for NF number
@@ -373,6 +374,7 @@ export class TicketsFormComponent implements OnInit {
       nomePagador: 'Pagador',
       cpfPagador: 'CPF Pagador',
       medicoExec: 'Médico Executante',
+      percentualIndicacao: 'Percentual Indicação',
       medicoSolic: 'Médico Solicitante',
       nfSerie: 'Série NF',
       nfNumero: 'Nº NF',
@@ -474,6 +476,7 @@ export class TicketsFormComponent implements OnInit {
         nomePaciente: formValue.nomePaciente,
         nomePagador: formValue.nomePagador,
         cpfPagador: cleanCpf,
+        percentualIndicacao: formValue.percentualIndicacao,
         medicoExec: selectedMedicoExec!,
         medicoSolic: selectedMedicoSolic!,
         nfSerie: formValue.nfSerie,
