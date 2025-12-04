@@ -4,15 +4,28 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ItemService } from '../item.service';
 import { Item } from '../item.model';
-import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
-import { ValidationFeedbackComponent } from '../../../components/validation-feedback/validation-feedback.component';
+import { ButtonModule, CardModule, FormModule, GridModule, AlertModule } from '@coreui/angular';
+import { IconModule } from '@coreui/icons-angular';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-itens-form',
   templateUrl: './itens-form.component.html',
   styleUrls: ['./itens-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, CardModule, GridModule, FormModule, ButtonModule, ValidationFeedbackComponent]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    CardModule,
+    GridModule,
+    FormModule,
+    ButtonModule,
+    AlertModule,
+    IconModule
+  ]
 })
 export class ItensFormComponent implements OnInit {
 
@@ -57,14 +70,70 @@ export class ItensFormComponent implements OnInit {
       const itemData: Item = this.itemForm.value;
       if (this.isEditMode) {
         itemData.id = this.itemId;
-        this.itemService.updateItem(itemData).subscribe(() => {
+      }
+
+      const handleErrors = catchError((error: HttpErrorResponse) => {
+        if (error.status === 400 && error.error && typeof error.error === 'object') {
+          for (const key in error.error) {
+            if (this.itemForm.controls[key]) {
+              this.itemForm.controls[key].setErrors({ backend: error.error[key] });
+            }
+          }
+        }
+        return throwError(() => error);
+      });
+
+      if (this.isEditMode) {
+        this.itemService.updateItem(itemData).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/itens']);
         });
       } else {
-        this.itemService.createItem(itemData).subscribe(() => {
+        this.itemService.createItem(itemData).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/itens']);
         });
       }
+    } else {
+      this.itemForm.markAllAsTouched();
+    }
+  }
+
+  getFormErrors(): string[] {
+    const errors: string[] = [];
+    if (this.itemForm.invalid && (this.itemForm.dirty || this.itemForm.touched)) {
+      Object.keys(this.itemForm.controls).forEach(key => {
+        const control = this.itemForm.get(key);
+        if (control && control.invalid && (control.dirty || control.touched)) {
+          const controlErrors = control.errors;
+          if (controlErrors) {
+            Object.keys(controlErrors).forEach(errorKey => {
+              const errorMessage = this.getErrorMessage(key, errorKey, controlErrors[errorKey]);
+              if (errorMessage) {
+                errors.push(errorMessage);
+              }
+            });
+          }
+        }
+      });
+    }
+    return errors;
+  }
+
+  getErrorMessage(controlName: string, errorName: string, errorValue: any): string | null {
+    const fieldNames: { [key: string]: string } = {
+      tipo: 'Tipo',
+      descricao: 'Descrição',
+      valor: 'Valor'
+    };
+
+    const fieldName = fieldNames[controlName] || controlName;
+
+    switch (errorName) {
+      case 'required':
+        return `${fieldName} é obrigatório.`;
+      case 'backend':
+        return `${fieldName}: ${errorValue}`;
+      default:
+        return `${fieldName} é inválido.`;
     }
   }
 }

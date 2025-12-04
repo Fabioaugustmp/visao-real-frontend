@@ -1,23 +1,72 @@
-<c-row>
-  <c-col>
-    <c-card>
-      <c-card-header>
-        {{ isEditMode ? 'Editar Bandeira' : 'Nova Bandeira' }}
-      </c-card-header>
-      <c-card-body>
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <div class="mb-3">
-            <label cLabel for="bandeira">Bandeira</label>
-            <select cSelect id="bandeira" formControlName="bandeira" [class.is-invalid]="form.get('bandeira')?.invalid && (form.get('bandeira')?.dirty || form.get('bandeira')?.touched)">
-              <option [ngValue]="null" disabled>Selecione uma bandeira</option>
-              <option *ngFor="let enumValue of bandeiraEnums" [ngValue]="enumValue">{{ enumValue }}</option>
-            </select>
-            <app-validation-feedback [control]="form.get('bandeira')"></app-validation-feedback>
-          </div>
-          <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
-          <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
-        </form>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header class="d-flex justify-content-between align-items-center">
+          <strong>{{ isEditMode ? 'Editar Bandeira' : 'Nova Bandeira' }}</strong>
+          <span *ngIf="isEditMode" class="badge bg-info-subtle text-info-emphasis">
+            <c-icon name="cilPencil" size="sm" class="me-1"></c-icon>
+            Modo Edição
+          </span>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+            <!-- Validation Alert -->
+            <c-alert color="danger" *ngIf="getFormErrors().length > 0" [dismissible]="true" class="mb-4">
+              <div class="d-flex align-items-start">
+                <c-icon name="cilWarning" size="lg" class="me-2 flex-shrink-0"></c-icon>
+                <div>
+                  <strong>Erros de Validação</strong>
+                  <ul class="mb-0 mt-2">
+                    <li *ngFor="let error of getFormErrors()">{{ error }}</li>
+                  </ul>
+                </div>
+              </div>
+            </c-alert>
+
+            <!-- Dados da Bandeira -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilFlagAlt" class="me-2"></c-icon>
+                <strong>Dados da Bandeira</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="12">
+                    <label cLabel for="bandeira" class="form-label">
+                      Bandeira <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="bandeira" formControlName="bandeira"
+                      [ngClass]="{'is-invalid': form.get('bandeira')?.invalid && (form.get('bandeira')?.dirty || form.get('bandeira')?.touched)}">
+                      <option [ngValue]="null" disabled>Selecione uma bandeira</option>
+                      <option *ngFor="let enumValue of bandeiraEnums" [ngValue]="enumValue">{{ enumValue }}</option>
+                    </select>
+                    <div
+                      *ngIf="form.get('bandeira')?.invalid && (form.get('bandeira')?.dirty || form.get('bandeira')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="form.get('bandeira')?.errors?.['required']">Bandeira é obrigatória</span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+              <button cButton color="secondary" variant="outline" (click)="cancelar()" type="button">
+                <c-icon name="cilX" class="me-1"></c-icon>
+                Cancelar
+              </button>
+              <button cButton color="primary" type="submit" [disabled]="form.invalid">
+                <c-icon name="cilCheckCircle" class="me-1"></c-icon>
+                {{ isEditMode ? 'Atualizar Bandeira' : 'Salvar Bandeira' }}
+              </button>
+            </div>
+
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

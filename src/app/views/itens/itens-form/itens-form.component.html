@@ -2,36 +2,93 @@
   <c-row>
     <c-col xs="12">
       <c-card class="mb-4">
-        <c-card-header>
+        <c-card-header class="d-flex justify-content-between align-items-center">
           <strong>{{ isEditMode ? 'Editar Item' : 'Novo Item' }}</strong>
+          <span *ngIf="isEditMode" class="badge bg-info-subtle text-info-emphasis">
+            <c-icon name="cilPencil" size="sm" class="me-1"></c-icon>
+            Modo Edição
+          </span>
         </c-card-header>
         <c-card-body>
           <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-              <label cLabel for="tipo">Tipo</label>
-              <select cSelect id="tipo" formControlName="tipo"
-                [ngClass]="{ 'is-invalid': itemForm.get('tipo')?.invalid && (itemForm.get('tipo')?.dirty || itemForm.get('tipo')?.touched) }">
-                <option value="" disabled>Selecione o Tipo</option>
-                <option value="Procedimento">Procedimento</option>
-                <option value="MAT/MED">MAT/MED (Material, Medicamento, Outros)</option>
-              </select>
-              <app-validation-feedback [control]="itemForm.get('tipo')"></app-validation-feedback>
-            </div>
-            <div class="mb-3">
-              <label cLabel for="descricao">Descrição</label>
-              <input cFormControl id="descricao" formControlName="descricao"
-                [ngClass]="{ 'is-invalid': itemForm.get('descricao')?.invalid && (itemForm.get('descricao')?.dirty || itemForm.get('descricao')?.touched) }">
-              <app-validation-feedback [control]="itemForm.get('descricao')"></app-validation-feedback>
-            </div>
-            <div class="mb-3">
-              <label cLabel for="valor">Valor</label>
-              <input cFormControl id="valor" formControlName="valor" type="number"
-                [ngClass]="{ 'is-invalid': itemForm.get('valor')?.invalid && (itemForm.get('valor')?.dirty || itemForm.get('valor')?.touched) }">
-              <app-validation-feedback [control]="itemForm.get('valor')"></app-validation-feedback>
+
+            <!-- Validation Alert -->
+            <c-alert color="danger" *ngIf="getFormErrors().length > 0" [dismissible]="true" class="mb-4">
+              <div class="d-flex align-items-start">
+                <c-icon name="cilWarning" size="lg" class="me-2 flex-shrink-0"></c-icon>
+                <div>
+                  <strong>Erros de Validação</strong>
+                  <ul class="mb-0 mt-2">
+                    <li *ngFor="let error of getFormErrors()">{{ error }}</li>
+                  </ul>
+                </div>
+              </div>
+            </c-alert>
+
+            <!-- Dados do Item -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilBox" class="me-2"></c-icon>
+                <strong>Dados do Item</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="6">
+                    <label cLabel for="tipo" class="form-label">
+                      Tipo <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="tipo" formControlName="tipo"
+                      [ngClass]="{ 'is-invalid': itemForm.get('tipo')?.invalid && (itemForm.get('tipo')?.dirty || itemForm.get('tipo')?.touched) }">
+                      <option value="" disabled>Selecione o Tipo</option>
+                      <option value="Procedimento">Procedimento</option>
+                      <option value="MAT/MED">MAT/MED (Material, Medicamento, Outros)</option>
+                    </select>
+                    <div
+                      *ngIf="itemForm.get('tipo')?.invalid && (itemForm.get('tipo')?.dirty || itemForm.get('tipo')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="itemForm.get('tipo')?.errors?.['required']">Tipo é obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="valor" class="form-label">
+                      Valor (R$) <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="valor" formControlName="valor" type="number" placeholder="0.00"
+                      [ngClass]="{ 'is-invalid': itemForm.get('valor')?.invalid && (itemForm.get('valor')?.dirty || itemForm.get('valor')?.touched) }">
+                    <div
+                      *ngIf="itemForm.get('valor')?.invalid && (itemForm.get('valor')?.dirty || itemForm.get('valor')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="itemForm.get('valor')?.errors?.['required']">Valor é obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="12">
+                    <label cLabel for="descricao" class="form-label">
+                      Descrição <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="descricao" formControlName="descricao" placeholder="Descrição detalhada do item"
+                      [ngClass]="{ 'is-invalid': itemForm.get('descricao')?.invalid && (itemForm.get('descricao')?.dirty || itemForm.get('descricao')?.touched) }">
+                    <div
+                      *ngIf="itemForm.get('descricao')?.invalid && (itemForm.get('descricao')?.dirty || itemForm.get('descricao')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="itemForm.get('descricao')?.errors?.['required']">Descrição é obrigatória</span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+              <button cButton color="secondary" variant="outline" [routerLink]="['/itens']" type="button">
+                <c-icon name="cilX" class="me-1"></c-icon>
+                Cancelar
+              </button>
+              <button cButton color="primary" type="submit" [disabled]="itemForm.invalid">
+                <c-icon name="cilCheckCircle" class="me-1"></c-icon>
+                {{ isEditMode ? 'Atualizar Item' : 'Salvar Item' }}
+              </button>
             </div>
 
-            <button cButton color="primary" type="submit" [disabled]="itemForm.invalid">Salvar</button>
-            <button cButton color="secondary" [routerLink]="['/itens']">Cancelar</button>
           </form>
         </c-card-body>
       </c-card>

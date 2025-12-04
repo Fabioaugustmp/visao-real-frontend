@@ -8,18 +8,37 @@ import { Empresa } from '../../empresas/empresa.model';
 import { Usuario } from '../../usuarios/usuario.model';
 import { EmpresaService } from '../../empresas/empresa.service';
 import { UsuarioService } from '../../usuarios/usuario.service';
-import { ButtonModule, CardModule, FormModule, GridModule, AlertModule } from '@coreui/angular';
-import { ValidationFeedbackComponent } from '../../../components/validation-feedback/validation-feedback.component';
+import {
+  ButtonModule,
+  CardModule,
+  FormModule,
+  GridModule,
+  AlertModule
+} from '@coreui/angular';
+import { IconModule } from '@coreui/icons-angular';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-medicos-form',
   templateUrl: './medicos-form.component.html',
   styleUrls: ['./medicos-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, CardModule, GridModule, FormModule, ButtonModule, ValidationFeedbackComponent, AlertModule]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    CardModule,
+    GridModule,
+    FormModule,
+    ButtonModule,
+    AlertModule,
+    IconModule,
+    NgxMaskDirective
+  ],
+  providers: [provideNgxMask()]
 })
 export class MedicosFormComponent implements OnInit {
 
@@ -53,8 +72,8 @@ export class MedicosFormComponent implements OnInit {
       dataNasc: ['', Validators.required],
       cpf: ['', Validators.required],
       taxaImposto: ['', Validators.required],
-      empresa: [null, Validators.required]
-      // usuario: [null, Validators.required]
+      empresa: [null, Validators.required],
+      usuario: [null, Validators.required]
     });
   }
 
@@ -78,8 +97,9 @@ export class MedicosFormComponent implements OnInit {
         this.medicoService.getMedico(this.medicoId).subscribe(medico => {
           this.medicoForm.patchValue({
             ...medico,
-            empresa: medico.empresa.id
-            // usuario: medico.usuario.id
+            empresa: medico.empresa.id,
+            usuario: medico.usuario.id,
+            dataNasc: medico.dataNasc ? new Date(medico.dataNasc).toISOString().substring(0, 10) : ''
           });
         });
       }
@@ -124,6 +144,8 @@ export class MedicosFormComponent implements OnInit {
           this.router.navigate(['/medicos']);
         });
       }
+    } else {
+      this.medicoForm.markAllAsTouched();
     }
   }
 
@@ -174,4 +196,3 @@ export class MedicosFormComponent implements OnInit {
     }
   }
 }
-

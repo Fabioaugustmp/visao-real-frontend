@@ -1,57 +1,144 @@
-<c-row>
-  <c-col>
-    <c-card>
-      <c-card-header>
-        {{ isEditMode ? 'Editar Tarifário' : 'Novo Tarifário' }}
-      </c-card-header>
-      <c-card-body>
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <div class="mb-3">
-            <label cLabel for="titulo">Título</label>
-            <input cFormControl id="titulo" formControlName="titulo"
-              [ngClass]="{'is-invalid': form.get('titulo')?.invalid && (form.get('titulo')?.dirty || form.get('titulo')?.touched)}" />
-            <app-validation-feedback [control]="form.get('titulo')"></app-validation-feedback>
-          </div>
-          <div class="mb-3">
-            <label cLabel for="medico">Médico</label>
-            <!-- Show medico name as read-only text in edit mode -->
-            <input *ngIf="isEditMode" cFormControl type="text" [value]="medicoNome" disabled class="form-control">
-            <!-- Show dropdown in create mode -->
-            <select *ngIf="!isEditMode" cSelect id="medico" formControlName="medico"
-              [ngClass]="{'is-invalid': form.get('medico')?.invalid && (form.get('medico')?.dirty || form.get('medico')?.touched)}">
-              <option [ngValue]="null" disabled selected>Selecione um médico</option>
-              <option *ngFor="let medico of medicos" [ngValue]="medico.id">{{ medico.nome }} - {{ medico.crm }}</option>
-            </select>
-            <app-validation-feedback [control]="form.get('medico')"></app-validation-feedback>
-          </div>
-          <div class="mb-3">
-            <label cLabel for="bandeira">Bandeira</label>
-            <select cSelect id="bandeira" formControlName="bandeira"
-              [ngClass]="{'is-invalid': form.get('bandeira')?.invalid && (form.get('bandeira')?.dirty || form.get('bandeira')?.touched)}">
-              <option *ngFor="let bandeira of bandeiras" [value]="bandeira.id">{{ bandeira.bandeira }}</option>
-            </select>
-            <app-validation-feedback [control]="form.get('bandeira')"></app-validation-feedback>
-          </div>
-          <div class="mb-3">
-            <label cLabel for="percentualTarifa">Percentual Tarifa</label>
-            <input cFormControl id="percentualTarifa" formControlName="percentualTarifa" type="number"
-              [ngClass]="{'is-invalid': form.get('percentualTarifa')?.invalid && (form.get('percentualTarifa')?.dirty || form.get('percentualTarifa')?.touched)}" />
-            <app-validation-feedback [control]="form.get('percentualTarifa')"></app-validation-feedback>
-          </div>
-          <div class="mb-3">
-            <label cLabel for="dataInicioVigencia">Início Vigência</label>
-            <input cFormControl id="dataInicioVigencia" formControlName="dataInicioVigencia" type="date"
-              [ngClass]="{'is-invalid': form.get('dataInicioVigencia')?.invalid && (form.get('dataInicioVigencia')?.dirty || form.get('dataInicioVigencia')?.touched)}" />
-            <app-validation-feedback [control]="form.get('dataInicioVigencia')"></app-validation-feedback>
-          </div>
-          <div class="mb-3">
-            <label cLabel for="dataFimVigencia">Fim Vigência</label>
-            <input cFormControl id="dataFimVigencia" formControlName="dataFimVigencia" type="date" />
-          </div>
-          <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
-          <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
-        </form>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header class="d-flex justify-content-between align-items-center">
+          <strong>{{ isEditMode ? 'Editar Tarifário' : 'Novo Tarifário' }}</strong>
+          <span *ngIf="isEditMode" class="badge bg-info-subtle text-info-emphasis">
+            <c-icon name="cilPencil" size="sm" class="me-1"></c-icon>
+            Modo Edição
+          </span>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+            <!-- Validation Alert -->
+            <c-alert color="danger" *ngIf="getFormErrors().length > 0" [dismissible]="true" class="mb-4">
+              <div class="d-flex align-items-start">
+                <c-icon name="cilWarning" size="lg" class="me-2 flex-shrink-0"></c-icon>
+                <div>
+                  <strong>Erros de Validação</strong>
+                  <ul class="mb-0 mt-2">
+                    <li *ngFor="let error of getFormErrors()">{{ error }}</li>
+                  </ul>
+                </div>
+              </div>
+            </c-alert>
+
+            <!-- Dados do Tarifário -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilMoney" class="me-2"></c-icon>
+                <strong>Dados do Tarifário</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="6">
+                    <label cLabel for="titulo" class="form-label">
+                      Título <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="titulo" formControlName="titulo" placeholder="Título do tarifário"
+                      [ngClass]="{'is-invalid': form.get('titulo')?.invalid && (form.get('titulo')?.dirty || form.get('titulo')?.touched)}">
+                    <div
+                      *ngIf="form.get('titulo')?.invalid && (form.get('titulo')?.dirty || form.get('titulo')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="form.get('titulo')?.errors?.['required']">Título é obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="percentualTarifa" class="form-label">
+                      Percentual Tarifa (%) <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="percentualTarifa" formControlName="percentualTarifa" type="number" step="0.01" placeholder="0.00"
+                      [ngClass]="{'is-invalid': form.get('percentualTarifa')?.invalid && (form.get('percentualTarifa')?.dirty || form.get('percentualTarifa')?.touched)}">
+                    <div
+                      *ngIf="form.get('percentualTarifa')?.invalid && (form.get('percentualTarifa')?.dirty || form.get('percentualTarifa')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="form.get('percentualTarifa')?.errors?.['required']">Percentual é obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="medico" class="form-label">
+                      Médico <span class="text-danger">*</span>
+                    </label>
+                    <!-- Show medico name as read-only text in edit mode -->
+                    <input *ngIf="isEditMode" cFormControl type="text" [value]="medicoNome" disabled class="form-control">
+                    <!-- Show dropdown in create mode -->
+                    <select *ngIf="!isEditMode" cSelect id="medico" formControlName="medico"
+                      [ngClass]="{'is-invalid': form.get('medico')?.invalid && (form.get('medico')?.dirty || form.get('medico')?.touched)}">
+                      <option [ngValue]="null" disabled selected>Selecione um médico</option>
+                      <option *ngFor="let medico of medicos" [ngValue]="medico.id">{{ medico.nome }} - {{ medico.crm }}</option>
+                    </select>
+                    <div
+                      *ngIf="form.get('medico')?.invalid && (form.get('medico')?.dirty || form.get('medico')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="form.get('medico')?.errors?.['required']">Médico é obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="bandeira" class="form-label">
+                      Bandeira <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="bandeira" formControlName="bandeira"
+                      [ngClass]="{'is-invalid': form.get('bandeira')?.invalid && (form.get('bandeira')?.dirty || form.get('bandeira')?.touched)}">
+                      <option [ngValue]="null" disabled selected>Selecione uma bandeira</option>
+                      <option *ngFor="let bandeira of bandeiras" [value]="bandeira.id">{{ bandeira.bandeira }}</option>
+                    </select>
+                    <div
+                      *ngIf="form.get('bandeira')?.invalid && (form.get('bandeira')?.dirty || form.get('bandeira')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="form.get('bandeira')?.errors?.['required']">Bandeira é obrigatória</span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
+
+            <!-- Vigência -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilCalendar" class="me-2"></c-icon>
+                <strong>Vigência</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="6">
+                    <label cLabel for="dataInicioVigencia" class="form-label">
+                      Início Vigência <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="dataInicioVigencia" formControlName="dataInicioVigencia" type="date"
+                      [ngClass]="{'is-invalid': form.get('dataInicioVigencia')?.invalid && (form.get('dataInicioVigencia')?.dirty || form.get('dataInicioVigencia')?.touched)}">
+                    <div
+                      *ngIf="form.get('dataInicioVigencia')?.invalid && (form.get('dataInicioVigencia')?.dirty || form.get('dataInicioVigencia')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="form.get('dataInicioVigencia')?.errors?.['required']">Início da vigência é obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="dataFimVigencia" class="form-label">
+                      Fim Vigência
+                    </label>
+                    <input cFormControl id="dataFimVigencia" formControlName="dataFimVigencia" type="date">
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+              <button cButton color="secondary" variant="outline" (click)="cancelar()" type="button">
+                <c-icon name="cilX" class="me-1"></c-icon>
+                Cancelar
+              </button>
+              <button cButton color="primary" type="submit" [disabled]="form.invalid">
+                <c-icon name="cilCheckCircle" class="me-1"></c-icon>
+                {{ isEditMode ? 'Atualizar Tarifário' : 'Salvar Tarifário' }}
+              </button>
+            </div>
+
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>
