@@ -2,32 +2,116 @@
   <c-row>
     <c-col xs="12">
       <c-card class="mb-4">
-        <c-card-header>
+        <c-card-header class="d-flex justify-content-between align-items-center">
           <strong>{{ isEditMode ? 'Editar Empresa' : 'Nova Empresa' }}</strong>
+          <span *ngIf="isEditMode" class="badge bg-info-subtle text-info-emphasis">
+            <c-icon name="cilPencil" size="sm" class="me-1"></c-icon>
+            Modo Edição
+          </span>
         </c-card-header>
         <c-card-body>
           <form [formGroup]="empresaForm" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-              <label cLabel for="cnpj">CNPJ</label>
-              <input cFormControl id="cnpj" formControlName="cnpj" type="text">
-            </div>
-            <div class="mb-3">
-              <label cLabel for="razaoSocial">Razão Social</label>
-              <input cFormControl id="razaoSocial" formControlName="razaoSocial">
-            </div>
-            <div class="mb-3">
-              <label cLabel for="idContratoCartao">Contrato Cartão</label>
-              <input cFormControl id="idContratoCartao" formControlName="idContratoCartao" type="number">
-            </div>
-            <div class="mb-3">
-              <label cLabel for="contador">Contador</label>
-              <select cSelect id="contador" formControlName="contador">
-                <option *ngFor="let contador of contadores" [value]="contador.id">{{ contador.nome }}</option>
-              </select>
+
+            <!-- Validation Alert -->
+            <c-alert color="danger" *ngIf="getFormErrors().length > 0" [dismissible]="true" class="mb-4">
+              <div class="d-flex align-items-start">
+                <c-icon name="cilWarning" size="lg" class="me-2 flex-shrink-0"></c-icon>
+                <div>
+                  <strong>Erros de Validação</strong>
+                  <ul class="mb-0 mt-2">
+                    <li *ngFor="let error of getFormErrors()">{{ error }}</li>
+                  </ul>
+                </div>
+              </div>
+            </c-alert>
+
+            <!-- Dados da Empresa -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilBuilding" class="me-2"></c-icon>
+                <strong>Dados da Empresa</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="6">
+                    <label cLabel for="cnpj" class="form-label">
+                      CNPJ <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="cnpj" formControlName="cnpj" mask="00.000.000/0000-00" placeholder="00.000.000/0000-00"
+                      [ngClass]="{'is-invalid': empresaForm.get('cnpj')?.invalid && (empresaForm.get('cnpj')?.dirty || empresaForm.get('cnpj')?.touched)}">
+                    <div
+                      *ngIf="empresaForm.get('cnpj')?.invalid && (empresaForm.get('cnpj')?.dirty || empresaForm.get('cnpj')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="empresaForm.get('cnpj')?.errors?.['required']">CNPJ é obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="razaoSocial" class="form-label">
+                      Razão Social <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="razaoSocial" formControlName="razaoSocial" placeholder="Razão Social da empresa"
+                      [ngClass]="{'is-invalid': empresaForm.get('razaoSocial')?.invalid && (empresaForm.get('razaoSocial')?.dirty || empresaForm.get('razaoSocial')?.touched)}">
+                    <div
+                      *ngIf="empresaForm.get('razaoSocial')?.invalid && (empresaForm.get('razaoSocial')?.dirty || empresaForm.get('razaoSocial')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="empresaForm.get('razaoSocial')?.errors?.['required']">Razão Social é obrigatória</span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
+
+            <!-- Contrato & Contador -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilFile" class="me-2"></c-icon>
+                <strong>Contrato & Contador</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="6">
+                    <label cLabel for="idContratoCartao" class="form-label">
+                      Contrato Cartão <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="idContratoCartao" formControlName="idContratoCartao" type="number" placeholder="ID do contrato"
+                      [ngClass]="{'is-invalid': empresaForm.get('idContratoCartao')?.invalid && (empresaForm.get('idContratoCartao')?.dirty || empresaForm.get('idContratoCartao')?.touched)}">
+                    <div
+                      *ngIf="empresaForm.get('idContratoCartao')?.invalid && (empresaForm.get('idContratoCartao')?.dirty || empresaForm.get('idContratoCartao')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="empresaForm.get('idContratoCartao')?.errors?.['required']">Contrato Cartão é obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="contador" class="form-label">
+                      Contador <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="contador" formControlName="contador"
+                      [ngClass]="{'is-invalid': empresaForm.get('contador')?.invalid && (empresaForm.get('contador')?.dirty || empresaForm.get('contador')?.touched)}">
+                      <option [ngValue]="null">Selecione um contador</option>
+                      <option *ngFor="let contador of contadores" [value]="contador.id">{{ contador.nome }}</option>
+                    </select>
+                    <div
+                      *ngIf="empresaForm.get('contador')?.invalid && (empresaForm.get('contador')?.dirty || empresaForm.get('contador')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="empresaForm.get('contador')?.errors?.['required']">Contador é obrigatório</span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+              <button cButton color="secondary" variant="outline" [routerLink]="['/empresas']" type="button">
+                <c-icon name="cilX" class="me-1"></c-icon>
+                Cancelar
+              </button>
+              <button cButton color="primary" type="submit" [disabled]="empresaForm.invalid">
+                <c-icon name="cilCheckCircle" class="me-1"></c-icon>
+                {{ isEditMode ? 'Atualizar Empresa' : 'Salvar Empresa' }}
+              </button>
             </div>
 
-            <button cButton color="primary" type="submit" [disabled]="empresaForm.invalid">Salvar</button>
-            <button cButton color="secondary" [routerLink]="['/empresas']">Cancelar</button>
           </form>
         </c-card-body>
       </c-card>

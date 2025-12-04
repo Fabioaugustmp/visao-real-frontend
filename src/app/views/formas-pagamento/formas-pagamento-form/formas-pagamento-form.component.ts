@@ -6,7 +6,11 @@ import { FormaPagamento, NomeFormaPagamento } from '../forma-pagamento.model';
 import { Parcelamento } from '../../parcelamentos/parcelamento.model';
 import { ParcelamentoService } from '../../parcelamentos/parcelamento.service';
 import { CommonModule } from '@angular/common';
-import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
+import { ButtonModule, CardModule, FormModule, GridModule, AlertModule } from '@coreui/angular';
+import { IconModule } from '@coreui/icons-angular';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-formas-pagamento-form',
@@ -20,16 +24,18 @@ import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angula
     CardModule,
     GridModule,
     FormModule,
-    ButtonModule
+    ButtonModule,
+    AlertModule,
+    IconModule
   ]
 })
 export class FormasPagamentoFormComponent implements OnInit {
 
-  form: FormGroup;
+  form!: FormGroup;
   isEditMode = false;
   formaPagamentoId: number | null = null;
   nomeFormaPagamentoKeys: (keyof typeof NomeFormaPagamento)[];
-  NomeFormaPagamento = NomeFormaPagamento; // Make enum available in template
+  NomeFormaPagamento = NomeFormaPagamento;
   parcelamentos: Parcelamento[] = [];
 
   constructor(
@@ -40,12 +46,7 @@ export class FormasPagamentoFormComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.nomeFormaPagamentoKeys = Object.keys(NomeFormaPagamento) as (keyof typeof NomeFormaPagamento)[];
-    this.form = this.fb.group({
-      id: [null],
-      nome: ['', Validators.required], // New field
-      descricao: ['', Validators.required],
-      idParcelamento: [null, Validators.required]
-    });
+    this.initForm();
   }
 
   ngOnInit(): void {
@@ -59,6 +60,15 @@ export class FormasPagamentoFormComponent implements OnInit {
     }
   }
 
+  initForm(): void {
+    this.form = this.fb.group({
+      id: [null],
+      nome: ['', Validators.required],
+      descricao: ['', Validators.required],
+      idParcelamento: [null, Validators.required]
+    });
+  }
+
   loadParcelamentos(): void {
     this.parcelamentoService.getParcelamentos().subscribe(data => {
       this.parcelamentos = data;
@@ -68,15 +78,69 @@ export class FormasPagamentoFormComponent implements OnInit {
   onSubmit(): void {
     if (this.form.valid) {
       const formaPagamento: FormaPagamento = this.form.value;
+
+      const handleErrors = catchError((error: HttpErrorResponse) => {
+        if (error.status === 400 && error.error && typeof error.error === 'object') {
+          for (const key in error.error) {
+            if (this.form.controls[key]) {
+              this.form.controls[key].setErrors({ backend: error.error[key] });
+            }
+          }
+        }
+        return throwError(() => error);
+      });
+
       if (this.isEditMode) {
-        this.formaPagamentoService.updateFormaPagamento(formaPagamento).subscribe(() => {
+        this.formaPagamentoService.updateFormaPagamento(formaPagamento).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/formas-pagamento']);
         });
       } else {
-        this.formaPagamentoService.createFormaPagamento(formaPagamento).subscribe(() => {
+        this.formaPagamentoService.createFormaPagamento(formaPagamento).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/formas-pagamento']);
         });
       }
+    } else {
+      this.form.markAllAsTouched();
+    }
+  }
+
+  getFormErrors(): string[] {
+    const errors: string[] = [];
+    if (this.form.invalid && (this.form.dirty || this.form.touched)) {
+      Object.keys(this.form.controls).forEach(key => {
+        const control = this.form.get(key);
+        if (control && control.invalid && (control.dirty || control.touched)) {
+          const controlErrors = control.errors;
+          if (controlErrors) {
+            Object.keys(controlErrors).forEach(errorKey => {
+              const errorMessage = this.getErrorMessage(key, errorKey, controlErrors[errorKey]);
+              if (errorMessage) {
+                errors.push(errorMessage);
+              }
+            });
+          }
+        }
+      });
+    }
+    return errors;
+  }
+
+  getErrorMessage(controlName: string, errorName: string, errorValue: any): string | null {
+    const fieldNames: { [key: string]: string } = {
+      nome: 'Nome',
+      descricao: 'Descrição',
+      idParcelamento: 'Parcelamento'
+    };
+
+    const fieldName = fieldNames[controlName] || controlName;
+
+    switch (errorName) {
+      case 'required':
+        return `${fieldName} é obrigatório.`;
+      case 'backend':
+        return `${fieldName}: ${errorValue}`;
+      default:
+        return `${fieldName} é inválido.`;
     }
   }
 

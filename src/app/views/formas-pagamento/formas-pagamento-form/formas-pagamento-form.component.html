@@ -1,31 +1,99 @@
-<c-row>
-  <c-col>
-    <c-card>
-      <c-card-header>
-        {{ isEditMode ? 'Editar Forma de Pagamento' : 'Nova Forma de Pagamento' }}
-      </c-card-header>
-      <c-card-body>
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <div class="mb-3">
-            <label cLabel for="nome">Nome</label>
-            <select cSelect id="nome" formControlName="nome">
-              <option *ngFor="let nome of nomeFormaPagamentoKeys" [value]="nome">{{ NomeFormaPagamento[nome] }}</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label cLabel for="descricao">Descrição</label>
-            <input cFormControl id="descricao" formControlName="descricao" />
-          </div>
-          <div class="mb-3">
-            <label cLabel for="idParcelamento">Parcelamento</label>
-            <select cSelect id="idParcelamento" formControlName="idParcelamento">
-              <option *ngFor="let parcelamento of parcelamentos" [value]="parcelamento.id">{{ parcelamento.descricao }} - {{ parcelamento.numeroDeParcelas }} Parcelas</option>
-            </select>
-          </div>
-          <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
-          <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
-        </form>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header class="d-flex justify-content-between align-items-center">
+          <strong>{{ isEditMode ? 'Editar Forma de Pagamento' : 'Nova Forma de Pagamento' }}</strong>
+          <span *ngIf="isEditMode" class="badge bg-info-subtle text-info-emphasis">
+            <c-icon name="cilPencil" size="sm" class="me-1"></c-icon>
+            Modo Edição
+          </span>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+            <!-- Validation Alert -->
+            <c-alert color="danger" *ngIf="getFormErrors().length > 0" [dismissible]="true" class="mb-4">
+              <div class="d-flex align-items-start">
+                <c-icon name="cilWarning" size="lg" class="me-2 flex-shrink-0"></c-icon>
+                <div>
+                  <strong>Erros de Validação</strong>
+                  <ul class="mb-0 mt-2">
+                    <li *ngFor="let error of getFormErrors()">{{ error }}</li>
+                  </ul>
+                </div>
+              </div>
+            </c-alert>
+
+            <!-- Dados da Forma de Pagamento -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilCreditCard" class="me-2"></c-icon>
+                <strong>Dados da Forma de Pagamento</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="6">
+                    <label cLabel for="nome" class="form-label">
+                      Nome <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="nome" formControlName="nome"
+                      [ngClass]="{'is-invalid': form.get('nome')?.invalid && (form.get('nome')?.dirty || form.get('nome')?.touched)}">
+                      <option value="" disabled>Selecione o nome</option>
+                      <option *ngFor="let nome of nomeFormaPagamentoKeys" [value]="nome">{{ NomeFormaPagamento[nome] }}</option>
+                    </select>
+                    <div
+                      *ngIf="form.get('nome')?.invalid && (form.get('nome')?.dirty || form.get('nome')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="form.get('nome')?.errors?.['required']">Nome é obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="idParcelamento" class="form-label">
+                      Parcelamento <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="idParcelamento" formControlName="idParcelamento"
+                      [ngClass]="{'is-invalid': form.get('idParcelamento')?.invalid && (form.get('idParcelamento')?.dirty || form.get('idParcelamento')?.touched)}">
+                      <option [ngValue]="null" disabled>Selecione o parcelamento</option>
+                      <option *ngFor="let parcelamento of parcelamentos" [value]="parcelamento.id">{{ parcelamento.descricao }} - {{ parcelamento.numeroDeParcelas }} Parcelas</option>
+                    </select>
+                    <div
+                      *ngIf="form.get('idParcelamento')?.invalid && (form.get('idParcelamento')?.dirty || form.get('idParcelamento')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="form.get('idParcelamento')?.errors?.['required']">Parcelamento é obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="12">
+                    <label cLabel for="descricao" class="form-label">
+                      Descrição <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="descricao" formControlName="descricao" placeholder="Descrição da forma de pagamento"
+                      [ngClass]="{'is-invalid': form.get('descricao')?.invalid && (form.get('descricao')?.dirty || form.get('descricao')?.touched)}">
+                    <div
+                      *ngIf="form.get('descricao')?.invalid && (form.get('descricao')?.dirty || form.get('descricao')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="form.get('descricao')?.errors?.['required']">Descrição é obrigatória</span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+              <button cButton color="secondary" variant="outline" (click)="cancelar()" type="button">
+                <c-icon name="cilX" class="me-1"></c-icon>
+                Cancelar
+              </button>
+              <button cButton color="primary" type="submit" [disabled]="form.invalid">
+                <c-icon name="cilCheckCircle" class="me-1"></c-icon>
+                {{ isEditMode ? 'Atualizar Forma de Pagamento' : 'Salvar Forma de Pagamento' }}
+              </button>
+            </div>
+
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

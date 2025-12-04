@@ -4,14 +4,28 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { GrupoService } from '../grupo.service';
 import { Grupo } from '../grupo.model';
-import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
+import { ButtonModule, CardModule, FormModule, GridModule, AlertModule } from '@coreui/angular';
+import { IconModule } from '@coreui/icons-angular';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-grupos-form',
   templateUrl: './grupos-form.component.html',
   styleUrls: ['./grupos-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, CardModule, GridModule, FormModule, ButtonModule]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    CardModule,
+    GridModule,
+    FormModule,
+    ButtonModule,
+    AlertModule,
+    IconModule
+  ]
 })
 export class GruposFormComponent implements OnInit {
 
@@ -54,14 +68,68 @@ export class GruposFormComponent implements OnInit {
       const grupoData: Grupo = this.grupoForm.value;
       if (this.isEditMode) {
         grupoData.id = this.grupoId;
-        this.grupoService.updateGrupo(grupoData).subscribe(() => {
+      }
+
+      const handleErrors = catchError((error: HttpErrorResponse) => {
+        if (error.status === 400 && error.error && typeof error.error === 'object') {
+          for (const key in error.error) {
+            if (this.grupoForm.controls[key]) {
+              this.grupoForm.controls[key].setErrors({ backend: error.error[key] });
+            }
+          }
+        }
+        return throwError(() => error);
+      });
+
+      if (this.isEditMode) {
+        this.grupoService.updateGrupo(grupoData).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/grupos']);
         });
       } else {
-        this.grupoService.createGrupo(grupoData).subscribe(() => {
+        this.grupoService.createGrupo(grupoData).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/grupos']);
         });
       }
+    } else {
+      this.grupoForm.markAllAsTouched();
+    }
+  }
+
+  getFormErrors(): string[] {
+    const errors: string[] = [];
+    if (this.grupoForm.invalid && (this.grupoForm.dirty || this.grupoForm.touched)) {
+      Object.keys(this.grupoForm.controls).forEach(key => {
+        const control = this.grupoForm.get(key);
+        if (control && control.invalid && (control.dirty || control.touched)) {
+          const controlErrors = control.errors;
+          if (controlErrors) {
+            Object.keys(controlErrors).forEach(errorKey => {
+              const errorMessage = this.getErrorMessage(key, errorKey, controlErrors[errorKey]);
+              if (errorMessage) {
+                errors.push(errorMessage);
+              }
+            });
+          }
+        }
+      });
+    }
+    return errors;
+  }
+
+  getErrorMessage(controlName: string, errorName: string, errorValue: any): string | null {
+    const fieldNames: { [key: string]: string } = {
+      nomeGrupo: 'Nome do Grupo'
+    };
+
+    const fieldName = fieldNames[controlName] || controlName;
+
+    switch (errorName) {
+      case 'required':
+        return `${fieldName} é obrigatório.`;
+      case 'backend':
+        return `${fieldName}: ${errorValue}`;
+      default:
+        return `${fieldName} é inválido.`;
     }
   }
 }

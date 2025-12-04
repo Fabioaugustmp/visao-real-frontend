@@ -4,16 +4,30 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ContadorService } from '../contador.service';
 import { Contador } from '../contador.model';
-import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
-import { EmpresaService } from '../../empresas/empresa.service'; // Import EmpresaService
-import { Empresa } from '../../empresas/empresa.model'; // Import Empresa model
+import { ButtonModule, CardModule, FormModule, GridModule, AlertModule } from '@coreui/angular';
+import { IconModule } from '@coreui/icons-angular';
+import { EmpresaService } from '../../empresas/empresa.service';
+import { Empresa } from '../../empresas/empresa.model';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-contadores-form',
   templateUrl: './contadores-form.component.html',
   styleUrls: ['./contadores-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, CardModule, GridModule, FormModule, ButtonModule]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    CardModule,
+    GridModule,
+    FormModule,
+    ButtonModule,
+    AlertModule,
+    IconModule
+  ]
 })
 export class ContadoresFormComponent implements OnInit {
 
@@ -23,19 +37,19 @@ export class ContadoresFormComponent implements OnInit {
   ufs: string[] = [
     'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
   ];
-  empresas: Empresa[] = []; // Property to store companies
+  empresas: Empresa[] = [];
 
   constructor(
     private fb: FormBuilder,
     private contadorService: ContadorService,
-    private empresaService: EmpresaService, // Inject EmpresaService
+    private empresaService: EmpresaService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.initForm();
-    this.loadEmpresas(); // Load companies
+    this.loadEmpresas();
     this.checkMode();
   }
 
@@ -64,7 +78,6 @@ export class ContadoresFormComponent implements OnInit {
         this.contadorId = +params['id'];
         this.contadorService.getContador(this.contadorId).subscribe(contador => {
           this.contadorForm.patchValue(contador);
-          // Patch empresaId if contador has an associated company
           if (contador.empresa && contador.empresa.id) {
             this.contadorForm.patchValue({ empresaId: contador.empresa.id });
           }
@@ -78,14 +91,78 @@ export class ContadoresFormComponent implements OnInit {
       const contadorData: Contador = this.contadorForm.value;
       if (this.isEditMode) {
         contadorData.id = this.contadorId;
-        this.contadorService.updateContador(contadorData).subscribe(() => {
+      }
+
+      const handleErrors = catchError((error: HttpErrorResponse) => {
+        if (error.status === 400 && error.error && typeof error.error === 'object') {
+          for (const key in error.error) {
+            if (this.contadorForm.controls[key]) {
+              this.contadorForm.controls[key].setErrors({ backend: error.error[key] });
+            }
+          }
+        }
+        return throwError(() => error);
+      });
+
+      if (this.isEditMode) {
+        this.contadorService.updateContador(contadorData).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/contadores']);
         });
       } else {
-        this.contadorService.createContador(contadorData).subscribe(() => {
+        this.contadorService.createContador(contadorData).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/contadores']);
         });
       }
+    } else {
+      this.contadorForm.markAllAsTouched();
+    }
+  }
+
+  getFormErrors(): string[] {
+    const errors: string[] = [];
+    if (this.contadorForm.invalid && (this.contadorForm.dirty || this.contadorForm.touched)) {
+      Object.keys(this.contadorForm.controls).forEach(key => {
+        const control = this.contadorForm.get(key);
+        if (control && control.invalid && (control.dirty || control.touched)) {
+          const controlErrors = control.errors;
+          if (controlErrors) {
+            Object.keys(controlErrors).forEach(errorKey => {
+              const errorMessage = this.getErrorMessage(key, errorKey, controlErrors[errorKey]);
+              if (errorMessage) {
+                errors.push(errorMessage);
+              }
+            });
+          }
+        }
+      });
+    }
+    return errors;
+  }
+
+  getErrorMessage(controlName: string, errorName: string, errorValue: any): string | null {
+    const fieldNames: { [key: string]: string } = {
+      nome: 'Nome',
+      email: 'Email',
+      crc: 'CRC',
+      crcUf: 'UF',
+      empresaId: 'Empresa'
+    };
+
+    const fieldName = fieldNames[controlName] || controlName;
+
+    switch (errorName) {
+      case 'required':
+        return `${fieldName} é obrigatório.`;
+      case 'email':
+        return `${fieldName} inválido.`;
+      case 'maxlength':
+        return `${fieldName} deve ter no máximo 11 caracteres.`;
+      case 'pattern':
+        return `${fieldName} deve ser alfanumérico.`;
+      case 'backend':
+        return `${fieldName}: ${errorValue}`;
+      default:
+        return `${fieldName} é inválido.`;
     }
   }
 }

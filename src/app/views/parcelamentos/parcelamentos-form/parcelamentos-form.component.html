@@ -1,23 +1,81 @@
-<c-row>
-  <c-col>
-    <c-card>
-      <c-card-header>
-        {{ isEditMode ? 'Editar Parcelamento' : 'Novo Parcelamento' }}
-      </c-card-header>
-      <c-card-body>
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <div class="mb-3">
-            <label cLabel for="descricao">Descrição</label>
-            <input cFormControl id="descricao" formControlName="descricao" type="text" />
-          </div>
-          <div class="mb-3">
-            <label cLabel for="numeroDeParcelas">Número de Parcelas</label>
-            <input cFormControl id="numeroDeParcelas" formControlName="numeroDeParcelas" type="number" />
-          </div>         
-          <button cButton color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
-          <button cButton color="secondary" class="ms-1" (click)="cancelar()">Cancelar</button>
-        </form>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header class="d-flex justify-content-between align-items-center">
+          <strong>{{ isEditMode ? 'Editar Parcelamento' : 'Novo Parcelamento' }}</strong>
+          <span *ngIf="isEditMode" class="badge bg-info-subtle text-info-emphasis">
+            <c-icon name="cilPencil" size="sm" class="me-1"></c-icon>
+            Modo Edição
+          </span>
+        </c-card-header>
+        <c-card-body>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+            <!-- Validation Alert -->
+            <c-alert color="danger" *ngIf="getFormErrors().length > 0" [dismissible]="true" class="mb-4">
+              <div class="d-flex align-items-start">
+                <c-icon name="cilWarning" size="lg" class="me-2 flex-shrink-0"></c-icon>
+                <div>
+                  <strong>Erros de Validação</strong>
+                  <ul class="mb-0 mt-2">
+                    <li *ngFor="let error of getFormErrors()">{{ error }}</li>
+                  </ul>
+                </div>
+              </div>
+            </c-alert>
+
+            <!-- Dados do Parcelamento -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilCalendar" class="me-2"></c-icon>
+                <strong>Dados do Parcelamento</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="8">
+                    <label cLabel for="descricao" class="form-label">
+                      Descrição <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="descricao" formControlName="descricao" type="text" placeholder="Ex: 10x sem juros"
+                      [ngClass]="{'is-invalid': form.get('descricao')?.invalid && (form.get('descricao')?.dirty || form.get('descricao')?.touched)}">
+                    <div
+                      *ngIf="form.get('descricao')?.invalid && (form.get('descricao')?.dirty || form.get('descricao')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="form.get('descricao')?.errors?.['required']">Descrição é obrigatória</span>
+                    </div>
+                  </c-col>
+                  <c-col md="4">
+                    <label cLabel for="numeroDeParcelas" class="form-label">
+                      Número de Parcelas <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="numeroDeParcelas" formControlName="numeroDeParcelas" type="number" placeholder="Ex: 10"
+                      [ngClass]="{'is-invalid': form.get('numeroDeParcelas')?.invalid && (form.get('numeroDeParcelas')?.dirty || form.get('numeroDeParcelas')?.touched)}">
+                    <div
+                      *ngIf="form.get('numeroDeParcelas')?.invalid && (form.get('numeroDeParcelas')?.dirty || form.get('numeroDeParcelas')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="form.get('numeroDeParcelas')?.errors?.['required']">Número de parcelas é obrigatório</span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+              <button cButton color="secondary" variant="outline" (click)="cancelar()" type="button">
+                <c-icon name="cilX" class="me-1"></c-icon>
+                Cancelar
+              </button>
+              <button cButton color="primary" type="submit" [disabled]="form.invalid">
+                <c-icon name="cilCheckCircle" class="me-1"></c-icon>
+                {{ isEditMode ? 'Atualizar Parcelamento' : 'Salvar Parcelamento' }}
+              </button>
+            </div>
+
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

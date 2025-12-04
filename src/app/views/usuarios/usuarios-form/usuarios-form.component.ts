@@ -6,14 +6,28 @@ import { UsuarioService } from '../usuario.service';
 import { Usuario } from '../usuario.model';
 import { Perfil } from '../perfil.model';
 import { PerfilService } from '../perfil.service';
-import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
+import { ButtonModule, CardModule, FormModule, GridModule, AlertModule } from '@coreui/angular';
+import { IconModule } from '@coreui/icons-angular';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-usuarios-form',
   templateUrl: './usuarios-form.component.html',
   styleUrls: ['./usuarios-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, CardModule, GridModule, FormModule, ButtonModule]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    CardModule,
+    GridModule,
+    FormModule,
+    ButtonModule,
+    AlertModule,
+    IconModule
+  ]
 })
 export class UsuariosFormComponent implements OnInit {
 
@@ -73,7 +87,10 @@ export class UsuariosFormComponent implements OnInit {
   onSubmit(): void {
     if (this.usuarioForm.valid) {
       const formValue = this.usuarioForm.value;
-      const selectedPerfis = this.perfis.filter(p => formValue.perfis.includes(p.id));
+      // Handle the case where perfis might be numbers (IDs) or objects depending on the select control behavior
+      const selectedPerfisIds = Array.isArray(formValue.perfis) ? formValue.perfis.map((p: any) => Number(p)) : [];
+      const selectedPerfis = this.perfis.filter(p => selectedPerfisIds.includes(p.id));
+
       const usuarioData: Usuario = {
         id: this.usuarioId,
         nome: formValue.nome,
@@ -82,19 +99,75 @@ export class UsuariosFormComponent implements OnInit {
         perfis: selectedPerfis,
         password: formValue.password,
         status: formValue.status,
-        dataCriacao: new Date() // This should be handled by the backend
+        dataCriacao: new Date() // Ideally backend handles this
       };
 
+      const handleErrors = catchError((error: HttpErrorResponse) => {
+        if (error.status === 400 && error.error && typeof error.error === 'object') {
+          for (const key in error.error) {
+            if (this.usuarioForm.controls[key]) {
+              this.usuarioForm.controls[key].setErrors({ backend: error.error[key] });
+            }
+          }
+        }
+        return throwError(() => error);
+      });
+
       if (this.isEditMode) {
-        this.usuarioService.updateUsuario(usuarioData).subscribe(() => {
+        this.usuarioService.updateUsuario(usuarioData).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/usuarios']);
         });
       } else {
-        this.usuarioService.createUsuario(usuarioData).subscribe(() => {
+        this.usuarioService.createUsuario(usuarioData).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/usuarios']);
         });
       }
+    } else {
+      this.usuarioForm.markAllAsTouched();
+    }
+  }
+
+  getFormErrors(): string[] {
+    const errors: string[] = [];
+    if (this.usuarioForm.invalid && (this.usuarioForm.dirty || this.usuarioForm.touched)) {
+      Object.keys(this.usuarioForm.controls).forEach(key => {
+        const control = this.usuarioForm.get(key);
+        if (control && control.invalid && (control.dirty || control.touched)) {
+          const controlErrors = control.errors;
+          if (controlErrors) {
+            Object.keys(controlErrors).forEach(errorKey => {
+              const errorMessage = this.getErrorMessage(key, errorKey, controlErrors[errorKey]);
+              if (errorMessage) {
+                errors.push(errorMessage);
+              }
+            });
+          }
+        }
+      });
+    }
+    return errors;
+  }
+
+  getErrorMessage(controlName: string, errorName: string, errorValue: any): string | null {
+    const fieldNames: { [key: string]: string } = {
+      nome: 'Nome',
+      login: 'Login',
+      email: 'Email',
+      perfis: 'Perfis',
+      password: 'Senha'
+    };
+
+    const fieldName = fieldNames[controlName] || controlName;
+
+    switch (errorName) {
+      case 'required':
+        return `${fieldName} é obrigatório.`;
+      case 'email':
+        return `${fieldName} inválido.`;
+      case 'backend':
+        return `${fieldName}: ${errorValue}`;
+      default:
+        return `${fieldName} é inválido.`;
     }
   }
 }
-

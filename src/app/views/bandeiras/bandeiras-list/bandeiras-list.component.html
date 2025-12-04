@@ -1,31 +1,171 @@
-<c-row>
-  <c-col>
-    <c-card>
-      <c-card-header>
-        Lista de Bandeiras
-      </c-card-header>
-      <c-card-body>
-        <button cButton color="primary" [routerLink]="['/bandeiras/nova']">Nova Bandeira</button>
-        <table cTable class="mt-3">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Bandeira</th>
-              <th scope="col">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let bandeira of bandeiras">
-              <th scope="row">{{ bandeira.id }}</th>
-              <td>{{ bandeira.bandeira }}</td>
-              <td>
-                <button cButton color="secondary" size="sm" [routerLink]="['/bandeiras/editar', bandeira.id]">Editar</button>
-                <button cButton color="danger" size="sm" class="ms-1" (click)="excluirBandeira(bandeira.id)">Excluir</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+<div class="animated fadeIn">
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4 shadow-sm border-0">
+        <c-card-header class="border-bottom-0 pt-4 pb-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-primary fw-bold">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                class="bi bi-flag me-2" viewBox="0 0 16 16">
+                <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001M14 1.221c-.22.078-.48.167-.766.255-.81.252-1.872.523-2.734.523-.886 0-1.592-.286-2.203-.534l-.008-.003C7.662 1.21 7.139 1 6.5 1c-.669 0-1.606.229-2.415.478A21.294 21.294 0 0 0 3 1.845v6.433c.22-.078.48-.167.766-.255C4.576 7.77 5.638 7.5 6.5 7.5c.847 0 1.548.28 2.158.525l.028.01C9.32 8.29 9.86 8.5 10.5 8.5c.668 0 1.606-.229 2.415-.478A21.317 21.317 0 0 0 14 7.655V1.222z"/>
+              </svg>
+              Bandeiras
+            </h4>
+            <button cButton color="primary" class="d-flex align-items-center shadow-sm"
+              [routerLink]="['/bandeiras/nova']">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+              </svg>
+              Nova Bandeira
+            </button>
+          </div>
+        </c-card-header>
+        <c-card-body class="p-4">
+
+          <!-- Filters Section -->
+          <div class="filter-section p-3 rounded-3 mb-4 border">
+            <h6 class="mb-3 text-uppercase small fw-bold opacity-75">Filtros de Pesquisa</h6>
+            <c-row class="g-3">
+              <c-col md="9">
+                <label for="searchBandeira" class="form-label small fw-semibold opacity-75">Bandeira</label>
+                <div class="input-group">
+                  <span class="input-group-text border-end-0"><svg xmlns="http://www.w3.org/2000/svg" width="14"
+                      height="14" fill="currentColor" class="bi bi-flag" viewBox="0 0 16 16">
+                      <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001M14 1.221c-.22.078-.48.167-.766.255-.81.252-1.872.523-2.734.523-.886 0-1.592-.286-2.203-.534l-.008-.003C7.662 1.21 7.139 1 6.5 1c-.669 0-1.606.229-2.415.478A21.294 21.294 0 0 0 3 1.845v6.433c.22-.078.48-.167.766-.255C4.576 7.77 5.638 7.5 6.5 7.5c.847 0 1.548.28 2.158.525l.028.01C9.32 8.29 9.86 8.5 10.5 8.5c.668 0 1.606-.229 2.415-.478A21.317 21.317 0 0 0 14 7.655V1.222z"/>
+                    </svg></span>
+                  <input cFormControl id="searchBandeira" type="text" class="border-start-0 ps-0" placeholder="Nome da bandeira"
+                    [(ngModel)]="searchBandeira" (keyup.enter)="applyFilters()">
+                </div>
+              </c-col>
+              <c-col md="3" class="d-flex align-items-end">
+                <div class="d-grid gap-2 d-md-flex w-100">
+                  <button cButton color="primary" class="flex-grow-1 shadow-sm" (click)="applyFilters()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-search me-1" viewBox="0 0 16 16">
+                      <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                    </svg>
+                    Buscar
+                  </button>
+                  <button cButton color="secondary" variant="outline" class="shadow-sm" (click)="clearSearch()"
+                    title="Limpar Filtros">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-x-lg" viewBox="0 0 16 16">
+                      <path
+                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
+                    </svg>
+                  </button>
+                </div>
+              </c-col>
+            </c-row>
+          </div>
+
+          <!-- Skeleton Loader -->
+          <div *ngIf="isLoading" class="skeleton-loader">
+            <div class="skeleton-header mb-4"></div>
+            <div class="skeleton-row mb-3" *ngFor="let i of [1,2,3,4,5]"></div>
+          </div>
+
+          <!-- Table Section -->
+          <div class="table-responsive" *ngIf="!isLoading">
+            <table cTable hover class="align-middle mb-0 border-separate"
+              style="border-spacing: 0 10px; border-collapse: separate;">
+              <thead class="bg-light">
+                <tr>
+                  <th class="py-3 ps-3 border-0 rounded-start">#</th>
+                  <th class="py-3 border-0">Bandeira</th>
+                  <th class="py-3 text-end pe-3 border-0 rounded-end">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let bandeira of paginatedBandeiras" class="shadow-sm bg-white rounded-3 position-relative ticket-row">
+                  <td class="ps-3 fw-semibold text-primary py-3 rounded-start border-0">
+                    {{ bandeira.id }}
+                  </td>
+                  <td class="py-3 border-0">
+                    <div class="fw-semibold">{{ bandeira.bandeira }}</div>
+                  </td>
+                  <td class="text-end pe-3 py-3 rounded-end border-0">
+                    <div class="btn-group" role="group">
+                      <button cButton color="light" size="sm"
+                        class="border text-primary shadow-sm me-2 rounded-2 action-btn"
+                        [routerLink]="['/bandeiras/editar', bandeira.id]" title="Editar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-pencil-square" viewBox="0 0 16 16">
+                          <path
+                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                          <path fill-rule="evenodd"
+                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                        </svg>
+                      </button>
+                      <button cButton color="light" size="sm" class="border text-danger shadow-sm rounded-2 action-btn"
+                        (click)="excluirBandeira(bandeira.id)" title="Excluir">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-trash" viewBox="0 0 16 16">
+                          <path
+                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                          <path
+                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="filteredBandeiras.length === 0">
+                  <td colspan="3" class="text-center py-5 text-muted">
+                    <div class="mb-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                        class="bi bi-inbox opacity-25" viewBox="0 0 16 16">
+                        <path
+                          d="M4.98 4a.5.5 0 0 0-.39.188L1.54 8H6a.5.5 0 0 1 .5.5 1.5 1.5 0 1 0 3 0A.5.5 0 0 1 10 8h4.46l-3.05-3.812A.5.5 0 0 0 11.02 4H4.98zm9.954 5H10.45a2.5 2.5 0 0 1-4.9 0H1.066l.32 2.562a.5.5 0 0 0 .497.438h12.234a.5.5 0 0 0 .496-.438L14.933 9zM3.809 3.563A1.5 1.5 0 0 1 4.981 3h6.038a1.5 1.5 0 0 1 1.172.563l3.7 4.625a.5.5 0 0 1 .105.374l-.19 1.518a1.5 1.5 0 0 1-1.489 1.312H1.883a1.5 1.5 0 0 1-1.489-1.312l-.19-1.518a.5.5 0 0 1 .106-.374l3.7-4.625z" />
+                      </svg>
+                    </div>
+                    Nenhuma bandeira encontrada
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Controls -->
+          <div class="d-flex justify-content-center mt-4">
+            <c-pagination align="center" aria-label="Page navigation">
+              <c-page-item [disabled]="currentPage === 0" class="mx-1">
+                <a cButton color="white" class="border" c-page-link (click)="onPageChange(0)">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </c-page-item>
+              <c-page-item [disabled]="currentPage === 0" class="mx-1">
+                <a cButton color="white" class="border" c-page-link (click)="onPageChange(currentPage - 1)">
+                  <span aria-hidden="true">&lsaquo;</span>
+                </a>
+              </c-page-item>
+
+              <ng-container *ngFor="let pageNumber of [].constructor(totalPages); let i = index">
+                <c-page-item [active]="currentPage === i" class="mx-1"
+                  *ngIf="i >= currentPage - 2 && i <= currentPage + 2">
+                  <a cButton [color]="currentPage === i ? 'primary' : 'white'" [class.border]="currentPage !== i"
+                    c-page-link (click)="onPageChange(i)">{{ i + 1 }}</a>
+                </c-page-item>
+              </ng-container>
+
+              <c-page-item [disabled]="currentPage === totalPages - 1" class="mx-1">
+                <a cButton color="white" class="border" c-page-link (click)="onPageChange(currentPage + 1)">
+                  <span aria-hidden="true">&rsaquo;</span>
+                </a>
+              </c-page-item>
+              <c-page-item [disabled]="currentPage === totalPages - 1" class="mx-1">
+                <a cButton color="white" class="border" c-page-link (click)="onPageChange(totalPages - 1)">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </c-page-item>
+            </c-pagination>
+          </div>
+
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

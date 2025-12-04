@@ -2,18 +2,65 @@
   <c-row>
     <c-col xs="12">
       <c-card class="mb-4">
-        <c-card-header>
+        <c-card-header class="d-flex justify-content-between align-items-center">
           <strong>{{ isEditMode ? 'Editar Grupo' : 'Novo Grupo' }}</strong>
+          <span *ngIf="isEditMode" class="badge bg-info-subtle text-info-emphasis">
+            <c-icon name="cilPencil" size="sm" class="me-1"></c-icon>
+            Modo Edição
+          </span>
         </c-card-header>
         <c-card-body>
           <form [formGroup]="grupoForm" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-              <label cLabel for="nomeGrupo">Nome do Grupo</label>
-              <input cFormControl id="nomeGrupo" formControlName="nomeGrupo">
+
+            <!-- Validation Alert -->
+            <c-alert color="danger" *ngIf="getFormErrors().length > 0" [dismissible]="true" class="mb-4">
+              <div class="d-flex align-items-start">
+                <c-icon name="cilWarning" size="lg" class="me-2 flex-shrink-0"></c-icon>
+                <div>
+                  <strong>Erros de Validação</strong>
+                  <ul class="mb-0 mt-2">
+                    <li *ngFor="let error of getFormErrors()">{{ error }}</li>
+                  </ul>
+                </div>
+              </div>
+            </c-alert>
+
+            <!-- Dados do Grupo -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilPeople" class="me-2"></c-icon>
+                <strong>Dados do Grupo</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="12">
+                    <label cLabel for="nomeGrupo" class="form-label">
+                      Nome do Grupo <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="nomeGrupo" formControlName="nomeGrupo" placeholder="Nome do grupo"
+                      [ngClass]="{'is-invalid': grupoForm.get('nomeGrupo')?.invalid && (grupoForm.get('nomeGrupo')?.dirty || grupoForm.get('nomeGrupo')?.touched)}">
+                    <div
+                      *ngIf="grupoForm.get('nomeGrupo')?.invalid && (grupoForm.get('nomeGrupo')?.dirty || grupoForm.get('nomeGrupo')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="grupoForm.get('nomeGrupo')?.errors?.['required']">Nome do grupo é obrigatório</span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+              <button cButton color="secondary" variant="outline" [routerLink]="['/grupos']" type="button">
+                <c-icon name="cilX" class="me-1"></c-icon>
+                Cancelar
+              </button>
+              <button cButton color="primary" type="submit" [disabled]="grupoForm.invalid">
+                <c-icon name="cilCheckCircle" class="me-1"></c-icon>
+                {{ isEditMode ? 'Atualizar Grupo' : 'Salvar Grupo' }}
+              </button>
             </div>
 
-            <button cButton color="primary" type="submit" [disabled]="grupoForm.invalid">Salvar</button>
-            <button cButton color="secondary" [routerLink]="['/grupos']">Cancelar</button>
           </form>
         </c-card-body>
       </c-card>

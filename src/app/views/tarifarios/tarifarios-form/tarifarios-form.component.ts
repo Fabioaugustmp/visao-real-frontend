@@ -8,8 +8,11 @@ import { MedicoService } from '../../medicos/medico.service';
 import { Bandeira } from '../../bandeiras/bandeira.model';
 import { BandeiraService } from '../../bandeiras/bandeira.service';
 import { CommonModule } from '@angular/common';
-import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
-import { ValidationFeedbackComponent } from '../../../components/validation-feedback/validation-feedback.component';
+import { ButtonModule, CardModule, FormModule, GridModule, AlertModule } from '@coreui/angular';
+import { IconModule } from '@coreui/icons-angular';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-tarifarios-form',
@@ -24,17 +27,18 @@ import { ValidationFeedbackComponent } from '../../../components/validation-feed
     GridModule,
     FormModule,
     ButtonModule,
-    ValidationFeedbackComponent
+    AlertModule,
+    IconModule
   ]
 })
 export class TarifariosFormComponent implements OnInit {
 
-  form: FormGroup;
+  form!: FormGroup;
   isEditMode = false;
   tarifarioId: number | null = null;
   medicos: Medico[] = [];
   bandeiras: Bandeira[] = [];
-  medicoNome: string = ''; // Store medico name for display in edit mode
+  medicoNome: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -44,6 +48,36 @@ export class TarifariosFormComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
+    this.initForm();
+  }
+
+  ngOnInit(): void {
+    this.tarifarioId = this.route.snapshot.params['id'];
+    this.loadMedicos();
+    this.loadBandeiras();
+    if (this.tarifarioId) {
+      this.isEditMode = true;
+      this.tarifarioService.getTarifario(this.tarifarioId).subscribe(data => {
+        const dataInicio = data.dataInicioVigencia ? new Date(data.dataInicioVigencia).toISOString().split('T')[0] : null;
+        const dataFim = data.dataFimVigencia ? new Date(data.dataFimVigencia).toISOString().split('T')[0] : null;
+        this.medicoNome = data.medico ? `${data.medico.nome} - ${data.medico.crm}` : '';
+
+        this.form.patchValue({
+          id: data.id,
+          medico: null,
+          bandeira: data.bandeira ? data.bandeira.id : null,
+          titulo: data.titulo,
+          percentualTarifa: data.percentualTarifa,
+          dataInicioVigencia: dataInicio,
+          dataFimVigencia: dataFim
+        });
+
+        this.form.get('medico')?.disable();
+      });
+    }
+  }
+
+  initForm(): void {
     this.form = this.fb.group({
       id: [null],
       medico: [null, Validators.required],
@@ -53,37 +87,6 @@ export class TarifariosFormComponent implements OnInit {
       dataInicioVigencia: [null, Validators.required],
       dataFimVigencia: [null]
     });
-  }
-
-  ngOnInit(): void {
-    this.tarifarioId = this.route.snapshot.params['id'];
-    // Load medicos for the dropdown (only used in create mode)
-    this.loadMedicos();
-    this.loadBandeiras();
-    // If in edit mode, load tarifario data
-    if (this.tarifarioId) {
-      this.isEditMode = true;
-      this.tarifarioService.getTarifario(this.tarifarioId).subscribe(data => {
-        // Convert ISO date strings to YYYY-MM-DD format for date inputs
-        const dataInicio = data.dataInicioVigencia ? new Date(data.dataInicioVigencia).toISOString().split('T')[0] : null;
-        const dataFim = data.dataFimVigencia ? new Date(data.dataFimVigencia).toISOString().split('T')[0] : null;
-        // Store medico name for display (medico cannot be changed in edit mode)
-        this.medicoNome = data.medico ? `${data.medico.nome} - ${data.medico.crm}` : '';
-
-        this.form.patchValue({
-          id: data.id,
-          medico: null, // Don't set medico value, it's read-only in edit mode
-          bandeira: data.bandeira ? data.bandeira.id : null,
-          titulo: data.titulo,
-          percentualTarifa: data.percentualTarifa,
-          dataInicioVigencia: dataInicio,
-          dataFimVigencia: dataFim
-        });
-
-        // Disable medico field in edit mode since it cannot be changed
-        this.form.get('medico')?.disable();
-      });
-    }
   }
 
   loadMedicos(): void {
@@ -113,15 +116,70 @@ export class TarifariosFormComponent implements OnInit {
         dataFimVigencia: formValue.dataFimVigencia
       };
 
+      const handleErrors = catchError((error: HttpErrorResponse) => {
+        if (error.status === 400 && error.error && typeof error.error === 'object') {
+          for (const key in error.error) {
+            if (this.form.controls[key]) {
+              this.form.controls[key].setErrors({ backend: error.error[key] });
+            }
+          }
+        }
+        return throwError(() => error);
+      });
+
       if (this.isEditMode) {
-        this.tarifarioService.updateTarifario(tarifario).subscribe(() => {
+        this.tarifarioService.updateTarifario(tarifario).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/tarifarios']);
         });
       } else {
-        this.tarifarioService.createTarifario(tarifario).subscribe(() => {
+        this.tarifarioService.createTarifario(tarifario).pipe(handleErrors).subscribe(() => {
           this.router.navigate(['/tarifarios']);
         });
       }
+    } else {
+      this.form.markAllAsTouched();
+    }
+  }
+
+  getFormErrors(): string[] {
+    const errors: string[] = [];
+    if (this.form.invalid && (this.form.dirty || this.form.touched)) {
+      Object.keys(this.form.controls).forEach(key => {
+        const control = this.form.get(key);
+        if (control && control.invalid && (control.dirty || control.touched)) {
+          const controlErrors = control.errors;
+          if (controlErrors) {
+            Object.keys(controlErrors).forEach(errorKey => {
+              const errorMessage = this.getErrorMessage(key, errorKey, controlErrors[errorKey]);
+              if (errorMessage) {
+                errors.push(errorMessage);
+              }
+            });
+          }
+        }
+      });
+    }
+    return errors;
+  }
+
+  getErrorMessage(controlName: string, errorName: string, errorValue: any): string | null {
+    const fieldNames: { [key: string]: string } = {
+      medico: 'Médico',
+      bandeira: 'Bandeira',
+      titulo: 'Título',
+      percentualTarifa: 'Percentual Tarifa',
+      dataInicioVigencia: 'Início Vigência'
+    };
+
+    const fieldName = fieldNames[controlName] || controlName;
+
+    switch (errorName) {
+      case 'required':
+        return `${fieldName} é obrigatório.`;
+      case 'backend':
+        return `${fieldName}: ${errorValue}`;
+      default:
+        return `${fieldName} é inválido.`;
     }
   }
 

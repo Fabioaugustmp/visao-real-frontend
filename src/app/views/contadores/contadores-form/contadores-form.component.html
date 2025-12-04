@@ -2,64 +2,129 @@
   <c-row>
     <c-col xs="12">
       <c-card class="mb-4">
-        <c-card-header>
-          <strong>{{
-            isEditMode ? "Editar Contador" : "Novo Contador"
-            }}</strong>
+        <c-card-header class="d-flex justify-content-between align-items-center">
+          <strong>{{ isEditMode ? 'Editar Contador' : 'Novo Contador' }}</strong>
+          <span *ngIf="isEditMode" class="badge bg-info-subtle text-info-emphasis">
+            <c-icon name="cilPencil" size="sm" class="me-1"></c-icon>
+            Modo Edição
+          </span>
         </c-card-header>
         <c-card-body>
           <form [formGroup]="contadorForm" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-              <label cLabel for="nome">Nome</label>
-              <input cFormControl id="nome" formControlName="nome" />
-              <div *ngIf="f['nome'].touched && f['nome'].errors" class="text-danger small">
-                <div *ngIf="f['nome'].errors['required']">Nome é obrigatório.</div>
-              </div>
-            </div>
-            <div class="mb-3"></div>
-            <c-row class="mb-3">
-              <c-col md="8">
-                <label cLabel for="email">Email</label>
-                <input cFormControl id="email" formControlName="email" type="email" />
-                <div *ngIf="f['email'].touched && f['email'].errors" class="text-danger small">
-                  <div *ngIf="f['email'].errors['required']">Email é obrigatório.</div>
-                  <div *ngIf="f['email'].errors['email']">Email inválido.</div>
-                </div>
-              </c-col>
-              <c-col md="2">
-                <label cLabel for="crc">CRC</label>
-                <input cFormControl id="crc" formControlName="crc" />
-                <div *ngIf="f['crc'].touched && f['crc'].errors" class="text-danger small">
-                  <div *ngIf="f['crc'].errors['required']">CRC é obrigatório.</div>
-                  <div *ngIf="f['crc'].errors['maxlength']">CRC deve ter no máximo 11 caracteres.</div>
-                  <div *ngIf="f['crc'].errors['pattern']">CRC deve ser alfanumérico.</div>
-                </div>
-              </c-col>
-              <c-col md="2">
-                <label cLabel for="crcUf">UF</label>
-                <select cSelect id="crcUf" formControlName="crcUf">
-                  <option value="" disabled>Selecione a UF</option>
-                  <option *ngFor="let uf of ufs" [value]="uf">{{ uf }}</option>
-                </select>
-                <div *ngIf="f['crcUf'].touched && f['crcUf'].errors" class="text-danger small">
-                  <div *ngIf="f['crcUf'].errors['required']">UF é obrigatório.</div>
-                </div>
-              </c-col>
-              <c-col md="4">
-                <label cLabel for="empresaId">Empresa</label>
-                <select cSelect id="empresaId" formControlName="empresaId">
-                  <option value="" disabled>Selecione a Empresa</option>
-                  <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.razaoSocial }}</option>
-                </select>
 
-              </c-col>
-            </c-row>
-            <button cButton color="primary" variant="outline" type="submit" [disabled]="contadorForm.invalid">
-              Salvar
-            </button>
-            <button cButton color="secondary" variant="outline" [routerLink]="['/contadores']">
-              Cancelar
-            </button>
+            <!-- Validation Alert -->
+            <c-alert color="danger" *ngIf="getFormErrors().length > 0" [dismissible]="true" class="mb-4">
+              <div class="d-flex align-items-start">
+                <c-icon name="cilWarning" size="lg" class="me-2 flex-shrink-0"></c-icon>
+                <div>
+                  <strong>Erros de Validação</strong>
+                  <ul class="mb-0 mt-2">
+                    <li *ngFor="let error of getFormErrors()">{{ error }}</li>
+                  </ul>
+                </div>
+              </div>
+            </c-alert>
+
+            <!-- Dados Pessoais -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilUser" class="me-2"></c-icon>
+                <strong>Dados Pessoais</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="8">
+                    <label cLabel for="nome" class="form-label">
+                      Nome Completo <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="nome" formControlName="nome" placeholder="Nome do contador"
+                      [ngClass]="{'is-invalid': contadorForm.get('nome')?.invalid && (contadorForm.get('nome')?.dirty || contadorForm.get('nome')?.touched)}">
+                    <div
+                      *ngIf="contadorForm.get('nome')?.invalid && (contadorForm.get('nome')?.dirty || contadorForm.get('nome')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="contadorForm.get('nome')?.errors?.['required']">Nome é obrigatório</span>
+                    </div>
+                  </c-col>
+                  <c-col md="4">
+                    <label cLabel for="email" class="form-label">
+                      Email <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="email" formControlName="email" type="email" placeholder="email@exemplo.com"
+                      [ngClass]="{'is-invalid': contadorForm.get('email')?.invalid && (contadorForm.get('email')?.dirty || contadorForm.get('email')?.touched)}">
+                    <div
+                      *ngIf="contadorForm.get('email')?.invalid && (contadorForm.get('email')?.dirty || contadorForm.get('email')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="contadorForm.get('email')?.errors?.['required']">Email é obrigatório</span>
+                      <span *ngIf="contadorForm.get('email')?.errors?.['email']">Email inválido</span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
+
+            <!-- Dados Profissionais -->
+            <c-card class="mb-4 shadow-sm">
+              <c-card-header class="bg-light-subtle">
+                <c-icon name="cilBriefcase" class="me-2"></c-icon>
+                <strong>Dados Profissionais</strong>
+              </c-card-header>
+              <c-card-body>
+                <c-row class="g-3">
+                  <c-col md="4">
+                    <label cLabel for="crc" class="form-label">
+                      CRC <span class="text-danger">*</span>
+                    </label>
+                    <input cFormControl id="crc" formControlName="crc" placeholder="Número do CRC"
+                      [ngClass]="{'is-invalid': contadorForm.get('crc')?.invalid && (contadorForm.get('crc')?.dirty || contadorForm.get('crc')?.touched)}">
+                    <div
+                      *ngIf="contadorForm.get('crc')?.invalid && (contadorForm.get('crc')?.dirty || contadorForm.get('crc')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="contadorForm.get('crc')?.errors?.['required']">CRC é obrigatório</span>
+                      <span *ngIf="contadorForm.get('crc')?.errors?.['maxlength']">CRC deve ter no máximo 11 caracteres</span>
+                      <span *ngIf="contadorForm.get('crc')?.errors?.['pattern']">CRC deve ser alfanumérico</span>
+                    </div>
+                  </c-col>
+                  <c-col md="2">
+                    <label cLabel for="crcUf" class="form-label">
+                      UF <span class="text-danger">*</span>
+                    </label>
+                    <select cSelect id="crcUf" formControlName="crcUf"
+                      [ngClass]="{'is-invalid': contadorForm.get('crcUf')?.invalid && (contadorForm.get('crcUf')?.dirty || contadorForm.get('crcUf')?.touched)}">
+                      <option value="" disabled>Selecione</option>
+                      <option *ngFor="let uf of ufs" [value]="uf">{{ uf }}</option>
+                    </select>
+                    <div
+                      *ngIf="contadorForm.get('crcUf')?.invalid && (contadorForm.get('crcUf')?.dirty || contadorForm.get('crcUf')?.touched)"
+                      class="invalid-feedback">
+                      <span *ngIf="contadorForm.get('crcUf')?.errors?.['required']">UF é obrigatória</span>
+                    </div>
+                  </c-col>
+                  <c-col md="6">
+                    <label cLabel for="empresaId" class="form-label">
+                      Empresa Vinculada
+                    </label>
+                    <select cSelect id="empresaId" formControlName="empresaId"
+                      [ngClass]="{'is-invalid': contadorForm.get('empresaId')?.invalid && (contadorForm.get('empresaId')?.dirty || contadorForm.get('empresaId')?.touched)}">
+                      <option value="">Selecione a empresa</option>
+                      <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.razaoSocial }}</option>
+                    </select>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+              <button cButton color="secondary" variant="outline" [routerLink]="['/contadores']" type="button">
+                <c-icon name="cilX" class="me-1"></c-icon>
+                Cancelar
+              </button>
+              <button cButton color="primary" type="submit" [disabled]="contadorForm.invalid">
+                <c-icon name="cilCheckCircle" class="me-1"></c-icon>
+                {{ isEditMode ? 'Atualizar Contador' : 'Salvar Contador' }}
+              </button>
+            </div>
+
           </form>
         </c-card-body>
       </c-card>
